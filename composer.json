@@ -1,0 +1,6 @@
+{
+	"name": "cu-boulder/ucb_site_configuration",
+	"description": "Allows CU Boulder site administrators to configure site-specific settings.",
+	"license": "MIT",
+	"type": "drupal-custom-module"
+}

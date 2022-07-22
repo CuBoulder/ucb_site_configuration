@@ -1,0 +1,5 @@
+ucb_site_configuration.settings_form:
+  title: CU Boulder site settings
+  description: 'Change CU Boulder site-specific settings.'
+  route_name: ucb_site_configuration.settings_form
+  parent: system.admin_config_system

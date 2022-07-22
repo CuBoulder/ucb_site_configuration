@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"*.install": "php",
+		"*.module": "php",
+		"*.profile": "php",
+		"*.theme": "php"
+	}
+}

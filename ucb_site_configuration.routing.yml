@@ -1,0 +1,10 @@
+ucb_site_configuration.settings_form:
+  path: '/admin/config/system/ucb-site-settings'
+  defaults:
+    _form: '\Drupal\ucb_site_configuration\Form\SettingsForm'
+    _title: CU Boulder site settings
+    _description: 'Change CU Boulder site-specific settings.'
+  requirements:
+    _permission: administer ucb site
+  options:
+    _admin_route: true
