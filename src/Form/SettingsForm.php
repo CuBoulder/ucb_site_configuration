@@ -54,7 +54,7 @@ class SettingsForm extends ConfigFormBase {
 	 * {@inheritdoc}
 	 */
 	protected function getEditableConfigNames() {
-		return [$this->service->getThemeName() . '.settings'];
+		return [$this->service->getThemeName() . '.settings', 'ucb_site_configuration.settings'];
 	}
 
 	/**
@@ -64,8 +64,14 @@ class SettingsForm extends ConfigFormBase {
 		return 'ucb_site_configuration_settings_form';
 	}
 
+	/**
+	 * @return string[]
+	 *   A list of theme settings which are editable for users with the `administer ucb site` permission
+	 *   required to access this form. Configurable in `config/install/ucb_site_configuration.configuration.yml`
+	 *   at the root of this module.
+	 */
 	protected function getEditableThemeSettings() {
-		return $this->config('ucb_site_configuration.settings')->get('editable_theme_settings');
+		return $this->config('ucb_site_configuration.configuration')->get('editable_theme_settings');
 	}
 
 	/**
@@ -75,7 +81,7 @@ class SettingsForm extends ConfigFormBase {
 		$themeSettings = [];
 		$themeForm = [
 			'#type' => 'details',
-			'#title' => 'Theme settings',
+			'#title' => 'Appearance',
 			'#open' => TRUE
 		];
 		$editableThemeSettings = $this->getEditableThemeSettings();

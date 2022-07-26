@@ -1,0 +1,46 @@
+# This is the default configuration for the CU Boulder site contact info.
+# It can be edited to change how many of each item to allow.
+# Visibility, labels, and values can be overriden by the form.
+
+icons_visible: true
+
+address_visible: false
+address:
+  -
+    visible: false
+    label: ''
+    value: ''
+  -
+    visible: false
+    label: ''
+    value: ''
+
+email_visible: false
+email:
+  -
+    visible: false
+    label: ''
+    value: ''
+  -
+    visible: false
+    label: ''
+    value: ''
+  -
+    visible: false
+    label: ''
+    value: ''
+
+phone_visible: false
+phone:
+  -
+    visible: false
+    label: ''
+    value: ''
+  -
+    visible: false
+    label: ''
+    value: ''
+  -
+    visible: false
+    label: ''
+    value: ''

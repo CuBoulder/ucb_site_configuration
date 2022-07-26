@@ -3,3 +3,11 @@ ucb_site_configuration.settings_form:
   description: 'Change CU Boulder site-specific settings.'
   route_name: ucb_site_configuration.settings_form
   parent: system.admin_config_system
+  weight: 0
+
+ucb_site_configuration.contact_info_form:
+  title: CU Boulder site contact info
+  description: 'Modify the contact info for the site as it appears in the site footer.'
+  route_name: ucb_site_configuration.contact_info_form
+  parent: system.admin_config_system
+  weight: 1

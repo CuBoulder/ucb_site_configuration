@@ -8,3 +8,13 @@ ucb_site_configuration.settings_form:
     _permission: administer ucb site
   options:
     _admin_route: true
+
+ucb_site_configuration.contact_info_form:
+  path: '/admin/config/system/ucb-site-contact-info'
+  defaults:
+    _form: '\Drupal\ucb_site_configuration\Form\ContactInfoForm'
+    _title: CU Boulder site contact info
+  requirements:
+    _permission: administer ucb site
+  options:
+    _admin_route: true
