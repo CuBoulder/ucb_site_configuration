@@ -36,13 +36,6 @@ class SiteConfiguration {
 	protected $configFactory;
 
 	/**
-	 * The theme handler, used to get theme settings.
-	 *
-	 * @var \Drupal\Core\Extension\ThemeHandlerInterface
-	 */
-	protected $themeHandler;
-
-	/**
 	 * Constructs a UserInviteHelperService.
 	 *
 	 * @param \Drupal\Core\Session\AccountInterface $user
