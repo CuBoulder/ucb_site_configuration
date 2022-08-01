@@ -15,4 +15,4 @@ The block provides information about a given site including:
 
 The templates for rendering this block are located in the theme. This module simply installs the block itself and an admin form for populating the information.
 
-**Theme dependency: `boulder_d9_base`**
+**Theme dependency: `boulderD9_base`**
