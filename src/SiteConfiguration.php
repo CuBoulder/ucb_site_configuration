@@ -113,6 +113,13 @@ class SiteConfiguration {
 			'#description'    => t('Check this box if you would like to display the "Be Boulder" slogan in the header.')
 		];
 
+		$form['ucb_rave_alerts'] = [
+			'#type'           => 'checkbox',
+			'#title'          => t('Show campus-wide alerts'),
+			'#default_value'  => theme_get_setting('ucb_rave_alerts', $themeName),
+			'#description'    => t('If enabled, campus-wide alerts will be displayed at the top of the site.')
+		];
+
 		$form['ucb_gtm_account'] = [
 			'#type'           => 'textfield',
 			'#title'          => t('GTM Account Number'),
