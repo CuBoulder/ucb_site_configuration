@@ -60,7 +60,7 @@ class SiteConfiguration {
 	 *   The machine name of the CU Boulder base theme to configure.
 	 */
 	public function getThemeName() {
-		return 'ucb2021_base';
+		return 'boulder_d9_base';
 	}
 
 	public function buildThemeSettingsForm(array &$form, FormStateInterface &$form_state) {
