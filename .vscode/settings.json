@@ -3,6 +3,7 @@
 		"*.install": "php",
 		"*.module": "php",
 		"*.profile": "php",
-		"*.theme": "php"
+		"*.theme": "php",
+		"*.inc": "php"
 	}
 }
