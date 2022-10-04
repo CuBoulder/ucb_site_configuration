@@ -120,6 +120,13 @@ class SiteConfiguration {
 			'#description'    => t('If enabled, campus-wide alerts will be displayed at the top of the site.')
 		];
 
+		$form['ucb_breadcrumb_nav'] = [
+			'#type'           => 'checkbox',
+			'#title'          => t('Show breadcrumb navigation on pages'),
+			'#default_value'  => theme_get_setting('ucb_breadcrumb_nav', $themeName),
+			'#description'    => t('If enabled, the breadcrumb navigation will be shown at the top of pages, helping visitors find their way around the site.')
+		];
+
 		$form['ucb_gtm_account'] = [
 			'#type'           => 'textfield',
 			'#title'          => t('GTM Account Number'),

@@ -10,3 +10,4 @@ editable_theme_settings:
 # - ucb_secondary_menu
 # - ucb_footer_menu
  - ucb_social_share_position
+ - ucb_breadcrumb_nav
