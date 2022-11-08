@@ -11,3 +11,5 @@ editable_theme_settings:
 # - ucb_footer_menu
  - ucb_social_share_position
  - ucb_breadcrumb_nav
+ - ucb_date_format
+
