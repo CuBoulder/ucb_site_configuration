@@ -155,7 +155,7 @@ class SiteConfiguration {
 		$form['ucb_secondary_menu_button_display'] = [
 			'#type'           => 'checkbox',
 			'#title'          => t('Display links in the secondary menu as buttions'),
-			'#default_value'  => theme_get_setting('ucb_secondary_menu', $themeName),
+			'#default_value'  => theme_get_setting('ucb_secondary_menu_button_display', $themeName),
 			'#description'    => t('Check this box to display the links in the secondary menu of this site as buttons instead of links.')
 		];
 
@@ -178,6 +178,22 @@ class SiteConfiguration {
 				t('Below Title')
 			],
 			'#description'    => t('Select the location for social sharing links (Facebook, Twitter, etc) to appear on your pages.')
+		];
+		// Choose date/time format sitewide
+		$form['ucb_date_format'] = [
+			'#type'           => 'select',
+			'#title'          => t('Display settings for Date formats on Articles'),
+			'#default_value'  => theme_get_setting('ucb_date_format', $themeName),
+			'#options'        => [
+				t('Short Date'),
+				t('Medium Date'),
+				t('Long Date'),
+				t('Short Date with Time'),
+				t('Medium Date with Time'),
+				t('Long Date with Time'),
+				t('None - Hide')
+			],
+			'#description'    => t('Select the preferred Global Date/Time format for dates on your site.')
 		];
 	}
 }
