@@ -134,17 +134,35 @@ class SiteConfiguration {
 			'#description'    => t('Google Tag Manager account number e.g. GTM-123456.'),
 		];
 
-		$form['ucb_secondary_menu'] = [
+		$form['ucb_secondary_menu_default_links'] = [
 			'#type'           => 'checkbox',
 			'#title'          => t('Display the standard Boulder secondary menu in the header navigation region.'),
-			'#default_value'  => theme_get_setting('ucb_secondary_menu', $themeName),
+			'#default_value'  => theme_get_setting('ucb_secondary_menu_default_links', $themeName),
 			'#description'    => t('Check this box if you would like to display the default Boulder secondary menu links in the header.')
 		];
 
-		$form['ucb_footer_menu'] = [
+		$form['ucb_secondary_menu_position'] = [
+			'#type'           => 'select',
+			'#title'          => t('Position of the secondary menu'),
+			'#default_value'  => theme_get_setting('ucb_secondary_menu_position', $themeName),
+			'#options'        => [
+				'inline' => t('Inline with the main navigation'),
+				'above'  => t('Above the main navigation')
+			],
+			'#description'    => t('The secondary menu of this site can be populated with secondary or action links and displayed inline with or above the main navigation.')
+		];
+
+		$form['ucb_secondary_menu_button_display'] = [
 			'#type'           => 'checkbox',
-			'#title'          => t('Display the standard Boulder menus in the header footer region.'),
-			'#default_value'  => theme_get_setting('ucb_footer_menu', $themeName),
+			'#title'          => t('Display links in the secondary menu as buttions'),
+			'#default_value'  => theme_get_setting('ucb_secondary_menu_button_display', $themeName),
+			'#description'    => t('Check this box to display the links in the secondary menu of this site as buttons instead of links.')
+		];
+
+		$form['ucb_footer_menu_default_links'] = [
+			'#type'           => 'checkbox',
+			'#title'          => t('Display the standard Boulder menus in the footer region.'),
+			'#default_value'  => theme_get_setting('ucb_footer_menu_default_links', $themeName),
 			'#description'    => t('Check this box if you would like to display the default Boulder footer menu links in the footer.')
 		];
 		// Choose where social share buttons are positioned on each page
