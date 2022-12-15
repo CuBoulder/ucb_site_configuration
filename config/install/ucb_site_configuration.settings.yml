@@ -1,10 +1,14 @@
 # Editable site settings (non-theme) will go here
 
-third_party_services:
-  admithub:
+external_services:
+  mainstay:
     enabled: '0'
     _license_id: ''
     _college_id: ''
   livechat:
     enabled: '0'
     _license_id: ''
+  slate_forms:
+    enabled: '0'
+  statuspage:
+    enabled: '0'

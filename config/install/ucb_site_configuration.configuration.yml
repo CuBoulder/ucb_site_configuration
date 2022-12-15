@@ -15,9 +15,9 @@ editable_theme_settings:
  - ucb_breadcrumb_nav
  - ucb_date_format
 
-third_party_services:
-  admithub: 
-    label: AdmitHub
+external_services:
+  mainstay: 
+    label: Mainstay
     block: false
     node: true
     sitewide: true
@@ -26,3 +26,13 @@ third_party_services:
     block: false
     node: true
     sitewide: true
+  slate_forms:
+    label: Slate forms
+    block: true
+    node: false
+    sitewide: false
+  statuspage:
+    label: StatusPage
+    block: true
+    node: false
+    sitewide: false
