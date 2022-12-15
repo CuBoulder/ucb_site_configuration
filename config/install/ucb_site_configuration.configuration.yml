@@ -14,3 +14,15 @@ editable_theme_settings:
  - ucb_social_share_position
  - ucb_breadcrumb_nav
  - ucb_date_format
+
+third_party_services:
+  admithub: 
+    label: AdmitHub
+    block: false
+    node: true
+    sitewide: true
+  livechat: 
+    label: LiveChat
+    block: false
+    node: true
+    sitewide: true

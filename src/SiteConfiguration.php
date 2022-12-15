@@ -63,6 +63,14 @@ class SiteConfiguration {
 		return 'boulderD9_base';
 	}
 
+	/**
+	 * Builds the theme settings form.
+	 * 
+	 * @param array &$form
+	 *   The form build array.
+	 * @param \Drupal\Core\Form\FormStateInterface &$form_state
+	 *   The form state.
+	 */
 	public function buildThemeSettingsForm(array &$form, FormStateInterface &$form_state) {
 		$themeName = $this->getThemeName();
 

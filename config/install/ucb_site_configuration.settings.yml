@@ -1,1 +1,10 @@
 # Editable site settings (non-theme) will go here
+
+third_party_services:
+  admithub:
+    enabled: '0'
+    _license_id: ''
+    _college_id: ''
+  livechat:
+    enabled: '0'
+    _license_id: ''
