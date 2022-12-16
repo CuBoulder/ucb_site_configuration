@@ -8,7 +8,4 @@ external_services:
   livechat:
     enabled: '0'
     _license_id: ''
-  slate_forms:
-    enabled: '0'
-  statuspage:
-    enabled: '0'
+

@@ -18,21 +18,13 @@ editable_theme_settings:
 external_services:
   mainstay: 
     label: Mainstay
+    content_label: Mainstay
     block: false
     node: true
     sitewide: true
   livechat: 
     label: LiveChat
+    content_label: LiveChat
     block: false
     node: true
     sitewide: true
-  slate_forms:
-    label: Slate forms
-    block: true
-    node: false
-    sitewide: false
-  statuspage:
-    label: StatusPage
-    block: true
-    node: false
-    sitewide: false

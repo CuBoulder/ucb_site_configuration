@@ -204,4 +204,15 @@ class SiteConfiguration {
 			'#description'    => t('Select the preferred Global Date/Time format for dates on your site.')
 		];
 	}
+
+	public function getContentExternalServicesOptions() {
+		$externalServicesConfiguration = $this->configFactory->get('ucb_site_configuration.configuration')->get('external_services') ?? [];
+		$externalServicesSettings = $this->configFactory->get('ucb_site_configuration.settings')->get('external_services') ?? [];
+		$options = [];
+		foreach ($externalServicesSettings as $externalServiceName => $externalServiceSettings) {
+			if($externalServiceSettings['enabled'] === 'some')
+				$options[$externalServiceName] = $externalServicesConfiguration[$externalServiceName]['content_label'];
+		}
+		return $options;
+	}
 }

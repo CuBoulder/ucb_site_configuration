@@ -1,0 +1,71 @@
+<?php
+
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
+
+/**
+ * Adds third-party service configuration fields to nodes.
+ * Implements hook_entity_base_field_info().
+ */
+function ucb_site_configuration_entity_base_field_info(EntityTypeInterface $entity_type) {
+	if($entity_type->id() === 'node') {
+		$fields = [];
+		$fields['ucb_external_services_enabled'] = BaseFieldDefinition::create('list_string')
+			->setLabel(t('Third-party services'))
+			->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED)
+			->setDefaultValue([])
+			->setDisplayConfigurable('form', FALSE)
+    		->setDisplayConfigurable('view', FALSE);
+		return $fields;
+	}
+}
+
+/**
+ * Adds third-party service configuration options to node form sidebars.
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface $form_state) {
+	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+	$service = \Drupal::service('ucb_site_configuration');
+	/** @var \Drupal\node\NodeInterface $node */
+	$node = $form_state->getFormObject()->getEntity();
+	$nodeServicesField = $node->get('ucb_external_services_enabled');
+	$nodeServicesFieldItems = $nodeServicesField->getValue();
+	/** @var \Symfony\Component\Routing\Route */
+    $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('ucb_site_configuration.external_service_settings_form');
+	$form['ucb_external_services'] = [
+		'#type' => 'details',
+   		'#title' => t('Third-party services'),
+		'#group' => 'advanced',
+		'#open' => (bool) $nodeServicesFieldItems,
+		'ucb_external_services_enabled' => [
+			'#type'  => 'checkboxes',
+			'#title' => t('Services to include'),
+			'#description' => t('Configure third-party services to appear here in <a href="@settings_form_uri">@settings_form_title</a>. To add a Slate form or StatusPage block to a page, use the Layout tab after creating a basic page.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
+			'#options' => $service->getContentExternalServicesOptions(),
+			'#default_value' => array_map(function($fieldItem) { return $fieldItem['value']; }, $nodeServicesFieldItems)
+		]
+	];
+	// TODO: College ID field for the Mainstay service
+	foreach (array_keys($form['actions']) as $action) {
+		if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+			$form['actions'][$action]['#submit'][] = 'ucb_site_configuration_form_node_form_submit';
+		}
+	}
+}
+
+/**
+ * Saves the third-party services settings when a node is saved.
+ */
+function ucb_site_configuration_form_node_form_submit(&$form, FormStateInterface $form_state) {
+	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+	$service = \Drupal::service('ucb_site_configuration');
+	/** @var \Drupal\node\NodeInterface */
+	$node = $form_state->getFormObject()->getEntity();
+	$nodeServicesField = $node->get('ucb_external_services_enabled');
+	$nodeServicesFieldAllowedValues = array_keys($service->getContentExternalServicesOptions());
+	$nodeServicesField->setValue(array_filter(array_values($form_state->getValue('ucb_external_services_enabled')), function($value) use($nodeServicesFieldAllowedValues) { return in_array($value, $nodeServicesFieldAllowedValues); }));
+	$node->save();
+}
