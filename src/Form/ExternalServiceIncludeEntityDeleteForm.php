@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Contains \Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityDeleteForm.
+ */
+
 namespace Drupal\ucb_site_configuration\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
@@ -7,10 +12,10 @@ use Drupal\Core\Url;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Builds the form to delete an ExternalService entity.
+ * Builds the form to delete an ExternalServiceInclude entity.
  */
 
-class ExternalServiceEntityDeleteForm extends EntityConfirmFormBase {
+class ExternalServiceIncludeEntityDeleteForm extends EntityConfirmFormBase {
 	/**
 	 * {@inheritdoc}
 	 */
@@ -22,7 +27,7 @@ class ExternalServiceEntityDeleteForm extends EntityConfirmFormBase {
 	 * {@inheritdoc}
 	 */
 	public function getCancelUrl() {
-		return Url::fromRoute('entity.ucb_external_service.collection');
+		return Url::fromRoute('entity.ucb_external_service_include.collection');
 	}
 
 	/**

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\ucb_site_configuration\Form\ExternalServiceEntityForm.
+ * Contains \Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityForm.
  */
 
 namespace Drupal\ucb_site_configuration\Form;
@@ -13,7 +13,11 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class ExternalServiceEntityForm extends EntityForm {
+/**
+ * Builds the form to add or edit an ExternalServiceInclude entity.
+ */
+
+class ExternalServiceIncludeEntityForm extends EntityForm {
 
 	/**
 	 * The user site configuration service defined in this module.
@@ -23,13 +27,13 @@ class ExternalServiceEntityForm extends EntityForm {
 	protected $service;
 
 	/**
-	 * Constructs an ExternalServiceEntityForm object.
+	 * Constructs an ExternalServiceIncludeEntityForm object.
 	 * 
 	 * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    	 *   The entity type manager.
 	 *
-	 * @param \Drupal\ucb_site_configuration\UserInviteHelperService $helper
-	 *   The user invite helper service defined in this module.
+	 * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
+	 *   The service defined in this module.
 	 */
 	public function __construct(EntityTypeManagerInterface $entityTypeManager, SiteConfiguration $service) {
 		$this->entityTypeManager = $entityTypeManager;
@@ -55,15 +59,25 @@ class ExternalServiceEntityForm extends EntityForm {
 	 * {@inheritdoc}
 	 */
 	public function getFormId() {
-		return 'ucb_external_service_entity_form';
+		return 'ucb_external_service_include_entity_form';
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function form(array $form, FormStateInterface $form_state) {
-		$form = parent::form($form, $form_state);
+		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
+		$form = parent::form($form, $form_state);
+		$allowedExternalServiceOptions = $this->service->getContentExternalServicesOptions();
+		$siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('ucb_site_configuration.external_service_settings_form');
+		$form['service_name'] = [
+			'#type'  => 'radios',
+			'#title' => t('Service'),
+			'#description' => t('Configure third-party services to appear here in <a href="@settings_form_uri">@settings_form_title</a>. To add a Slate form to a page, use the Layout tab after creating a basic page.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
+			'#options' => $allowedExternalServiceOptions,
+			'#default_value' => $entity->serviceName()
+		];
 		$form['label'] = [
 			'#type' => 'textfield',
 			'#title' => t('Label'),
@@ -86,29 +100,26 @@ class ExternalServiceEntityForm extends EntityForm {
 	 * {@inheritdoc}
 	 */
 	public function save(array $form, FormStateInterface $form_state) {
+		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
 		$status = $entity->save();
 
 		if ($status === SAVED_NEW) {
-			$this->messenger()->addMessage($this->t('The %label third-party service created.', [
-				'%label' => $entity->label(),
-			]));
+			$this->messenger()->addMessage($this->t('The %label third-party service created.', ['%label' => $entity->label()]));
 		} else {
-			$this->messenger()->addMessage($this->t('The %label third-party service updated.', [
-				'%label' => $entity->label(),
-			]));
+			$this->messenger()->addMessage($this->t('The %label third-party service updated.', ['%label' => $entity->label()]));
 		}
 
-		$form_state->setRedirect('entity.ucb_external_service.collection');
+		$form_state->setRedirect('entity.ucb_external_service_include.collection');
 	}
 
 	/**
-	 * Helper function to check whether the `ucb_external_service` configuration entity exists.
+	 * Helper function to check whether the ExternalServiceInclude configuration entity exists.
 	 * 
 	 * @see https://www.drupal.org/node/1809494
 	 */
 	public function exist($id) {
-		$entity = $this->entityTypeManager->getStorage('ucb_external_service')->getQuery()
+		$entity = $this->entityTypeManager->getStorage('ucb_external_service_include')->getQuery()
 			->condition('id', $id)
 			->execute();
 		return (bool) $entity;

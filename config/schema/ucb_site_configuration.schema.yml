@@ -1,6 +1,6 @@
-ucb_site_configuration.external_services.*:
+ucb_site_configuration.external_service_includes.*:
   type: config_entity
-  label: 'External service'
+  label: 'External service include'
   mapping:
     id:
       type: string
@@ -8,3 +8,6 @@ ucb_site_configuration.external_services.*:
     label:
       type: label
       label: 'Label'
+    service_name:
+      type: string
+      label: 'Service name'
