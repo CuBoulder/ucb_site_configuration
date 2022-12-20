@@ -8,4 +8,6 @@ external_services:
   livechat:
     enabled: '0'
     _license_id: ''
-
+  statuspage:
+    enabled: '0'
+    _page_id: ''

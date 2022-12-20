@@ -33,6 +33,7 @@ function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface 
 	$node = $form_state->getFormObject()->getEntity();
 	$nodeServicesField = $node->get('ucb_external_services_enabled');
 	$nodeServicesFieldItems = $nodeServicesField->getValue();
+	$nodeServicesFieldAllowedOptions = $service->getContentExternalServicesOptions();
 	/** @var \Symfony\Component\Routing\Route */
     $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('ucb_site_configuration.external_service_settings_form');
 	$form['ucb_external_services'] = [
@@ -43,12 +44,27 @@ function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface 
 		'ucb_external_services_enabled' => [
 			'#type'  => 'checkboxes',
 			'#title' => t('Services to include'),
-			'#description' => t('Configure third-party services to appear here in <a href="@settings_form_uri">@settings_form_title</a>. To add a Slate form or StatusPage block to a page, use the Layout tab after creating a basic page.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
-			'#options' => $service->getContentExternalServicesOptions(),
+			'#description' => t('Configure third-party services to appear here in <a href="@settings_form_uri">@settings_form_title</a>. To add a Slate form to a page, use the Layout tab after creating a basic page.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
+			'#options' => $nodeServicesFieldAllowedOptions,
 			'#default_value' => array_map(function($fieldItem) { return $fieldItem['value']; }, $nodeServicesFieldItems)
 		]
 	];
-	// TODO: College ID field for the Mainstay service
+	// Adds individual external service settings
+	foreach ($nodeServicesFieldAllowedOptions as $externalServiceName => $externalServiceLabel) {
+		$externalServiceCustomSettingsForm = [];
+		$service->buildExternalServiceContentSettingsForm($externalServiceCustomSettingsForm, $externalServiceName, $node, $form_state);
+		if ($externalServiceCustomSettingsForm) {
+			$externalServiceCustomSettingsForm['#type'] = 'fieldset';
+			$externalServiceCustomSettingsForm['#title'] = $externalServiceLabel;
+			$externalServiceCustomSettingsForm['#states'] = [
+				'visible' => [
+					':input[name="ucb_external_services_enabled[' . $externalServiceName . ']"]' => ['checked' => TRUE]
+				]
+			];
+			$form['ucb_external_services']['ucb_external_service_settings_' . $externalServiceName] = $externalServiceCustomSettingsForm;
+		}	
+	}
+	// Binds submit action
 	foreach (array_keys($form['actions']) as $action) {
 		if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
 			$form['actions'][$action]['#submit'][] = 'ucb_site_configuration_form_node_form_submit';

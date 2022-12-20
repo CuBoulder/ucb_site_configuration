@@ -75,10 +75,12 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 		foreach ($externalServicesConfig as $externalServiceName => $externalServiceConfig) {
 			$externalServiceSettings = $externalServicesSettings[$externalServiceName];
 			$enabledOptions = ['0' => $this->t('Disabled')];
-			if ($externalServiceConfig['block'] || $externalServiceConfig['node'])
-				$enabledOptions['some'] = $this->t('Enabled for adding to individual content pages');
-			if ($externalServiceConfig['sitewide'])
-				$enabledOptions['all'] = $this->t('Enabled on the entire site');
+			if(isset($externalServiceConfig['availability'])) {
+				if ($externalServiceConfig['availability']['content'])
+					$enabledOptions['some'] = $this->t('Enabled for adding to individual content pages');
+				if ($externalServiceConfig['availability']['sitewide'])
+					$enabledOptions['all'] = $this->t('Enabled on the entire site');
+			}
 			$form['service_' . $externalServiceName] = [
 				'#type' => 'details',
 				'#title' => $externalServiceConfig['label'],
@@ -89,7 +91,8 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 					'#default_value' => $externalServiceSettings['enabled']
 				]
 			];
-			$externalServiceCustomSettingsForm = $this->buildExternalServiceCustomSettingsForm($externalServiceName, $externalServiceConfig, $externalServiceSettings, $form_state);
+			$externalServiceCustomSettingsForm = [];
+			$this->buildExternalServiceSiteSettingsForm($externalServiceCustomSettingsForm, $externalServiceName, $externalServiceConfig, $externalServiceSettings, $form_state);
 			if ($externalServiceCustomSettingsForm) {
 				$externalServiceCustomSettingsForm['#type'] = 'fieldset';
 				$externalServiceCustomSettingsForm['#states'] = [
@@ -103,26 +106,39 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 		return parent::buildForm($form, $form_state);
 	}
 
-	private function buildExternalServiceCustomSettingsForm($externalServiceName, $externalServiceConfig, $externalServiceSettings, FormStateInterface $form_state) {
-		$form = [];
+	/**
+	 * Builds the inner settings form for an external service on the "Third-party services" administration page.
+	 * 
+	 * @param array &$form
+	 *   The form build array.
+	 * @param string $externalServiceName
+	 *   The machine name of the external srvice.
+	 * @param array $externalServiceConfig
+	 *   The fixed configuration of the external service.
+	 * @param array $externalServiceSettings
+	 *   The editable settings of the external service.
+	 * @param FormStateInterface $form_state
+	 *   The current state of the form.
+	 */
+	private function buildExternalServiceSiteSettingsForm(array &$form, $externalServiceName, $externalServiceConfig, $externalServiceSettings, FormStateInterface $form_state) {
 		switch ($externalServiceName) {
 			case 'mainstay':
 				$form['service_' . $externalServiceName . '__license_id'] = [
 					'#type' => 'textfield',
 					'#size' => '60',
-					'#title' => $this->t('License ID'),
+					'#title' => t('License ID'),
 					'#default_value' => $externalServiceSettings['_license_id'],
 					'#states' => [
 						'optional' => [
-							':input[name="service_' . $externalServiceName .'_enabled"]' => ['value' => '0']
+							':input[name="service_' . $externalServiceName . '_enabled"]' => ['value' => '0']
 						]
 					]
 				];
 				$form['service_' . $externalServiceName . '__college_id'] = [
 					'#type' => 'textfield',
 					'#size' => '60',
-					'#title' => $this->t('College ID'),
-					'#description' => $this->t('If enabled for adding to individual content pages, the College ID becomes editable for each page and can be left blank here.'),
+					'#title' => t('College ID'),
+					'#description' => t('If enabled for adding to individual content pages, the College ID becomes editable for each page and can be left blank here.'),
 					'#default_value' => $externalServiceSettings['_college_id']
 				];
 			break;
@@ -130,18 +146,17 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 				$form['service_' . $externalServiceName . '__license_id'] = [
 					'#type' => 'textfield',
 					'#size' => '60',
-					'#title' => $this->t('License ID'),
+					'#title' => t('License ID'),
 					'#default_value' => $externalServiceSettings['_license_id'],
 					'#states' => [
 						'optional' => [
-							':input[name="service_' . $externalServiceName .'_enabled"]' => ['value' => '0']
+							':input[name="service_' . $externalServiceName . '_enabled"]' => ['value' => '0']
 						]
 					]
 				];
 			break;
 			default:
 		}
-		return $form;
 	}
 
 	/**

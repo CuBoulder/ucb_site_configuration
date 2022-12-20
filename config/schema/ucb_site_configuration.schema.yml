@@ -1,0 +1,10 @@
+ucb_site_configuration.external_services.*:
+  type: config_entity
+  label: 'External service'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'

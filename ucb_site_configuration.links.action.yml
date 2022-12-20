@@ -1,0 +1,5 @@
+ucb_site_configuration.external_services.add:
+  route_name: entity.ucb_external_service.add_form
+  title: Add a third-party service
+  appears_on:
+    - entity.ucb_external_service.collection

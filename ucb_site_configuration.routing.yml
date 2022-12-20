@@ -38,3 +38,35 @@ ucb_site_configuration.external_service_settings_form:
     _permission: administer ucb site
   options:
     _admin_route: true
+
+entity.ucb_external_service.collection:
+  path: '/admin/config/cu-boulder/services/list'
+  defaults:
+    _entity_list: ucb_external_service
+    _title: Third-party services
+  requirements:
+    _permission: administer ucb site
+
+entity.ucb_external_service.add_form:
+  path: '/admin/config/cu-boulder/services/add'
+  defaults:
+    _entity_form: ucb_external_service.add
+    _title: Add a third-party service
+  requirements:
+    _permission: administer ucb site
+
+entity.ucb_external_service.edit_form:
+  path: '/admin/config/cu-boulder/services/{ucb_external_service}'
+  defaults:
+    _entity_form: ucb_external_service.edit
+    _title: Edit a third-party service
+  requirements:
+    _permission: administer ucb site
+
+entity.ucb_external_service.delete_form:
+  path: '/admin/config/cu-boulder/services/{ucb_external_service}/delete'
+  defaults:
+    _entity_form: ucb_external_service.delete
+    _title: Delete a third-party service
+  requirements:
+    _permission: administer ucb site

@@ -11,6 +11,7 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\node\NodeInterface;
 
 class SiteConfiguration {
 
@@ -205,6 +206,36 @@ class SiteConfiguration {
 		];
 	}
 
+	/**
+	 * Builds the inner settings form for an external service on a node add or edit page.
+	 * 
+	 * @param array &$form
+	 *   The form build array.
+	 * @param string $externalServiceName
+	 *   The machine name of the external srvice.
+	 * @param \Drupal\node\NodeInterface $node
+	 *   The node for which this form is being built.
+	 * @param FormStateInterface $form_state
+	 *   The current state of the form.
+	 */
+	public function buildExternalServiceContentSettingsForm(array &$form, $externalServiceName, NodeInterface $node, FormStateInterface $form_state) {
+		switch ($externalServiceName) {
+			case 'mainstay':
+				$form['ucb_external_service_' . $externalServiceName . '__college_id'] = [
+					'#type' => 'textfield',
+					'#size' => '60',
+					'#title' => t('College ID'),
+					// '#default_value' => $node->get('ucb_external_service_' . $externalServiceName . '__college_id')
+				];
+			break;
+			default:
+		}
+	}
+
+	/**
+	 * @return array
+	 *   The external services options available on content nodes.
+	 */
 	public function getContentExternalServicesOptions() {
 		$externalServicesConfiguration = $this->configFactory->get('ucb_site_configuration.configuration')->get('external_services') ?? [];
 		$externalServicesSettings = $this->configFactory->get('ucb_site_configuration.settings')->get('external_services') ?? [];

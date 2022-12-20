@@ -19,12 +19,18 @@ external_services:
   mainstay: 
     label: Mainstay
     content_label: Mainstay
-    block: false
-    node: true
-    sitewide: true
+    availability:
+      content: true
+      sitewide: true
   livechat: 
     label: LiveChat
     content_label: LiveChat
-    block: false
-    node: true
-    sitewide: true
+    availability:
+      content: true
+      sitewide: true
+  statuspage:
+    label: StatusPage
+    content_label: StatusPage
+    availability:
+      content: true
+      sitewide: true
