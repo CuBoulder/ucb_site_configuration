@@ -29,44 +29,34 @@ ucb_site_configuration.contact_info_form:
   options:
     _admin_route: true
 
-ucb_site_configuration.external_service_settings_form:
+entity.ucb_external_service_include.collection:
   path: '/admin/config/cu-boulder/services'
   defaults:
-    _form: '\Drupal\ucb_site_configuration\Form\ExternalServiceSettingsForm'
-    _title: Third-party services
-  requirements:
-    _permission: administer ucb site
-  options:
-    _admin_route: true
-
-entity.ucb_external_service_include.collection:
-  path: '/admin/config/cu-boulder/services/includes'
-  defaults:
     _entity_list: ucb_external_service_include
-    _title: Third-party service includes
+    _title: Third-party services
   requirements:
     _permission: administer ucb site
 
 entity.ucb_external_service_include.add_form:
-  path: '/admin/config/cu-boulder/services/includes/add'
+  path: '/admin/config/cu-boulder/services/add'
   defaults:
     _entity_form: ucb_external_service_include.add
-    _title: Include a third-party service
+    _title: Add a third-party service
   requirements:
     _permission: administer ucb site
 
 entity.ucb_external_service_include.edit_form:
-  path: '/admin/config/cu-boulder/services/includes/{ucb_external_service_include}'
+  path: '/admin/config/cu-boulder/services/{ucb_external_service_include}'
   defaults:
     _entity_form: ucb_external_service_include.edit
-    _title: Edit a third-party service include
+    _title: Edit a third-party service
   requirements:
     _permission: administer ucb site
 
 entity.ucb_external_service_include.delete_form:
-  path: '/admin/config/cu-boulder/services/includes/{ucb_external_service_include}/delete'
+  path: '/admin/config/cu-boulder/services/{ucb_external_service_include}/delete'
   defaults:
     _entity_form: ucb_external_service_include.delete
-    _title: Delete a third-party service include
+    _title: Delete a third-party service
   requirements:
     _permission: administer ucb site

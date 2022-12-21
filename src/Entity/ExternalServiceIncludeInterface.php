@@ -12,26 +12,32 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface ExternalServiceIncludeInterface extends ConfigEntityInterface {
 
 	/**
-	 * {@inheritdoc}
-	 * 
      * @return string
-	 *   The internal id of this ExternalServiceInclude.
+	 *   The machine name of this include.
 	 */
 	public function id();
 
 	/**
-	 * {@inheritdoc}
-	 * 
 	 * @return string
-	 *   The label of this ExternalServiceInclude.
+	 *   The label of this include.
 	 */
 	public function label();
 
 	/**
-	 * Gets the name of the service of this ExternalServiceInclude.
-	 *
 	 * @return string
-	 *   The name of the service of this ExternalServiceInclude.
+	 *   The name of the service this include is intended to provide.
 	 */
-	public function serviceName();
+	public function getServiceName();
+
+	/**
+	 * @return boolean
+	 *   TRUE if this include applies to the entire site rather than specific nodes, FALSE if not.
+	 */
+	public function isSitewide();
+
+	/**
+	 * @return \Drupal\node\NodeInterface[]
+	 *   The nodes that this include applies to.
+	 */
+	public function getNodes();
 }

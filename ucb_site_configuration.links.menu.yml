@@ -19,9 +19,9 @@ ucb_site_configuration.contact_info_form:
   parent: ucb_site_configuration
   weight: 1
 
-ucb_site_configuration.external_service_settings_form:
+ucb_site_configuration.external_services:
   title: Third-party services
   description: 'Configure third-party services to be used on the site.'
-  route_name: ucb_site_configuration.external_service_settings_form
+  route_name: entity.ucb_external_service_include.collection
   parent: ucb_site_configuration
-  weight: 1
+  weight: 2

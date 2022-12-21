@@ -69,14 +69,16 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
 		$form = parent::form($form, $form_state);
-		$allowedExternalServiceOptions = $this->service->getContentExternalServicesOptions();
-		$siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('ucb_site_configuration.external_service_settings_form');
+		$allowedExternalServiceOptions = $this->service->getExternalServicesOptions();
+		$exists = $this->exists($entity->id());
 		$form['service_name'] = [
 			'#type'  => 'radios',
-			'#title' => t('Service'),
-			'#description' => t('Configure third-party services to appear here in <a href="@settings_form_uri">@settings_form_title</a>. To add a Slate form to a page, use the Layout tab after creating a basic page.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
+			'#title' => $this->t('Service'),
+			'#description' => $exists ? $this->t('To use a different service than the one selected, add it through the add page.') : '',
 			'#options' => $allowedExternalServiceOptions,
-			'#default_value' => $entity->serviceName()
+			'#default_value' => $entity->getServiceName(),
+			'#disabled' => $exists,
+			'#required' => TRUE
 		];
 		$form['label'] = [
 			'#type' => 'textfield',
@@ -89,9 +91,30 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 			'#type' => 'machine_name',
 			'#default_value' => $entity->id(),
 			'#machine_name' => [
-			  'exists' => [$this, 'exist'],
+			  'exists' => [$this, 'exists'],
 			],
 			'#disabled' => !$entity->isNew()
+		];
+		$form['sitewide'] = [
+			'#type'  => 'radios',
+			'#title' => t('Include this service on'),
+			'#options' => [
+				$this->t('Specific content'),
+				$this->t('All pages of this site')
+			],
+			'#default_value' => $entity->isSitewide() ? 1 : 0,
+			'#required' => TRUE
+		];
+		$form['node_entity_autocomplete'] = [
+			'#type' => 'entity_autocomplete',
+    		'#target_type' => 'node',
+			'#title' => $this->t('Content'),
+			'#description' => $this->t('Specify content to include this service on. Multiple entries may be seperated by commas.'),
+			'#default_value' => $entity->getNodes(),
+			'#tags' => TRUE,
+			'#states' => [
+				'visible' => [':input[name="sitewide"]' => ['value' => 0]]
+			]
 		];
 		return $form;
 	}
@@ -102,6 +125,8 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	public function save(array $form, FormStateInterface $form_state) {
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
+		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete')));
+		\Drupal::logger('ucb_site_configuration')->notice(json_encode($entity->get('nodes')));
 		$status = $entity->save();
 
 		if ($status === SAVED_NEW) {
@@ -118,7 +143,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	 * 
 	 * @see https://www.drupal.org/node/1809494
 	 */
-	public function exist($id) {
+	public function exists($id) {
 		$entity = $this->entityTypeManager->getStorage('ucb_external_service_include')->getQuery()
 			->condition('id', $id)
 			->execute();

@@ -35,7 +35,7 @@ function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface 
 	$nodeServicesFieldItems = $nodeServicesField->getValue();
 	$nodeServicesFieldAllowedOptions = $service->getContentExternalServicesOptions();
 	/** @var \Symfony\Component\Routing\Route */
-    $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('ucb_site_configuration.external_service_settings_form');
+    $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('entity.ucb_external_service_include.add_form');
 	$form['ucb_external_services'] = [
 		'#type' => 'details',
    		'#title' => t('Third-party services'),

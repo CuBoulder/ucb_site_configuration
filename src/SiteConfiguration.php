@@ -232,6 +232,14 @@ class SiteConfiguration {
 		}
 	}
 
+	public function getExternalServicesOptions() {
+		$externalServicesConfiguration = $this->configFactory->get('ucb_site_configuration.configuration')->get('external_services');
+		$options = [];
+		foreach ($externalServicesConfiguration as $externalServiceName => $externalServiceConfiguration)
+			$options[$externalServiceName] = $externalServiceConfiguration['label'];
+		return $options;
+	}
+
 	/**
 	 * @return array
 	 *   The external services options available on content nodes.

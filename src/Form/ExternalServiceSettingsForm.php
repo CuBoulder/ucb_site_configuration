@@ -129,8 +129,8 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 					'#title' => t('License ID'),
 					'#default_value' => $externalServiceSettings['_license_id'],
 					'#states' => [
-						'optional' => [
-							':input[name="service_' . $externalServiceName . '_enabled"]' => ['value' => '0']
+						'required' => [
+							':input[name="service_' . $externalServiceName . '_enabled"]' => ['value' => 'all']
 						]
 					]
 				];
@@ -149,8 +149,8 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 					'#title' => t('License ID'),
 					'#default_value' => $externalServiceSettings['_license_id'],
 					'#states' => [
-						'optional' => [
-							':input[name="service_' . $externalServiceName . '_enabled"]' => ['value' => '0']
+						'required' => [
+							':input[name="service_' . $externalServiceName . '_enabled"]' => ['value' => 'all']
 						]
 					]
 				];

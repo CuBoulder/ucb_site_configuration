@@ -4,10 +4,19 @@ ucb_site_configuration.external_service_includes.*:
   mapping:
     id:
       type: string
-      label: 'ID'
+      label: 'Identifier'
     label:
       type: label
       label: 'Label'
     service_name:
       type: string
       label: 'Service name'
+    sidewide:
+      type: boolean
+      label: 'Sitewide'
+    nodes:
+      type: sequence
+      label: 'Content pages'
+      sequence:
+        type: integer
+        label: 'Content page identifier'

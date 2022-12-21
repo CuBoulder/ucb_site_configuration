@@ -8,13 +8,14 @@
 namespace Drupal\ucb_site_configuration\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\node\Entity\Node;
 
 /**
  * Defines the ExternalServiceInclude entity.
  * 
  * @ConfigEntityType(
  *  id = "ucb_external_service_include",
- *  label = @Translation("Third-party service include"),
+ *  label = @Translation("Third-party service"),
  *  handlers = {
  *   "view_builder" = "\Drupal\Core\Config\Entity\ConfigEntityViewBuilder",
  *   "list_builder" = "\Drupal\Core\Config\Entity\ConfigEntityListBuilder",
@@ -30,47 +31,79 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *  entity_keys = {
  *   "id" = "id",
  *   "label" = "label",
- *   "service_name" = "service_name"
+ *   "service_name" = "service_name",
+ *   "sitewide" = "sitewide",
+ *   "nodes" = "nodes"
  *  },
  *  config_export = {
  *   "id",
  *   "label",
- *   "service_name"
+ *   "service_name",
+ *   "sitewide"
  *  },
  *  links = {
- *   "collection" = "/admin/config/cu-boulder/services/includes",
- *   "edit-form" = "/admin/config/cu-boulder/services/includes/{ucb_external_service_include}",
- *   "delete-form" = "/admin/config/cu-boulder/services/includes/{ucb_external_service_include}/delete"
+ *   "collection" = "/admin/config/cu-boulder/services",
+ *   "edit-form" = "/admin/config/cu-boulder/services/{ucb_external_service_include}",
+ *   "delete-form" = "/admin/config/cu-boulder/services/{ucb_external_service_include}/delete"
  *  }
  * )
  */
 class ExternalServiceInclude extends ConfigEntityBase implements ExternalServiceIncludeInterface {
 
 	/**
-	 * The internal id of this ExternalServiceInclude.
+	 * The machine name of this include.
 	 *
 	 * @var string
 	 */
-	protected $id;
+	protected $id = '';
 
 	/**
-	 * The label of this ExternalServiceInclude.
+	 * The label of this include.
 	 *
 	 * @var string
 	 */
-	protected $label;
+	protected $label = '';
 
 	/**
-	 * The name of the service of this ExternalServiceInclude.
+	 * The name of the service of this include.
 	 *
 	 * @var string
 	 */
-	protected $service_name;
+	protected $service_name = '';
+
+	/**
+	 * True if this include applies to the entire site rather than specific nodes.
+	 *
+	 * @var boolean
+	 */
+	protected $sitewide = FALSE;
+
+	/**
+	 * The ids for nodes that this include applies to.
+	 *
+	 * @var int[]
+	 */
+	protected $nodes = [];
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public function serviceName() {
+	public function getServiceName() {
 		return $this->service_name;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isSitewide() {
+		return $this->sitewide;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getNodes() {
+		// \Drupal::logger('ucb_site_configuration')->notice(sizeof($this->nodes));
+		return Node::loadMultiple($this->nodes);
 	}
 }
