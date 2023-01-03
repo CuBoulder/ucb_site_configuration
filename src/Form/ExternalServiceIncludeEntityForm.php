@@ -125,7 +125,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	public function save(array $form, FormStateInterface $form_state) {
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
-		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete')));
+		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete') ?? []));
 		\Drupal::logger('ucb_site_configuration')->notice(json_encode($entity->get('nodes')));
 		$status = $entity->save();
 

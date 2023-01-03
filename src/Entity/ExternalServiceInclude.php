@@ -17,8 +17,8 @@ use Drupal\node\Entity\Node;
  *  id = "ucb_external_service_include",
  *  label = @Translation("Third-party service"),
  *  handlers = {
- *   "view_builder" = "\Drupal\Core\Config\Entity\ConfigEntityViewBuilder",
- *   "list_builder" = "\Drupal\Core\Config\Entity\ConfigEntityListBuilder",
+ *   "view_builder" = "Drupal\Core\Config\Entity\ConfigEntityViewBuilder",
+ *   "list_builder" = "Drupal\ucb_site_configuration\Controller\ExternalServiceIncludeListBuilder",
  *   "form" = {
  *    "add" = "Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityForm",
  *    "edit" = "Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityForm",
@@ -39,7 +39,8 @@ use Drupal\node\Entity\Node;
  *   "id",
  *   "label",
  *   "service_name",
- *   "sitewide"
+ *   "sitewide",
+ *   "nodes"
  *  },
  *  links = {
  *   "collection" = "/admin/config/cu-boulder/services",
@@ -103,7 +104,7 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	 * {@inheritdoc}
 	 */
 	public function getNodes() {
-		// \Drupal::logger('ucb_site_configuration')->notice(sizeof($this->nodes));
+		\Drupal::logger('ucb_site_configuration')->notice(sizeof($this->nodes));
 		return Node::loadMultiple($this->nodes);
 	}
 }

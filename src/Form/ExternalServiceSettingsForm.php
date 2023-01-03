@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class ExternalServiceSettingsForm extends ConfigFormBase {
 
 	/**
-	 * The user site configuration service defined in this module.
+	 * The site configuration service defined in this module.
 	 *
 	 * @var \Drupal\ucb_site_configuration\SiteConfiguration
 	 */
@@ -27,8 +27,8 @@ class ExternalServiceSettingsForm extends ConfigFormBase {
 	 *
 	 * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
 	 *   The config factory.
-	 * @param \Drupal\ucb_site_configuration\UserInviteHelperService $helper
-	 *   The user invite helper service defined in this module.
+	 * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
+	 *   The site configuration service defined in this module.
 	 */
 	public function __construct(ConfigFactoryInterface $config_factory, SiteConfiguration $service) {
 		parent::__construct($config_factory);

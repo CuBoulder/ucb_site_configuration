@@ -254,4 +254,12 @@ class SiteConfiguration {
 		}
 		return $options;
 	}
+
+	public function getConfiguration() {
+		return $this->configFactory->get('ucb_site_configuration.configuration');
+	}
+
+	public function getSettings() {
+		return $this->configFactory->get('ucb_site_configuration.settings');
+	}
 }
