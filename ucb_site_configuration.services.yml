@@ -5,3 +5,4 @@ services:
       - '@current_user'
       - '@module_handler'
       - '@config.factory'
+      - '@string_translation'

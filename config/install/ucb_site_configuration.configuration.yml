@@ -19,18 +19,21 @@ external_services:
   mainstay: 
     label: Mainstay
     content_label: Mainstay
+    settings: ['license_id', 'college_id']
     availability:
       content: true
       sitewide: true
   livechat: 
     label: LiveChat
     content_label: LiveChat
+    settings: ['license_id']
     availability:
       content: true
       sitewide: true
   statuspage:
     label: StatusPage
     content_label: StatusPage
+    settings: ['page_id']
     availability:
       content: true
       sitewide: true

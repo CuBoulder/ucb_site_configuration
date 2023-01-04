@@ -32,6 +32,7 @@ use Drupal\node\Entity\Node;
  *   "id" = "id",
  *   "label" = "label",
  *   "service_name" = "service_name",
+ *   "service_settings" = "service_settings",
  *   "sitewide" = "sitewide",
  *   "nodes" = "nodes"
  *  },
@@ -39,6 +40,7 @@ use Drupal\node\Entity\Node;
  *   "id",
  *   "label",
  *   "service_name",
+ *   "service_settings",
  *   "sitewide",
  *   "nodes"
  *  },
@@ -73,6 +75,13 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	protected $service_name = '';
 
 	/**
+	 * The settings of the service of this include.
+	 *
+	 * @var array
+	 */
+	protected $service_settings = [];
+
+	/**
 	 * True if this include applies to the entire site rather than specific nodes.
 	 *
 	 * @var boolean
@@ -96,6 +105,13 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	/**
 	 * {@inheritdoc}
 	 */
+	public function getServiceSettings() {
+		return $this->service_settings;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function isSitewide() {
 		return $this->sitewide;
 	}
@@ -104,7 +120,6 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	 * {@inheritdoc}
 	 */
 	public function getNodes() {
-		\Drupal::logger('ucb_site_configuration')->notice(sizeof($this->nodes));
 		return Node::loadMultiple($this->nodes);
 	}
 }

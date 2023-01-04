@@ -11,6 +11,12 @@ ucb_site_configuration.external_service_includes.*:
     service_name:
       type: string
       label: 'Service name'
+    service_settings:
+      type: sequence
+      label: 'Service settings'
+      sequence:
+        type: string
+        label: 'Service setting mapping'
     sidewide:
       type: boolean
       label: 'Sitewide'

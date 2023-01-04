@@ -29,6 +29,13 @@ interface ExternalServiceIncludeInterface extends ConfigEntityInterface {
 	 */
 	public function getServiceName();
 
+
+	/**
+	 * @return array
+	 *   The settings of the service of this include.
+	 */
+	public function getServiceSettings();
+
 	/**
 	 * @return boolean
 	 *   TRUE if this include applies to the entire site rather than specific nodes, FALSE if not.

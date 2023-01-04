@@ -68,7 +68,6 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	public function form(array $form, FormStateInterface $form_state) {
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
-		$form = parent::form($form, $form_state);
 		$allowedExternalServiceOptions = $this->service->getExternalServicesOptions();
 		$exists = $this->exists($entity->id());
 		$form['service_name'] = [
@@ -107,7 +106,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 		];
 		$form['node_entity_autocomplete'] = [
 			'#type' => 'entity_autocomplete',
-    		'#target_type' => 'node',
+			'#target_type' => 'node',
 			'#title' => $this->t('Content'),
 			'#description' => $this->t('Specify content to include this service on. Multiple entries may be seperated by commas.'),
 			'#default_value' => $entity->getNodes(),
@@ -116,7 +115,22 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 				'visible' => [':input[name="sitewide"]' => ['value' => 0]]
 			]
 		];
-		return $form;
+		$externalServicesConfig = $this->service->getConfiguration()->get('external_services');
+		foreach ($allowedExternalServiceOptions as $externalServiceName => $externalServiceLabel) {
+			$serviceSettingsForm = [
+				'#type' => 'details',
+				'#title' => $this->t('%service configuration', ['%service' => $externalServiceLabel]),
+				'#open' => TRUE,
+				'#states' => [
+					'visible' => [
+						':input[name="service_name"]' => ['value' => $externalServiceName]
+					]
+				]
+			];
+			$this->buildExternalServiceSiteSettingsForm($serviceSettingsForm, $externalServiceName, $externalServicesConfig[$externalServiceName], $entity->getServiceSettings(), $form_state);
+			$form['service_' . $externalServiceName . '_settings'] = $serviceSettingsForm;
+		}
+		return $form + parent::form($form, $form_state);
 	}
 
 	/**
@@ -125,16 +139,22 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	public function save(array $form, FormStateInterface $form_state) {
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;
-		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete') ?? []));
-		\Drupal::logger('ucb_site_configuration')->notice(json_encode($entity->get('nodes')));
+		// Set `service_settings` for the selected service
+		$externalServiceName = $entity->getServiceName();
+		$externalServiceConfig = $this->service->getConfiguration()->get('external_services')[$externalServiceName];
+		$externalServiceSettings = [];
+		foreach ($externalServiceConfig['settings'] as $settingName)
+			$externalServiceSettings[$settingName] = $form_state->getValue($externalServiceName . '__' . $settingName) ?? '';
+		$entity->set('service_settings', $externalServiceSettings);
+		// Set `nodes` from the special content field
+		$entity->set('nodes', $entity->isSitewide() ? [] : array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete') ?? []));
+		// Save the entity
 		$status = $entity->save();
-
 		if ($status === SAVED_NEW) {
 			$this->messenger()->addMessage($this->t('The %label third-party service created.', ['%label' => $entity->label()]));
 		} else {
 			$this->messenger()->addMessage($this->t('The %label third-party service updated.', ['%label' => $entity->label()]));
 		}
-
 		$form_state->setRedirect('entity.ucb_external_service_include.collection');
 	}
 
@@ -148,5 +168,74 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 			->condition('id', $id)
 			->execute();
 		return (bool) $entity;
+	}
+
+	/**
+	 * Builds the inner settings form for an external service on the "Third-party services" administration page.
+	 * 
+	 * @param array &$form
+	 *   The form build array.
+	 * @param string $externalServiceName
+	 *   The machine name of the external srvice.
+	 * @param array $externalServiceConfig
+	 *   The fixed configuration of the external service.
+	 * @param array $externalServiceSettings
+	 *   The editable settings of the external service.
+	 * @param FormStateInterface $form_state
+	 *   The current state of the form.
+	 */
+	private function buildExternalServiceSiteSettingsForm(array &$form, $externalServiceName, $externalServiceConfig, $externalServiceSettings, FormStateInterface $form_state) {
+		switch ($externalServiceName) {
+			case 'mainstay':
+				$form[$externalServiceName . '__license_id'] = [
+					'#type' => 'textfield',
+					'#size' => 20,
+					'#maxlength' => 20,
+					'#title' => $this->t('License ID'),
+					'#default_value' => $externalServiceSettings['license_id'],
+					'#states' => [
+						'required' => [
+							':input[name="service_name"]' => ['value' => $externalServiceName]
+						]
+					]
+				];
+				$form[$externalServiceName . '__college_id'] = [
+					'#type' => 'textfield',
+					'#size' => 60,
+					'#maxlength' => 60,
+					'#title' => $this->t('College ID'),
+					'#default_value' => $externalServiceSettings['college_id']
+				];
+			break;
+			case 'livechat':
+				$form[$externalServiceName . '__license_id'] = [
+					'#type' => 'textfield',
+					'#size' => 20,
+					'#maxlength' => 20,
+					'#title' => $this->t('License ID'),
+					'#default_value' => $externalServiceSettings['license_id'],
+					'#states' => [
+						'required' => [
+							':input[name="service_name"]' => ['value' => $externalServiceName]
+						]
+					]
+				];
+			break;
+			case 'statuspage':
+				$form[$externalServiceName . '__page_id'] = [ // TODO: validate page id as a letter/number string, exactly 12 characters
+					'#type' => 'textfield',
+					'#size' => 12,
+					'#maxlength' => 12,
+					'#title' => $this->t('Page ID'),
+					'#default_value' => $externalServiceSettings['page_id'],
+					'#states' => [
+						'required' => [
+							':input[name="service_name"]' => ['value' => $externalServiceName]
+						]
+					]
+				];
+			break;
+			default:
+		}
 	}
 }
