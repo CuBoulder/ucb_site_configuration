@@ -6,6 +6,15 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
+ * Enables external service includes to be referenced from the page template.
+ */
+function ucb_site_configuration_preprocess_page(array &$variables) {
+	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+	$service = \Drupal::service('ucb_site_configuration');
+	$service->attachExternalServiceIncludes($variables);
+}
+
+/**
  * Adds third-party service configuration fields to nodes.
  * Implements hook_entity_base_field_info().
  */

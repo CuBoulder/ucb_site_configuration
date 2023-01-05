@@ -8,12 +8,15 @@
 namespace Drupal\ucb_site_configuration;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\node\NodeInterface;
+use Drupal\ucb_site_configuration\Entity\ExternalServiceInclude;
 
 class SiteConfiguration {
 	use StringTranslationTrait;
@@ -40,6 +43,20 @@ class SiteConfiguration {
 	protected $configFactory;
 
 	/**
+	 * The entity type manager.
+	 *
+	 * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+	 */
+	protected $entityTypeManager;
+
+	/**
+	 * The entity type repository.
+	 *
+	 * @var \Drupal\Core\Entity\EntityTypeRepositoryInterface
+	 */
+	protected $entityTypeRepository;
+
+	/**
 	 * Constructs a UserInviteHelperService.
 	 *
 	 * @param \Drupal\Core\Session\AccountInterface $user
@@ -48,19 +65,27 @@ class SiteConfiguration {
 	 *   The module handler.
 	 * @param \Drupal\Core\Extension\ConfigFactoryInterface $config_factory
 	 *   The config factory.
-	 * @param \Drupal\Core\Extension\TranslationManager $stringTranslation
+	 * @param \Drupal\Core\Extension\TranslationManager $string_translation
 	 *   The translation manager.
+	 * @param \Drupal\Core\Entity\EntityTypeManagerInterface
+	 *   The entity type manager.
+	 * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface
+	 *   The entity type repository.
 	 */
 	public function __construct(
 		AccountInterface $user,
 		ModuleHandlerInterface $module_handler,
 		ConfigFactoryInterface $config_factory,
-		TranslationManager $stringTranslation
+		TranslationManager $string_translation,
+		EntityTypeManagerInterface $entity_type_manager,
+		EntityTypeRepositoryInterface $entity_type_repository
 	) {
 		$this->user = $user;
 		$this->moduleHandler = $module_handler;
 		$this->configFactory = $config_factory;
-		$this->stringTranslation = $stringTranslation;
+		$this->stringTranslation = $string_translation;
+		$this->entityTypeManager = $entity_type_manager;
+		$this->entityTypeRepository = $entity_type_repository;
 	}
 
 	/**
@@ -239,8 +264,12 @@ class SiteConfiguration {
 		}
 	}
 
+	/**
+	 * @return array
+	 *   The external services options available when creating an external service include.
+	 */
 	public function getExternalServicesOptions() {
-		$externalServicesConfiguration = $this->getConfiguration()->get('external_services');
+		$externalServicesConfiguration = $this->getConfiguration()->get('external_services') ?? [];
 		$options = [];
 		foreach ($externalServicesConfiguration as $externalServiceName => $externalServiceConfiguration)
 			$options[$externalServiceName] = $externalServiceConfiguration['label'];
@@ -260,6 +289,32 @@ class SiteConfiguration {
 				$options[$externalServiceName] = $externalServicesConfiguration[$externalServiceName]['content_label'];
 		}
 		return $options;
+	}
+
+	/**
+	 * This helper funtion attches external service includes if called from hook_preprocess in the .module file.
+	 * Variables can be referenced from the template using `service_servicename_includes`.
+	 * 
+	 * @param array &$variables
+	 *   The array to add the external service includes to.
+	 */
+	public function attachExternalServiceIncludes(array &$variables) {
+		$storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
+		$query = $storage->getQuery();
+		$results = $query->condition('sitewide', TRUE)->execute();
+		$externalServiceIncludes = [];
+		foreach (ExternalServiceInclude::loadMultiple($results) as $externalServiceInclude) {
+			$externalServiceName = $externalServiceInclude->getServiceName();
+			$externalServiceIncludes[$externalServiceName][] = [
+				'id' => $externalServiceInclude->id(),
+				'label' => $externalServiceInclude->label(),
+				'service_name' => $externalServiceName,
+				'service_settings' => $externalServiceInclude->getServiceSettings(),
+				'sitewide' => $externalServiceInclude->isSitewide()
+			];
+		}
+		foreach ($externalServiceIncludes as $externalServiceName => $externalServiceIncludeArray)
+			$variables['service_' . $externalServiceName . '_includes'] = $externalServiceIncludeArray;	
 	}
 
 	/**
