@@ -297,11 +297,15 @@ class SiteConfiguration {
 	 * 
 	 * @param array &$variables
 	 *   The array to add the external service includes to.
+	 * @param \Drupal\node\NodeInterface|null $node
+	 *   The node this is being called from (if applicable). If null, only sitewide includes will be attached.
 	 */
-	public function attachExternalServiceIncludes(array &$variables) {
+	public function attachExternalServiceIncludes(array &$variables, NodeInterface $node = NULL) {
 		$storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
-		$query = $storage->getQuery();
-		$results = $query->condition('sitewide', TRUE)->execute();
+		$query = $storage->getQuery('OR')->condition('sitewide', TRUE);
+		if ($node)
+			$query = $query->condition('nodes.*', $node->id());
+		$results = $query->execute();
 		$externalServiceIncludes = [];
 		foreach (ExternalServiceInclude::loadMultiple($results) as $externalServiceInclude) {
 			$externalServiceName = $externalServiceInclude->getServiceName();

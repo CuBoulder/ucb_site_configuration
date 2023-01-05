@@ -83,15 +83,13 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 
 	/**
 	 * True if this include applies to the entire site rather than specific nodes.
-	 *
-	 * @var boolean
 	 */
-	protected $sitewide = FALSE;
+	protected $sitewide;
 
 	/**
 	 * The ids for nodes that this include applies to.
 	 *
-	 * @var int[]
+	 * @var array
 	 */
 	protected $nodes = [];
 
@@ -113,7 +111,7 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	 * {@inheritdoc}
 	 */
 	public function isSitewide() {
-		return $this->sitewide;
+		return (bool) $this->sitewide;
 	}
 
 	/**
