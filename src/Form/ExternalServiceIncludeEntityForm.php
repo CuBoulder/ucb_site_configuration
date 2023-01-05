@@ -136,6 +136,34 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function validateForm(array &$form, FormStateInterface $form_state) {
+		$externalServiceName = $form_state->getValue('service_name');
+		switch ($externalServiceName) {
+			case 'mainstay':
+				$licenseIdFieldName = $externalServiceName . '__license_id';
+				$licenseId = $form_state->getValue($licenseIdFieldName);
+				if(!preg_match('/^[a-z0-9]+$/', $form_state->getValue($licenseId)))
+					$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only lowercase letters and numbers.'));
+			break;
+			case 'livechat':
+				$licenseIdFieldName = $externalServiceName . '__license_id';
+				$licenseId = $form_state->getValue($licenseIdFieldName);
+				if(!preg_match('/^[0-9]+$/', $form_state->getValue($licenseId)))
+					$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only numbers.'));
+			break;
+			case 'statuspage':
+				$pageIdFieldName = $externalServiceName . '__page_id';
+				$pageId = $form_state->getValue($pageIdFieldName);
+				if(strlen($pageId) != 12 || !preg_match('/^[a-z0-9]+$/', $form_state->getValue($pageIdFieldName))) // preg_match validation on page id is important and stops potential script injection
+					$form_state->setErrorByName($pageIdFieldName, $this->t('A valid Page ID is 12 characters long and a mix of lowercase letters and numbers.'));
+			break;
+			default:
+		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function save(array $form, FormStateInterface $form_state) {
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface */
 		$entity = $this->entity;

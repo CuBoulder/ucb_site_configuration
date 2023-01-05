@@ -27,7 +27,7 @@ use Drupal\node\Entity\Node;
  *  },
  *  config_prefix = "external_service_includes",
  *  base_table = "ucb_external_service_includes",
- *  admin_permission = "administer ucb site",
+ *  admin_permission = "administer ucb external services",
  *  entity_keys = {
  *   "id" = "id",
  *   "label" = "label",

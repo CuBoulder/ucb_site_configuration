@@ -5,7 +5,7 @@ ucb_site_configuration:
     _title: 'CU Boulder site settings'
     _description: 'Change CU Boulder site-specific settings.'
   requirements:
-    _permission: administer ucb site
+    _permission: access administration pages
   options:
     _admin_route: true
 
@@ -15,7 +15,7 @@ ucb_site_configuration.appearance_form:
     _form: '\Drupal\ucb_site_configuration\Form\SettingsForm'
     _title: Appearance
   requirements:
-    _permission: administer ucb site
+    _permission: edit ucb site appearance
   options:
     _admin_route: true
 
@@ -25,7 +25,7 @@ ucb_site_configuration.contact_info_form:
     _form: '\Drupal\ucb_site_configuration\Form\ContactInfoForm'
     _title: Contact info
   requirements:
-    _permission: administer ucb site
+    _permission: edit ucb site contact info
   options:
     _admin_route: true
 
@@ -35,7 +35,7 @@ entity.ucb_external_service_include.collection:
     _entity_list: ucb_external_service_include
     _title: Third-party services
   requirements:
-    _permission: administer ucb site
+    _permission: administer ucb external services
 
 entity.ucb_external_service_include.add_form:
   path: '/admin/config/cu-boulder/services/add'
@@ -43,7 +43,7 @@ entity.ucb_external_service_include.add_form:
     _entity_form: ucb_external_service_include.add
     _title: Add a third-party service
   requirements:
-    _permission: administer ucb site
+    _permission: administer ucb external services
 
 entity.ucb_external_service_include.edit_form:
   path: '/admin/config/cu-boulder/services/{ucb_external_service_include}'
@@ -51,7 +51,7 @@ entity.ucb_external_service_include.edit_form:
     _entity_form: ucb_external_service_include.edit
     _title: Edit a third-party service
   requirements:
-    _permission: administer ucb site
+    _permission: administer ucb external services
 
 entity.ucb_external_service_include.delete_form:
   path: '/admin/config/cu-boulder/services/{ucb_external_service_include}/delete'
@@ -59,4 +59,4 @@ entity.ucb_external_service_include.delete_form:
     _entity_form: ucb_external_service_include.delete
     _title: Delete a third-party service
   requirements:
-    _permission: administer ucb site
+    _permission: administer ucb external services

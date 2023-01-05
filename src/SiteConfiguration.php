@@ -292,13 +292,13 @@ class SiteConfiguration {
 	}
 
 	/**
-	 * This helper funtion attches external service includes if called from hook_preprocess in the .module file.
+	 * This helper funtion attaches external service includes if called from hook_preprocess in the .module file.
 	 * Variables can be referenced from the template using `service_servicename_includes`.
 	 * 
 	 * @param array &$variables
 	 *   The array to add the external service includes to.
 	 * @param \Drupal\node\NodeInterface|null $node
-	 *   The node this is being called from (if applicable). If null, only sitewide includes will be attached.
+	 *   A node to match includes that are for specific content. If null, only sitewide includes will be attached.
 	 */
 	public function attachExternalServiceIncludes(array &$variables, NodeInterface $node = NULL) {
 		$storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
@@ -306,10 +306,12 @@ class SiteConfiguration {
 		if ($node)
 			$query = $query->condition('nodes.*', $node->id());
 		$results = $query->execute();
-		$externalServiceIncludes = [];
-		foreach (ExternalServiceInclude::loadMultiple($results) as $externalServiceInclude) {
+		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
+		$externalServiceIncludeEntities = $storage->loadMultiple($results);
+		$externalServiceIncludeArrays = [];
+		foreach ($externalServiceIncludeEntities as $externalServiceInclude) {
 			$externalServiceName = $externalServiceInclude->getServiceName();
-			$externalServiceIncludes[$externalServiceName][] = [
+			$externalServiceIncludeArrays[$externalServiceName][] = [
 				'id' => $externalServiceInclude->id(),
 				'label' => $externalServiceInclude->label(),
 				'service_name' => $externalServiceName,
@@ -317,7 +319,7 @@ class SiteConfiguration {
 				'sitewide' => $externalServiceInclude->isSitewide()
 			];
 		}
-		foreach ($externalServiceIncludes as $externalServiceName => $externalServiceIncludeArray)
+		foreach ($externalServiceIncludeArrays as $externalServiceName => $externalServiceIncludeArray)
 			$variables['service_' . $externalServiceName . '_includes'] = $externalServiceIncludeArray;	
 	}
 

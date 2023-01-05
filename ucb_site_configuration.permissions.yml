@@ -1,3 +1,11 @@
-administer ucb site:
-  title: Administer CU Boulder Site
-  description: 'Enables editing of CU Boulder site-specific settings.'
+edit ucb site appearance:
+  title: Edit the site appearance
+  description: 'Enables editing of the CU Boulder site appearance.'
+
+edit ucb site contact info:
+  title: Edit the site contact info
+  description: 'Enables editing of the CU Boulder site contact info.'
+
+administer ucb external services:
+  title: Administer third-party services
+  description: 'Enables adding, editing, and deleting supported third-party services.'
