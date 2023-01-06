@@ -19,7 +19,7 @@ external_services:
   mainstay: 
     label: Mainstay
     content_label: Mainstay
-    settings: ['license_id', 'college_id']
+    settings: ['bot_token', 'college_id']
     availability:
       content: true
       sitewide: true

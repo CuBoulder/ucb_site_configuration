@@ -18,7 +18,7 @@ function ucb_site_configuration_preprocess_page(array &$variables) {
  * Adds third-party service configuration options to node form sidebars.
  * Implements hook_form_BASE_FORM_ID_alter().
  */
-function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface $form_state) {
+function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInterface $form_state) {
 	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
 	$service = \Drupal::service('ucb_site_configuration');
 	/** @var \Drupal\node\NodeInterface $node */
@@ -42,7 +42,7 @@ function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface 
 		'ucb_external_services_enabled' => [
 			'#type'  => 'checkboxes',
 			'#title' => t('Third-party services'),
-			'#description' => t('A user with permission can configure third-party services to display here in <a href="@settings_form_uri">@settings_form_title</a>. Third-party services aren\'t included in previews.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
+			'#description' => t('A user with permission can <a href="@settings_form_uri">configure third-party services</a> to display here. Third-party services aren\'t included in previews.', ['@settings_form_uri' => $siteSettingsRoute->getPath()]),
 			'#options' => $contentServicesFieldAllowedOptions,
 			'#default_value' => $contentServicesFieldDefaultOptions
 		]
@@ -58,7 +58,7 @@ function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface 
 /**
  * Saves the third-party services settings when a node is saved.
  */
-function ucb_site_configuration_form_node_form_submit(&$form, FormStateInterface $form_state) {
+function ucb_site_configuration_form_node_form_submit(array &$form, FormStateInterface $form_state) {
 	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
 	$service = \Drupal::service('ucb_site_configuration');
 	/** @var \Drupal\node\NodeInterface */

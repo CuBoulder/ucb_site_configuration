@@ -152,22 +152,22 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 		$externalServiceName = $form_state->getValue('service_name');
 		switch ($externalServiceName) {
 			case 'mainstay':
-				$licenseIdFieldName = $externalServiceName . '__license_id';
+				$licenseIdFieldName = $externalServiceName . '__bot_token';
 				$licenseId = $form_state->getValue($licenseIdFieldName);
-				//if(!preg_match('/^[a-z0-9]+$/', $form_state->getValue($licenseId)))
-				//	$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only lowercase letters and numbers.'));
+				if(!preg_match('/^[a-z0-9]+$/', $licenseId))
+					$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid bot token is a mix of lowercase letters and numbers.'));
 			break;
 			case 'livechat':
 				$licenseIdFieldName = $externalServiceName . '__license_id';
 				$licenseId = $form_state->getValue($licenseIdFieldName);
-				//if(!preg_match('/^[0-9]+$/', $form_state->getValue($licenseId)))
-				//	$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only numbers.'));
+				if(!preg_match('/^[0-9]+$/', $licenseId))
+					$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid license ID contains only numbers.'));
 			break;
 			case 'statuspage':
 				$pageIdFieldName = $externalServiceName . '__page_id';
 				$pageId = $form_state->getValue($pageIdFieldName);
-				if(strlen($pageId) != 12 || !preg_match('/^[a-z0-9]+$/', $form_state->getValue($pageIdFieldName))) // preg_match validation on page id is important and stops potential script injection
-					$form_state->setErrorByName($pageIdFieldName, $this->t('A valid Page ID is 12 characters long and a mix of lowercase letters and numbers.'));
+				if(strlen($pageId) != 12 || !preg_match('/^[a-z0-9]+$/', $pageId)) // preg_match validation on page id is important and stops potential script injection
+					$form_state->setErrorByName($pageIdFieldName, $this->t('A valid page ID is 12 characters long and a mix of lowercase letters and numbers.'));
 			break;
 			default:
 		}
@@ -227,12 +227,12 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	private function buildExternalServiceSiteSettingsForm(array &$form, $externalServiceName, $externalServiceConfig, $externalServiceSettings, FormStateInterface $form_state) {
 		switch ($externalServiceName) {
 			case 'mainstay':
-				$form[$externalServiceName . '__license_id'] = [
+				$form[$externalServiceName . '__bot_token'] = [
 					'#type' => 'textfield',
-					'#size' => 20,
-					'#maxlength' => 20,
-					'#title' => $this->t('License ID'),
-					'#default_value' => $externalServiceSettings['license_id'],
+					'#size' => 24,
+					'#maxlength' => 24,
+					'#title' => $this->t('Bot token'),
+					'#default_value' => $externalServiceSettings['bot_token'],
 					'#states' => [
 						'required' => [
 							':input[name="service_name"]' => ['value' => $externalServiceName]
@@ -241,17 +241,22 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 				];
 				$form[$externalServiceName . '__college_id'] = [
 					'#type' => 'textfield',
-					'#size' => 60,
-					'#maxlength' => 60,
+					'#size' => 64,
+					'#maxlength' => 64,
 					'#title' => $this->t('College ID'),
-					'#default_value' => $externalServiceSettings['college_id']
+					'#default_value' => $externalServiceSettings['college_id'],
+					'#states' => [
+						'required' => [
+							':input[name="service_name"]' => ['value' => $externalServiceName]
+						]
+					]
 				];
 			break;
 			case 'livechat':
 				$form[$externalServiceName . '__license_id'] = [
 					'#type' => 'textfield',
-					'#size' => 20,
-					'#maxlength' => 20,
+					'#size' => 12,
+					'#maxlength' => 12,
 					'#title' => $this->t('License ID'),
 					'#default_value' => $externalServiceSettings['license_id'],
 					'#states' => [
