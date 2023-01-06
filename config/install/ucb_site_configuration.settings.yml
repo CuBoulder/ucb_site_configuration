@@ -1,13 +1,1 @@
 # Editable site settings (non-theme) will go here
-
-external_services:
-  mainstay:
-    enabled: '0'
-    _license_id: ''
-    _college_id: ''
-  livechat:
-    enabled: '0'
-    _license_id: ''
-  statuspage:
-    enabled: '0'
-    _page_id: ''

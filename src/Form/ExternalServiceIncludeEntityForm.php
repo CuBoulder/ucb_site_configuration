@@ -73,12 +73,25 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 		$form['service_name'] = [
 			'#type'  => 'radios',
 			'#title' => $this->t('Service'),
-			'#description' => $exists ? $this->t('To use a different service than the one selected, add it through the add page.') : '',
 			'#options' => $allowedExternalServiceOptions,
 			'#default_value' => $entity->getServiceName(),
-			'#disabled' => $exists,
 			'#required' => TRUE
 		];
+		$externalServicesConfig = $this->service->getConfiguration()->get('external_services');
+		foreach ($allowedExternalServiceOptions as $externalServiceName => $externalServiceLabel) {
+			$serviceSettingsForm = [
+				'#type' => 'details',
+				'#title' => $this->t('%service configuration', ['%service' => $externalServiceLabel]),
+				'#open' => !$exists || $externalServiceName != $entity->getServiceName(),
+				'#states' => [
+					'visible' => [
+						':input[name="service_name"]' => ['value' => $externalServiceName]
+					]
+				]
+			];
+			$this->buildExternalServiceSiteSettingsForm($serviceSettingsForm, $externalServiceName, $externalServicesConfig[$externalServiceName], $entity->getServiceSettings(), $form_state);
+			$form['service_' . $externalServiceName . '_settings'] = $serviceSettingsForm;
+		}
 		$form['label'] = [
 			'#type' => 'textfield',
 			'#title' => t('Label'),
@@ -129,21 +142,6 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 				'visible' => [':input[name="sitewide"]' => ['value' => 0]]
 			]
 		];
-		$externalServicesConfig = $this->service->getConfiguration()->get('external_services');
-		foreach ($allowedExternalServiceOptions as $externalServiceName => $externalServiceLabel) {
-			$serviceSettingsForm = [
-				'#type' => 'details',
-				'#title' => $this->t('%service configuration', ['%service' => $externalServiceLabel]),
-				'#open' => TRUE,
-				'#states' => [
-					'visible' => [
-						':input[name="service_name"]' => ['value' => $externalServiceName]
-					]
-				]
-			];
-			$this->buildExternalServiceSiteSettingsForm($serviceSettingsForm, $externalServiceName, $externalServicesConfig[$externalServiceName], $entity->getServiceSettings(), $form_state);
-			$form['service_' . $externalServiceName . '_settings'] = $serviceSettingsForm;
-		}
 		return $form + parent::form($form, $form_state);
 	}
 

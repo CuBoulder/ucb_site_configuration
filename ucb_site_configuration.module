@@ -42,7 +42,7 @@ function ucb_site_configuration_form_node_form_alter(&$form, FormStateInterface 
 		'ucb_external_services_enabled' => [
 			'#type'  => 'checkboxes',
 			'#title' => t('Third-party services'),
-			'#description' => t('A user with permission can configure third-party services to display here in <a href="@settings_form_uri">@settings_form_title</a>.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
+			'#description' => t('A user with permission can configure third-party services to display here in <a href="@settings_form_uri">@settings_form_title</a>. Third-party services aren\'t included in previews.', ['@settings_form_uri' => $siteSettingsRoute->getPath(), '@settings_form_title' => $siteSettingsRoute->getDefault('_title')]),
 			'#options' => $contentServicesFieldAllowedOptions,
 			'#default_value' => $contentServicesFieldDefaultOptions
 		]
@@ -67,18 +67,15 @@ function ucb_site_configuration_form_node_form_submit(&$form, FormStateInterface
 	$contentServicesFieldSelectedIds = $form_state->getValue('ucb_external_services_enabled');
 	foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
 		$includeId = $externalServiceInclude->id();
-		$isDefault = in_array($node->id(), $externalServiceInclude->getNodeIds());
+		$nodeIds = $externalServiceInclude->getNodeIds();
+		$index = array_search($node->id(), $nodeIds);
 		$isSelected = (bool) $contentServicesFieldSelectedIds[$includeId];
-		if ($isSelected && !$isDefault) { // add the node to the include
-			$nodeIds = $externalServiceInclude->getNodeIds();
+		if ($isSelected && $index === false) { // add the node to the include
 			$nodeIds[] = $node->id();
 			$externalServiceInclude->set('nodes', $nodeIds);
 			$externalServiceInclude->save();
-		} else if (!$isSelected && $isDefault) { // remove the node from the include
-			$nodeIds = $externalServiceInclude->getNodeIds();
-			$index = array_search($node->id(), $nodeIds);
-			if($index !== FALSE)
-				unset($nodeIds[$index]);
+		} else if (!$isSelected && $index !== false) { // remove the node from the include
+			unset($nodeIds[$index]);
 			$externalServiceInclude->set('nodes', $nodeIds);
 			$externalServiceInclude->save();
 		}
