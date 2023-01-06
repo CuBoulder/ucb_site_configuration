@@ -99,18 +99,32 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 			'#title' => t('Include this service on'),
 			'#options' => [
 				$this->t('Specific content'),
-				$this->t('All pages of this site')
+				$this->t('All content on this site')
 			],
 			'#default_value' => $entity->isSitewide() ? 1 : 0,
 			'#required' => TRUE
 		];
-		$form['node_entity_autocomplete'] = [
-			'#type' => 'entity_autocomplete',
-			'#target_type' => 'node',
-			'#title' => $this->t('Content'),
-			'#description' => $this->t('Specify content to include this service on. Multiple entries may be seperated by commas.'),
-			'#default_value' => $entity->getNodes(),
-			'#tags' => TRUE,
+		$form['content_options_container'] = [
+			'#type' => 'container',
+			'node_entity_autocomplete' => [
+				'#type' => 'entity_autocomplete',
+				'#target_type' => 'node',
+				'#title' => $this->t('Content'),
+				'#description' => $this->t('Specify content to include this service on. Multiple entries may be seperated by commas.'),
+				'#default_value' => $entity->getNodes(),
+				'#tags' => TRUE,
+			],
+			'content_editing_enabled' => [
+				'#type' => 'checkbox',
+				'#target_type' => 'node',
+				'#title' => $this->t('Allow content authors to add or remove this service for content they can edit'),
+				'#description' => $this->t('If enabled, all users will be able to add or remove this service for content they can edit, including when creating new content. A user with permission to administer third-party services will always be able to add or remove this service, regardless if enabled.'),
+				'#default_value' => $entity->isContentEditingEnabled(),
+				'#tags' => TRUE,
+				'#states' => [
+					'visible' => [':input[name="sitewide"]' => ['value' => 0]]
+				]
+			],
 			'#states' => [
 				'visible' => [':input[name="sitewide"]' => ['value' => 0]]
 			]
@@ -136,20 +150,20 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 	/**
 	 * {@inheritdoc}
 	 */
-	public function validateForm(array &$form, FormStateInterface $form_state) {
+	public function validateForm(array &$form, FormStateInterface $form_state) { // TODO: Finish validation function
 		$externalServiceName = $form_state->getValue('service_name');
 		switch ($externalServiceName) {
 			case 'mainstay':
 				$licenseIdFieldName = $externalServiceName . '__license_id';
 				$licenseId = $form_state->getValue($licenseIdFieldName);
-				if(!preg_match('/^[a-z0-9]+$/', $form_state->getValue($licenseId)))
-					$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only lowercase letters and numbers.'));
+				//if(!preg_match('/^[a-z0-9]+$/', $form_state->getValue($licenseId)))
+				//	$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only lowercase letters and numbers.'));
 			break;
 			case 'livechat':
 				$licenseIdFieldName = $externalServiceName . '__license_id';
 				$licenseId = $form_state->getValue($licenseIdFieldName);
-				if(!preg_match('/^[0-9]+$/', $form_state->getValue($licenseId)))
-					$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only numbers.'));
+				//if(!preg_match('/^[0-9]+$/', $form_state->getValue($licenseId)))
+				//	$form_state->setErrorByName($licenseIdFieldName, $this->t('A valid License ID can contain only numbers.'));
 			break;
 			case 'statuspage':
 				$pageIdFieldName = $externalServiceName . '__page_id';
@@ -175,7 +189,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 			$externalServiceSettings[$settingName] = $form_state->getValue($externalServiceName . '__' . $settingName) ?? '';
 		$entity->set('service_settings', $externalServiceSettings);
 		// Set `nodes` from the special content field
-		$entity->set('nodes', $entity->isSitewide() ? [] : array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete') ?? []));
+		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete')));
 		// Save the entity
 		$status = $entity->save();
 		if ($status === SAVED_NEW) {

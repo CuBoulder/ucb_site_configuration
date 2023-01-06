@@ -20,9 +20,12 @@ ucb_site_configuration.external_service_includes.*:
     sidewide:
       type: boolean
       label: 'Sitewide'
+    content_ediing_enabled:
+      type: boolean
+      label: 'Content editing enabled'
     nodes:
       type: sequence
       label: 'Content pages'
       sequence:
-        type: integer
+        type: string
         label: 'Content page identifier'

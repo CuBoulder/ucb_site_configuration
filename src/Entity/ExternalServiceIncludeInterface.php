@@ -43,8 +43,20 @@ interface ExternalServiceIncludeInterface extends ConfigEntityInterface {
 	public function isSitewide();
 
 	/**
+	 * @return boolean
+	 *   TRUE if this include can be added or removed by content authors, FALSE if not.
+	 */
+	public function isContentEditingEnabled();
+
+	/**
+	 * @return string[]
+	 *   The ids for nodes that have been explicitly included in the "Content" field.
+	 */
+	public function getNodeIds();
+
+	/**
 	 * @return \Drupal\node\NodeInterface[]
-	 *   The nodes that this include applies to.
+	 *   All the nodes that this include applies to.
 	 */
 	public function getNodes();
 }

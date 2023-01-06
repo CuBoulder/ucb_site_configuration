@@ -34,6 +34,7 @@ use Drupal\node\Entity\Node;
  *   "service_name" = "service_name",
  *   "service_settings" = "service_settings",
  *   "sitewide" = "sitewide",
+ *   "content_editing_enabled" = "content_editing_enabled",
  *   "nodes" = "nodes"
  *  },
  *  config_export = {
@@ -42,6 +43,7 @@ use Drupal\node\Entity\Node;
  *   "service_name",
  *   "service_settings",
  *   "sitewide",
+ *   "content_editing_enabled",
  *   "nodes"
  *  },
  *  links = {
@@ -84,12 +86,17 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	/**
 	 * True if this include applies to the entire site rather than specific nodes.
 	 */
-	protected $sitewide;
+	protected $sitewide = FALSE;
+
+	/**
+	 * True if this include can be added or removed by content authors.
+	 */
+	protected $content_editing_enabled = TRUE;
 
 	/**
 	 * The ids for nodes that this include applies to.
 	 *
-	 * @var array
+	 * @var string[]
 	 */
 	protected $nodes = [];
 
@@ -112,6 +119,20 @@ class ExternalServiceInclude extends ConfigEntityBase implements ExternalService
 	 */
 	public function isSitewide() {
 		return (bool) $this->sitewide;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function isContentEditingEnabled() {
+		return (bool) $this->content_editing_enabled;
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public function getNodeIds() {
+		return $this->nodes;
 	}
 
 	/**

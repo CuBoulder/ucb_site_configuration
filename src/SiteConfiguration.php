@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\node\NodeInterface;
@@ -67,9 +68,9 @@ class SiteConfiguration {
 	 *   The config factory.
 	 * @param \Drupal\Core\Extension\TranslationManager $string_translation
 	 *   The translation manager.
-	 * @param \Drupal\Core\Entity\EntityTypeManagerInterface
+	 * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
 	 *   The entity type manager.
-	 * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface
+	 * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
 	 *   The entity type repository.
 	 */
 	public function __construct(
@@ -277,21 +278,6 @@ class SiteConfiguration {
 	}
 
 	/**
-	 * @return array
-	 *   The external services options available on content nodes.
-	 */
-	public function getContentExternalServicesOptions() {
-		$externalServicesConfiguration = $this->getConfiguration()->get('external_services') ?? [];
-		$externalServicesSettings = $this->getSettings()->get('external_services') ?? [];
-		$options = [];
-		foreach ($externalServicesSettings as $externalServiceName => $externalServiceSettings) {
-			if($externalServiceSettings['enabled'] === 'some')
-				$options[$externalServiceName] = $externalServicesConfiguration[$externalServiceName]['content_label'];
-		}
-		return $options;
-	}
-
-	/**
 	 * This helper funtion attaches external service includes if called from hook_preprocess in the .module file.
 	 * Variables can be referenced from the template using `service_servicename_includes`.
 	 * 
@@ -304,7 +290,7 @@ class SiteConfiguration {
 		$storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
 		$query = $storage->getQuery('OR')->condition('sitewide', TRUE);
 		if ($node)
-			$query = $query->condition('nodes.*', $node->id());
+			$query->condition('nodes.*', $node->id());
 		$results = $query->execute();
 		/** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
 		$externalServiceIncludeEntities = $storage->loadMultiple($results);
@@ -321,6 +307,18 @@ class SiteConfiguration {
 		}
 		foreach ($externalServiceIncludeArrays as $externalServiceName => $externalServiceIncludeArray)
 			$variables['service_' . $externalServiceName . '_includes'] = $externalServiceIncludeArray;	
+	}
+
+	/**
+	 * @return \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[]
+	 *   All the external service includes that can be added and removed from the content form pages.
+	 */
+	public function getContentAccessibleExternalServiceIncludes() {
+		$storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
+		$query = $storage->getQuery('AND')->condition('sitewide', FALSE);
+		if (!$this->user->hasPermission('administer ucb external services'))
+			$query->condition('content_editing_enabled', TRUE);
+		return $storage->loadMultiple($query->execute());
 	}
 
 	/**

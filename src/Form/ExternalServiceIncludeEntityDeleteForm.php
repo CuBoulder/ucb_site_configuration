@@ -20,7 +20,7 @@ class ExternalServiceIncludeEntityDeleteForm extends EntityConfirmFormBase {
 	 * {@inheritdoc}
 	 */
 	public function getQuestion() {
-		return $this->t('Are you sure you want to delete the third-party service %name?', ['%name' => $this->entity->label()]);
+		return $this->t('Are you sure you want to delete the third-party service %label?', ['%label' => $this->entity->label()]);
 	}
 
 	/**
