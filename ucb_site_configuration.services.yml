@@ -5,3 +5,6 @@ services:
       - '@current_user'
       - '@module_handler'
       - '@config.factory'
+      - '@string_translation'
+      - '@entity_type.manager'
+      - '@entity_type.repository'

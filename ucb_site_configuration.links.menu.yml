@@ -1,13 +1,27 @@
-ucb_site_configuration.settings_form:
+ucb_site_configuration:
   title: CU Boulder site settings
   description: 'Change CU Boulder site-specific settings.'
-  route_name: ucb_site_configuration.settings_form
-  parent: system.admin_config_system
+  route_name: ucb_site_configuration
+  parent: system.admin_config
+  weight: 0
+
+ucb_site_configuration.appearance_form:
+  title: Appearance
+  description: 'Change the appearance, layout, and formatting of the site theme.'
+  route_name: ucb_site_configuration.appearance_form
+  parent: ucb_site_configuration
   weight: 0
 
 ucb_site_configuration.contact_info_form:
-  title: CU Boulder site contact info
+  title: Contact info
   description: 'Modify the contact info for the site as it appears in the site footer.'
   route_name: ucb_site_configuration.contact_info_form
-  parent: system.admin_config_system
+  parent: ucb_site_configuration
   weight: 1
+
+ucb_site_configuration.external_services:
+  title: Third-party services
+  description: 'Configure third-party services to be used on the site.'
+  route_name: entity.ucb_external_service_include.collection
+  parent: ucb_site_configuration
+  weight: 2

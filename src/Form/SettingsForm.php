@@ -79,19 +79,13 @@ class SettingsForm extends ConfigFormBase {
 	 */
 	public function buildForm(array $form, FormStateInterface $form_state) {
 		$themeSettings = [];
-		$themeForm = [
-			'#type' => 'details',
-			'#title' => 'Appearance',
-			'#open' => TRUE
-		];
 		$editableThemeSettings = $this->getEditableThemeSettings();
 		$this->service->buildThemeSettingsForm($themeSettings, $form_state);
 		foreach($themeSettings as $themeSettingName => $themeSettingValue) {
 			if(in_array($themeSettingName, $editableThemeSettings)) {
-				$themeForm[$themeSettingName] = $themeSettingValue;
+				$form[$themeSettingName] = $themeSettingValue;
 			}
 		}
-		$form['theme_settings'] = $themeForm;
 		return parent::buildForm($form, $form_state);
 	}
 

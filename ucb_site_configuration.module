@@ -1,0 +1,83 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\node\NodeInterface;
+
+/**
+ * Enables external service includes to be referenced from the page template.
+ */
+function ucb_site_configuration_preprocess_page(array &$variables) {
+	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+	$service = \Drupal::service('ucb_site_configuration');
+	if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
+		$service->attachExternalServiceIncludes($variables, $node);
+	} else $service->attachExternalServiceIncludes($variables);
+}
+
+/**
+ * Adds third-party service configuration options to node form sidebars.
+ * Implements hook_form_BASE_FORM_ID_alter().
+ */
+function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInterface $form_state) {
+	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+	$service = \Drupal::service('ucb_site_configuration');
+	/** @var \Drupal\node\NodeInterface $node */
+	$node = $form_state->getFormObject()->getEntity();
+	$contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
+	$contentServicesFieldAllowedOptions = [];
+	$contentServicesFieldDefaultOptions = [];
+	foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
+		$includeId = $externalServiceInclude->id();
+		$contentServicesFieldAllowedOptions[$includeId] = $externalServiceInclude->label();
+		if (in_array($node->id(), $externalServiceInclude->getNodeIds()))
+			$contentServicesFieldDefaultOptions[] = $includeId;
+	}
+	/** @var \Symfony\Component\Routing\Route */
+    $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('entity.ucb_external_service_include.collection');
+	$form['ucb_external_services'] = [
+		'#type' => 'details',
+   		'#title' => t('Third-party services'),
+		'#group' => 'advanced',
+		'#open' => (bool) $contentServicesFieldDefaultOptions,
+		'ucb_external_services_enabled' => [
+			'#type'  => 'checkboxes',
+			'#title' => t('Third-party services'),
+			'#description' => t('A user with permission can <a href="@settings_form_uri">configure third-party services</a> to display here. Third-party services aren\'t included in previews.', ['@settings_form_uri' => $siteSettingsRoute->getPath()]),
+			'#options' => $contentServicesFieldAllowedOptions,
+			'#default_value' => $contentServicesFieldDefaultOptions
+		]
+	];
+	// Binds submit action
+	foreach (array_keys($form['actions']) as $action) {
+		if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+			$form['actions'][$action]['#submit'][] = 'ucb_site_configuration_form_node_form_submit';
+		}
+	}
+}
+
+/**
+ * Saves the third-party services settings when a node is saved.
+ */
+function ucb_site_configuration_form_node_form_submit(array &$form, FormStateInterface $form_state) {
+	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+	$service = \Drupal::service('ucb_site_configuration');
+	/** @var \Drupal\node\NodeInterface */
+	$node = $form_state->getFormObject()->getEntity();
+	$contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
+	$contentServicesFieldSelectedIds = $form_state->getValue('ucb_external_services_enabled');
+	foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
+		$includeId = $externalServiceInclude->id();
+		$nodeIds = $externalServiceInclude->getNodeIds();
+		$index = array_search($node->id(), $nodeIds);
+		$isSelected = (bool) $contentServicesFieldSelectedIds[$includeId];
+		if ($isSelected && $index === false) { // add the node to the include
+			$nodeIds[] = $node->id();
+			$externalServiceInclude->set('nodes', $nodeIds);
+			$externalServiceInclude->save();
+		} else if (!$isSelected && $index !== false) { // remove the node from the include
+			unset($nodeIds[$index]);
+			$externalServiceInclude->set('nodes', $nodeIds);
+			$externalServiceInclude->save();
+		}
+	}
+}
