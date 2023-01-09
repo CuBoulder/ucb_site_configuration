@@ -187,7 +187,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 			$externalServiceSettings[$settingName] = $form_state->getValue($externalServiceName . '__' . $settingName) ?? '';
 		$entity->set('service_settings', $externalServiceSettings);
 		// Set `nodes` from the special content field
-		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete')));
+		$entity->set('nodes', array_map(function($node){ return intval($node['target_id']); }, $form_state->getValue('node_entity_autocomplete') ?? []));
 		// Save the entity
 		$status = $entity->save();
 		if ($status === SAVED_NEW) {
