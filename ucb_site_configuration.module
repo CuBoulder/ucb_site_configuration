@@ -4,6 +4,25 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
+ * Implements hook_page_attachments_alter().
+ */
+function ucb_site_configuration_page_attachments_alter(array &$page) {
+	$user = \Drupal::currentUser();
+	if ($user->hasPermission('access toolbar')) {
+		/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+		$service = \Drupal::service('ucb_site_configuration');
+		$config = $service->getConfiguration();
+		$roles = join(', ', $user->getRoles());
+		$page['#attached']['library'][] = 'ucb_site_configuration/admin_helpscout_beacon';
+		$page['#attached']['drupalSettings']['ucb_site_configuration']['admin_helpscout_beacon'] = [
+			'prefill' => [
+				'roles' => $roles
+			]
+		];
+	}
+}
+
+/**
  * Enables external service includes to be referenced from the page template.
  */
 function ucb_site_configuration_preprocess_page(array &$variables) {
