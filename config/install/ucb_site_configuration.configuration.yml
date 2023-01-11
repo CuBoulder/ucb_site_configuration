@@ -37,3 +37,5 @@ external_services:
     availability:
       content: true
       sitewide: true
+
+admin_helpscout_beacon_id: '1bb01225-0287-4443-a7e5-be8f375a7766'

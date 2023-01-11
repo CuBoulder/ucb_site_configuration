@@ -4,6 +4,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
+ * Adds the Helpscout Beacon widget if the user has permission to see the admin toolbar.
  * Implements hook_page_attachments_alter().
  */
 function ucb_site_configuration_page_attachments_alter(array &$page) {
@@ -13,10 +14,19 @@ function ucb_site_configuration_page_attachments_alter(array &$page) {
 		$service = \Drupal::service('ucb_site_configuration');
 		$config = $service->getConfiguration();
 		$roles = join(', ', $user->getRoles());
+  		$site_name = \Drupal::config('system.site')->get('name');
+		$site_name = str_replace(' ', '-', $site_name);
+		$site_name = preg_replace('/[^A-Za-z0-9\-]/', '', $site_name);
 		$page['#attached']['library'][] = 'ucb_site_configuration/admin_helpscout_beacon';
-		$page['#attached']['drupalSettings']['ucb_site_configuration']['admin_helpscout_beacon'] = [
+		$page['#attached']['drupalSettings']['admin_helpscout_beacon'] = [
+			'id' => $config->get('admin_helpscout_beacon_id'),
 			'prefill' => [
-				'roles' => $roles
+				'name' => $user->getDisplayName(),
+				'email' => $user->getEmail(),
+				'user_email' => $user->getEmail(),
+				'roles' => $roles,
+				'site_name' => $site_name,
+				'site_url' => (stripos($_SERVER['SERVER_PROTOCOL'], 'https') === 0 ? 'https://' : 'http://') . $_SERVER['HTTP_HOST'] . \Drupal::request()->getRequestUri()
 			]
 		];
 	}
@@ -24,6 +34,7 @@ function ucb_site_configuration_page_attachments_alter(array &$page) {
 
 /**
  * Enables external service includes to be referenced from the page template.
+ * Implements hook_preprocess_HOOK().
  */
 function ucb_site_configuration_preprocess_page(array &$variables) {
 	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
