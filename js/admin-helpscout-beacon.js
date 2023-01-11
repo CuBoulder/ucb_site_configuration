@@ -1,5 +1,5 @@
 (function(Drupal) {
-	Drupal.behaviors.loadAdminHelpscountBeacon = {
+	Drupal.behaviors.adminHelpscoutBeacon = {
 		attach: function (context, drupalSettings) {
 			const helpElement = document.querySelector('.menu-item__help-main a');
 			if(!helpElement) return;
