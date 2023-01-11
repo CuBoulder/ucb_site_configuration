@@ -1,0 +1,9 @@
+admin_helpscout_beacon:
+  version: 1.0
+  js:
+    js/admin-helpscout-beacon.js: {}
+  css:
+    theme:
+      css/admin-helpscout-beacon.css: {}
+  dependencies:
+    - core/drupalSettings
