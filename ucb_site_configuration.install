@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * Adds id for the admin Helpscout Beacon.
+ */
+function ucb_site_configuration_update_9501() {
+	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
+	$config->set('admin_helpscout_beacon_id', '1bb01225-0287-4443-a7e5-be8f375a7766')->save();
+}
