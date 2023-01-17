@@ -89,7 +89,7 @@ Below is an example workflow for adding a theme setting to change the header tex
     */
    function ucb_site_configuration_update_95xx() {
    	// Ensures the default value of `medium` is set for the theme setting
-   	\Drupal::configFactory()->getEditable(\Drupal::service('ucb_site_configuration')->getThemeName() . '.settings')->set('ucb_header_text_size', 'medium');
+   	\Drupal::configFactory()->getEditable(\Drupal::service('ucb_site_configuration')->getThemeName() . '.settings')->set('ucb_header_text_size', 'medium')->save();
    	// Exposes the theme setting on the "Appearance" adminstration form by updating the module configuration
    	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
    	$editableThemeSettings = $config->get('editable_theme_settings');
