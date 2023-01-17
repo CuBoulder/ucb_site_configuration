@@ -34,7 +34,7 @@ Site contact information is editable in the "Contact info" administration form a
 
 Path: `/admin/config/cu-boulder/services`
 
-User permission: `administer external services` 
+User permission: `administer ucb external services` 
 
 Users with the permission above may choose to add selected client-side third-party services (JavaScript) to their site in the "Third-party services" administration page. Supported services are:
 
@@ -42,7 +42,7 @@ Users with the permission above may choose to add selected client-side third-par
 - [LiveChat](https://www.livechat.com) chat widget
 - [StatusPage](https://www.atlassian.com/software/statuspage) status widget
 
-These services can be configured and added to pages as desired, with options for specific pages or all pages on the site. Additionally, they can be configured to appear as options when creating or editing content, enabling them to be added or removed by content authors who don't have permission to `administer external services`.
+These services can be configured and added to pages as desired, with options for specific pages or all pages on the site. Additionally, they can be configured to appear as options when creating or editing content, enabling them to be added or removed by content authors who don't have permission to `administer ucb external services`.
 
 Some required configuration for these services isn't provided by default, and the responsibility for ensuring they are configured correctly falls to the site administrator.
 
