@@ -70,6 +70,8 @@ class GeneralForm extends ConfigFormBase {
 	public function buildForm(array $form, FormStateInterface $form_state) {
 		$configuration = $this->service->getConfiguration();
 		$settings = $this->service->getSettings();
+		$siteTypeOptions = $configuration->get('site_type_options');
+		$siteAffiliationOptions = array_filter($configuration->get('site_affiliation_options'), function ($value) { return !$value['type_restricted']; });
 		$form['site_name'] = [
 			'#type' => 'textfield',
 			'#title' => $this->t('Site name'),
@@ -80,38 +82,46 @@ class GeneralForm extends ConfigFormBase {
 			'#type' => 'select',
 			'#title' => $this->t('Site type'),
 			'#default_value' => $settings->get('site_type'),
-			'#options' => array_merge(['' => $this->t('- None -')], $configuration->get('site_type_options')),
+			'#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) { return $value['label']; }, $siteTypeOptions)),
 			'#required' => FALSE
 		];
-		$form['site_affiliation'] = [
-			'#type' => 'select',
-			'#title' => $this->t('Site affiliation'),
-			'#default_value' => $settings->get('site_affiliation'),
-			'#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) { return $value['label']; }, $configuration->get('site_affiliation_options')), ['custom' =>  $this->t('Custom')]),
-			'#required' => FALSE
-		];
-		$form['site_affiliation_custom'] = [
-			'#type' => 'fieldset',
-			'#description' => $this->t('Define a title and optional URL for the custom site affiliation.'),
+		$affiliationHidesOn = [];
+		foreach ($siteTypeOptions as $siteTypeId => $siteType) {
+			if (isset($siteType['affiliation']))
+				array_push($affiliationHidesOn, [':input[name="site_type"]' => ['value' => $siteTypeId]]);
+		}
+		$form['site_affiliation_container'] = [
+			'#type' => 'container',
 			'#states' => [
-				'visible' => [':input[name="site_affiliation"]' => ['value' => 'custom']]
+				'invisible' => $affiliationHidesOn
 			],
-			'site_affiliation_label' => [
-				'#type' => 'textfield',
-				'#title' => $this->t('Title'),
-				'#default_value' => $settings->get('site_affiliation_label'),
-				'#required' => FALSE,
-				'#maxlength' => 255,
+			'site_affiliation' => [
+				'#type' => 'select',
+				'#title' => $this->t('Site affiliation'),
+				'#default_value' => $settings->get('site_affiliation'),
+				'#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) { return $value['label']; }, $siteAffiliationOptions), ['custom' =>  $this->t('Custom')]),
+				'#required' => FALSE
+			],
+			'site_affiliation_custom' => [
+				'#type' => 'fieldset',
+				'#description' => $this->t('Define a title and optional URL for the custom site affiliation.'),
 				'#states' => [
-					'required' => [':input[name="site_affiliation"]' => ['value' => 'custom']]
+					'visible' => [[':input[name="site_affiliation"]' => ['value' => 'custom']]]
+				],
+				'site_affiliation_label' => [
+					'#type' => 'textfield',
+					'#title' => $this->t('Title'),
+					'#default_value' => $settings->get('site_affiliation_label'),
+					'#required' => FALSE,
+					'#maxlength' => 255
+				],
+				'site_affiliation_url' => [
+					'#type' => 'textfield',
+					'#title' => $this->t('URL'),
+					'#default_value' => $settings->get('site_affiliation_url'),
+					'#required' => FALSE,
+					'#maxlength' => 255
 				]
-			],
-			'site_affiliation_url' => [
-				'#type' => 'textfield',
-				'#title' => $this->t('URL'),
-				'#default_value' => $settings->get('site_affiliation_url'),
-				'#required' => FALSE,
-				'#maxlength' => 255
 			]
 		];
 		return parent::buildForm($form, $form_state);
@@ -121,10 +131,17 @@ class GeneralForm extends ConfigFormBase {
 	 * {@inheritdoc}
 	 */
 	public function submitForm(array &$form, FormStateInterface $form_state) {
+		$configuration = $this->service->getConfiguration();
+		$settings = $this->config('ucb_site_configuration.settings');
+		$siteTypeOptions = $configuration->get('site_type_options');
 		$this->config('system.site')->set('name', $form_state->getValue('site_name'))->save();
+		$siteTypeId = $form_state->getValue('site_type');
+		$siteAffiliationId = $form_state->getValue('site_affiliation');
+		if ($siteTypeId && isset($siteTypeOptions[$siteTypeId]) && isset($siteTypeOptions[$siteTypeId]['affiliation']))
+			$siteAffiliationId = $siteTypeOptions[$siteTypeId]['affiliation'];
 		$this->config('ucb_site_configuration.settings')
-			->set('site_type', $form_state->getValue('site_type'))
-			->set('site_affiliation', $form_state->getValue('site_affiliation'))
+			->set('site_type', $siteTypeId)
+			->set('site_affiliation', $siteAffiliationId)
 			->set('site_affiliation_label', $form_state->getValue('site_affiliation_label'))
 			->set('site_affiliation_url', $form_state->getValue('site_affiliation_url'))
 			->save();

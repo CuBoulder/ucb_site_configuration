@@ -1,108 +1,166 @@
 # Configuration for this module will go here
 
 site_type_options:
-  college: 'College'
-  school: 'School'
-  academic_department: 'Academic Department'
-  academic_program: 'Academic Program'
-  certificate_program: 'Certificate Program'
-  outreach_program: 'Outreach Program'
-  residential_academic_program: 'Residential Academic Program'
-  academic_support: 'Academic Support'
-  center: 'Center'
-  institute: 'Institute'
-  service_department: 'Service Department'
-  resource_department: 'Resource Department'
-  support_department: 'Support Department'
-  performance: 'Performance'
-  event: 'Event'
-  museum: 'Museum'
-  research_program: 'Research Program'
-  lab: 'Lab'
-  faculty: 'Faculty'
-  student_group: 'Student Group'
-  sport_club: 'Sport Club'
-  publication: 'Publication'
+  college: 
+    label: 'College'
+  school:
+    label: 'School'
+  academic_department:
+    label: 'Academic Department'
+  academic_program:
+    label: 'Academic Program'
+  certificate_program:
+    label: 'Certificate Program'
+  outreach_program:
+    label: 'Outreach Program'
+  residential_academic_program:
+    label: 'Residential Academic Program'
+  academic_support:
+    label: 'Academic Support'
+  center:
+    label: 'Center'
+  institute:
+    label: 'Institute'
+  service_department:
+    label: 'Service Department'
+  resource_department:
+    label: 'Resource Department'
+  support_department:
+    label: 'Support Department'
+  performance:
+    label: 'Performance'
+  event:
+    label: 'Event'
+  museum:
+    label: 'Museum'
+  research_program:
+    label: 'Research Program'
+  lab:
+    label: 'Lab'
+  faculty:
+    label: 'Faculty'
+  student_group:
+    label: 'Student Group'
+    affiliation: student_group
+  sport_club:
+    label: 'Sport Club'
+    affiliation: sport_club
+  publication:
+    label: 'Publication'
 
 site_affiliation_options:
   arts_sciences:
     url: 'https://www.colorado.edu/artsandsciences'
     label: 'College of Arts and Sciences'
+    type_restricted: false
   business:
     url: 'https://www.colorado.edu/business'
     label: 'Leeds School of Business'
+    type_restricted: false
   education:
     url: 'https://www.colorado.edu/education'
     label: 'School of Education'
+    type_restricted: false
   engineering:
     url: 'https://www.colorado.edu/engineering'
     label: 'College of Engineering and Applied Science'
+    type_restricted: false
   cmci:
     url: 'https://www.colorado.edu/cmci'
     label: 'College of Media, Communication and Information'
+    type_restricted: false
   music:
     url: 'https://www.colorado.edu/music'
     label: 'College of Music'
+    type_restricted: false
   law:
     url: 'https://www.colorado.edu/law'
     label: 'School of Law'
+    type_restricted: false
   graduate_school:
     url: 'https://www.colorado.edu/graduateschool'
     label: 'Graduate School'
+    type_restricted: false
   continuing_education:
     url: 'https://ce.colorado.edu/'
     label: 'Division of Continuing Education'
+    type_restricted: false
   university_libraries:
     url: 'https://www.colorado.edu/libraries'
     label: 'University Libraries'
+    type_restricted: false
   biofrontiers_institute:
     url: 'https://www.colorado.edu/biofrontiers'
     label: 'Biofrontiers Institute'
+    type_restricted: false
   odece:
     url: 'https://www.colorado.edu/odece'
     label: 'Office of Diversity, Equity and Community Engagement'
+    type_restricted: false
   faculty_affairs:
     url: 'https://www.colorado.edu/facultyaffairs'
     label: 'Office of Faculty Affairs'
+    type_restricted: false
   ombuds:
     url: 'https://www.colorado.edu/ombuds'
     label: 'Ombuds Office'
+    type_restricted: false
   research_innovation_office:
     url: 'https://www.colorado.edu/researchinnovation'
     label: 'Research and Innovation Office'
+    type_restricted: false
   strategic_initiatives:
     url: 'https://www.colorado.edu/osi'
     label: 'Office of Strategic Initiatives'
+    type_restricted: false
   student_affairs:
     url: 'https://www.colorado.edu/studentaffairs'
     label: 'Division of Student Affairs'
+    type_restricted: false
   undergraduate_education:
     url: ''
     label: 'Office of Undergraduate Education'
+    type_restricted: false
   enrollment_management:
     url: ''
     label: 'Part of Enrollment Management'
+    type_restricted: false
   finance_business_strategy:
     url: 'https://www.colorado.edu/fbs'
     label: 'Part of Finance and Business Strategy'
+    type_restricted: false
   human_resources:
     url: 'https://www.colorado.edu/hr'
     label: 'Department of Human Resources'
+    type_restricted: false
   information_technology:
     url: 'https://oit.colorado.edu/'
     label: 'Office of Information Technology'
+    type_restricted: false
   infrastructure_sustainability:
     url: 'https://www.colorado.edu/infrastructure-sustainability'
     label: 'Part of Infrastructure and Sustainability'
+    type_restricted: false
   institutional_equity_compliance:
     url: 'https://www.colorado.edu/oiec'
     label: 'Office of Institutional Equity'
+    type_restricted: false
   integrity_safety_compliance:
     url: ''
     label: 'Office of Integrity, Safety and Compliance'
+    type_restricted: false
   strategic_relations_comm:
     url: 'https://www.colorado.edu/strategicrelations'
     label: 'Part of Strategic Relations and Communications'
+    type_restricted: false
+  student_group:
+    url: 'https://www.colorado.edu/involvement'
+    label: 'A CU Boulder Student Group'
+    type_restricted: true
+  sport_club:
+    url: 'https://www.colorado.edu/recreation'
+    label: 'A CU Boulder Sport Club'
+    type_restricted: true
 
 editable_theme_settings: 
  - ucb_campus_header_color

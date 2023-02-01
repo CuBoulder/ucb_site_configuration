@@ -290,11 +290,11 @@ class SiteConfiguration {
 		$siteTypeId = $settings->get('site_type');
 		$variables['site_type'] = [
 			'id' => $siteTypeId,
-			'label' => $siteTypeId ? $configuration->get('site_type_options')[$siteTypeId] ?? '' : ''
+			'label' => $siteTypeId && isset($configuration->get('site_type_options')[$siteTypeId]) ? $configuration->get('site_type_options')[$siteTypeId]['label'] : $siteTypeId
 		];
 		$siteAffiliationId = $settings->get('site_affiliation');
-		$siteAffiliationAttribs = $siteAffiliationId ? $siteAffiliationId == 'custom' ? ['label' => $settings->get('site_affiliation_label'), 'url' => $settings->get('site_affiliation_url')] : $configuration->get('site_affiliation_options')[$siteAffiliationId] ?? null : null;
-		$variables['site_affiliation'] = array_merge(['id' => $siteAffiliationId], $siteAffiliationAttribs ?? ['label' => '', 'url' => '']);	
+		$siteAffiliationAttribs = $siteAffiliationId ? $siteAffiliationId == 'custom' ? ['label' => $settings->get('site_affiliation_label') ?? $siteAffiliationId, 'url' => $settings->get('site_affiliation_url')] : $configuration->get('site_affiliation_options')[$siteAffiliationId] ?? null : null;
+		$variables['site_affiliation'] = array_merge(['id' => $siteAffiliationId], $siteAffiliationAttribs ?? ['label' => $siteAffiliationId, 'url' => '']);	
 	}
 
 	/**
