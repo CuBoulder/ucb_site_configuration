@@ -278,7 +278,27 @@ class SiteConfiguration {
 	}
 
 	/**
-	 * This helper funtion attaches external service includes if called from hook_preprocess in the .module file.
+	 * This helper function attaches site information if called from hook_preprocess in the .module file.
+	 * 
+	 * @param array &$variables
+	 *   The array to add the site information to.
+	 */
+	public function attachSiteInformation(array &$variables) {
+		$configuration = $this->getConfiguration();
+		$settings = $this->getSettings();
+		$variables['site_name'] = $this->configFactory->get('system.site')->get('name');
+		$siteTypeId = $settings->get('site_type');
+		$variables['site_type'] = [
+			'id' => $siteTypeId,
+			'label' => $siteTypeId ? $configuration->get('site_type_options')[$siteTypeId] ?? '' : ''
+		];
+		$siteAffiliationId = $settings->get('site_affiliation');
+		$siteAffiliationAttribs = $siteAffiliationId ? $siteAffiliationId == 'custom' ? ['label' => $settings->get('site_affiliation_label'), 'url' => $settings->get('site_affiliation_url')] : $configuration->get('site_affiliation_options')[$siteAffiliationId] ?? null : null;
+		$variables['site_affiliation'] = array_merge(['id' => $siteAffiliationId], $siteAffiliationAttribs ?? ['label' => '', 'url' => '']);	
+	}
+
+	/**
+	 * This helper function attaches external service includes if called from hook_preprocess in the .module file.
 	 * Variables can be referenced from the template using `service_servicename_includes`.
 	 * 
 	 * @param array &$variables

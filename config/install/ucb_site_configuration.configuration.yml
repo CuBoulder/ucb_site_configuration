@@ -1,5 +1,109 @@
 # Configuration for this module will go here
 
+site_type_options:
+  college: 'College'
+  school: 'School'
+  academic_department: 'Academic Department'
+  academic_program: 'Academic Program'
+  certificate_program: 'Certificate Program'
+  outreach_program: 'Outreach Program'
+  residential_academic_program: 'Residential Academic Program'
+  academic_support: 'Academic Support'
+  center: 'Center'
+  institute: 'Institute'
+  service_department: 'Service Department'
+  resource_department: 'Resource Department'
+  support_department: 'Support Department'
+  performance: 'Performance'
+  event: 'Event'
+  museum: 'Museum'
+  research_program: 'Research Program'
+  lab: 'Lab'
+  faculty: 'Faculty'
+  student_group: 'Student Group'
+  sport_club: 'Sport Club'
+  publication: 'Publication'
+
+site_affiliation_options:
+  arts_sciences:
+    url: 'https://www.colorado.edu/artsandsciences'
+    label: 'College of Arts and Sciences'
+  business:
+    url: 'https://www.colorado.edu/business'
+    label: 'Leeds School of Business'
+  education:
+    url: 'https://www.colorado.edu/education'
+    label: 'School of Education'
+  engineering:
+    url: 'https://www.colorado.edu/engineering'
+    label: 'College of Engineering and Applied Science'
+  cmci:
+    url: 'https://www.colorado.edu/cmci'
+    label: 'College of Media, Communication and Information'
+  music:
+    url: 'https://www.colorado.edu/music'
+    label: 'College of Music'
+  law:
+    url: 'https://www.colorado.edu/law'
+    label: 'School of Law'
+  graduate_school:
+    url: 'https://www.colorado.edu/graduateschool'
+    label: 'Graduate School'
+  continuing_education:
+    url: 'https://ce.colorado.edu/'
+    label: 'Division of Continuing Education'
+  university_libraries:
+    url: 'https://www.colorado.edu/libraries'
+    label: 'University Libraries'
+  biofrontiers_institute:
+    url: 'https://www.colorado.edu/biofrontiers'
+    label: 'Biofrontiers Institute'
+  odece:
+    url: 'https://www.colorado.edu/odece'
+    label: 'Office of Diversity, Equity and Community Engagement'
+  faculty_affairs:
+    url: 'https://www.colorado.edu/facultyaffairs'
+    label: 'Office of Faculty Affairs'
+  ombuds:
+    url: 'https://www.colorado.edu/ombuds'
+    label: 'Ombuds Office'
+  research_innovation_office:
+    url: 'https://www.colorado.edu/researchinnovation'
+    label: 'Research and Innovation Office'
+  strategic_initiatives:
+    url: 'https://www.colorado.edu/osi'
+    label: 'Office of Strategic Initiatives'
+  student_affairs:
+    url: 'https://www.colorado.edu/studentaffairs'
+    label: 'Division of Student Affairs'
+  undergraduate_education:
+    url: ''
+    label: 'Office of Undergraduate Education'
+  enrollment_management:
+    url: ''
+    label: 'Part of Enrollment Management'
+  finance_business_strategy:
+    url: 'https://www.colorado.edu/fbs'
+    label: 'Part of Finance and Business Strategy'
+  human_resources:
+    url: 'https://www.colorado.edu/hr'
+    label: 'Department of Human Resources'
+  information_technology:
+    url: 'https://oit.colorado.edu/'
+    label: 'Office of Information Technology'
+  infrastructure_sustainability:
+    url: 'https://www.colorado.edu/infrastructure-sustainability'
+    label: 'Part of Infrastructure and Sustainability'
+  institutional_equity_compliance:
+    url: 'https://www.colorado.edu/oiec'
+    label: 'Office of Institutional Equity'
+  integrity_safety_compliance:
+    url: ''
+    label: 'Office of Integrity, Safety and Compliance'
+  strategic_relations_comm:
+    url: 'https://www.colorado.edu/strategicrelations'
+    label: 'Part of Strategic Relations and Communications'
+
 editable_theme_settings: 
  - ucb_campus_header_color
  - ucb_header_color

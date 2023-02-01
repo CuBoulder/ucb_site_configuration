@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\ucb_site_configuration\Form\SettingsForm.
+ * Contains \Drupal\ucb_site_configuration\Form\AppearanceForm.
  */
 
 namespace Drupal\ucb_site_configuration\Form;
@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class SettingsForm extends ConfigFormBase {
+class AppearanceForm extends ConfigFormBase {
 
 	/**
 	 * The user site configuration service defined in this module.
@@ -23,7 +23,7 @@ class SettingsForm extends ConfigFormBase {
 	protected $service;
 
 	/**
-	 * Constructs a SettingsForm object.
+	 * Constructs a AppearanceForm object.
 	 *
 	 * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
 	 *   The config factory.
@@ -61,7 +61,7 @@ class SettingsForm extends ConfigFormBase {
 	 * {@inheritdoc}
 	 */
 	public function getFormId() {
-		return 'ucb_site_configuration_settings_form';
+		return 'ucb_site_configuration_appearance_form';
 	}
 
 	/**

@@ -39,9 +39,12 @@ function ucb_site_configuration_page_attachments_alter(array &$page) {
 function ucb_site_configuration_preprocess_page(array &$variables) {
 	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
 	$service = \Drupal::service('ucb_site_configuration');
+	$service->attachSiteInformation($variables);
 	if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
 		$service->attachExternalServiceIncludes($variables, $node);
 	} else $service->attachExternalServiceIncludes($variables);
+	$variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
+	$variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
 }
 
 /**
