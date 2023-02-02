@@ -286,15 +286,17 @@ class SiteConfiguration {
 	public function attachSiteInformation(array &$variables) {
 		$configuration = $this->getConfiguration();
 		$settings = $this->getSettings();
+		$siteTypeOptions = $configuration->get('site_type_options');
+		$siteAffiliationOptions = $configuration->get('site_affiliation_options');
 		$variables['site_name'] = $this->configFactory->get('system.site')->get('name');
 		$siteTypeId = $settings->get('site_type');
 		$variables['site_type'] = [
 			'id' => $siteTypeId,
-			'label' => $siteTypeId && isset($configuration->get('site_type_options')[$siteTypeId]) ? $configuration->get('site_type_options')[$siteTypeId]['label'] : $siteTypeId
+			'label' => $siteTypeId && isset($siteTypeOptions[$siteTypeId]) ? $siteTypeOptions[$siteTypeId]['label'] : $siteTypeId
 		];
 		$siteAffiliationId = $settings->get('site_affiliation');
-		$siteAffiliationAttribs = $siteAffiliationId ? $siteAffiliationId == 'custom' ? ['label' => $settings->get('site_affiliation_label') ?? $siteAffiliationId, 'url' => $settings->get('site_affiliation_url')] : $configuration->get('site_affiliation_options')[$siteAffiliationId] ?? null : null;
-		$variables['site_affiliation'] = array_merge(['id' => $siteAffiliationId], $siteAffiliationAttribs ?? ['label' => $siteAffiliationId, 'url' => '']);	
+		$siteAffiliationAttribs = $siteAffiliationId == 'custom' ? ['label' => $settings->get('site_affiliation_label'), 'url' => $settings->get('site_affiliation_url')] : ($siteAffiliationId && isset($siteAffiliationOptions[$siteAffiliationId]) ? $siteAffiliationOptions[$siteAffiliationId] : ['label' => $siteAffiliationId ?? '', 'url' => '']);
+		$variables['site_affiliation'] = array_merge(['id' => $siteAffiliationId], $siteAffiliationAttribs);	
 	}
 
 	/**
