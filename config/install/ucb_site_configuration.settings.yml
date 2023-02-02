@@ -1,1 +1,6 @@
 # Editable site settings (non-theme) will go here
+
+site_type: ''
+site_affiliation: ''
+site_affiliation_label: ''
+site_affiliation_url: ''

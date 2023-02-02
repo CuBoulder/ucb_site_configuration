@@ -1,3 +1,8 @@
+ucb_site_configuration.general_form:
+  route_name: ucb_site_configuration.general_form
+  title: 'General'
+  base_route: ucb_site_configuration
+  weight: 0
 ucb_site_configuration.appearance_form:
   route_name: ucb_site_configuration.appearance_form
   title: 'Appearance'

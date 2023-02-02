@@ -9,10 +9,20 @@ ucb_site_configuration:
   options:
     _admin_route: true
 
+ucb_site_configuration.general_form:
+  path: '/admin/config/cu-boulder/general'
+  defaults:
+    _form: '\Drupal\ucb_site_configuration\Form\GeneralForm'
+    _title: General
+  requirements:
+    _permission: edit ucb site general
+  options:
+    _admin_route: true
+
 ucb_site_configuration.appearance_form:
   path: '/admin/config/cu-boulder/appearance'
   defaults:
-    _form: '\Drupal\ucb_site_configuration\Form\SettingsForm'
+    _form: '\Drupal\ucb_site_configuration\Form\AppearanceForm'
     _title: Appearance
   requirements:
     _permission: edit ucb site appearance
