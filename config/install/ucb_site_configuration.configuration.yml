@@ -166,7 +166,7 @@ editable_theme_settings:
  - ucb_campus_header_color
  - ucb_header_color
  - ucb_sidebar_position
- - ucb_be_boulder
+ # - ucb_be_boulder
  - ucb_rave_alerts
  - ucb_gtm_account
  # - ucb_secondary_menu_default_links
