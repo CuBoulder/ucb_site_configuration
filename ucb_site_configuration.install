@@ -2,7 +2,7 @@
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Adds id for the admin Helpscout Beacon.
+ * v2.0 – Adds id for the admin Helpscout Beacon.
  */
 function ucb_site_configuration_update_9501() {
 	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
@@ -10,7 +10,7 @@ function ucb_site_configuration_update_9501() {
 }
 
 /**
- * Adds configuration and settings for the site type and affiliation.
+ * v2.1 – Adds configuration and settings for the site type and affiliation (CuBoulder/tiamat-theme#210, CuBoulder/tiamat-theme#211).
  */
 function ucb_site_configuration_update_9502() {
 	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
@@ -20,4 +20,17 @@ function ucb_site_configuration_update_9502() {
 		throw new \RuntimeException('Oh no! Failed to get or parse site type and affiliation configuration YAML.');
 	$config->set('site_type_options', $yaml['site_type_options'])->set('site_affiliation_options', $yaml['site_affiliation_options'])->save();
 	$settings->set('site_type', '')->set('site_affiliation', '')->set('site_affiliation_label', '')->set('site_affiliation_url', '')->save();
+}
+
+/**
+ * v2.1.1 – Removes "Be Boulder slogan" from Appearance settings (CuBoulder/tiamat-theme#230).
+ */
+function ucb_site_configuration_update_9503() {
+	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
+	$editableThemeSettings = $config->get('editable_theme_settings');
+	$index = array_search('ucb_be_boulder', $editableThemeSettings);
+	if ($index !== false) {
+		array_splice($editableThemeSettings, $index, 1);
+		$config->set('editable_theme_settings', $editableThemeSettings)->save();	
+	}
 }

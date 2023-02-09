@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Removes "Be Boulder slogan" from Appearance settings
+  Resolves CuBoulder/tiamat-theme#230
+---
+
 - ### Adds site type, site affiliation
   This update to CU Boulder Site Configuration introduces a new "General" configuration form accessible for users with the "Edit the site general settings" permission. The form allows editing of site information:
   - Site name
