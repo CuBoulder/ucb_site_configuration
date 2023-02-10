@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v2.1.1] - 2023-02-10
+
 ## [20230209] - 2023-02-09
 
 -   ### Removes "Be Boulder slogan" from Appearance settings
@@ -35,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Updates `README.md`
 
-[Unreleased]: https://github.com/CuBoulder/ucb_site_configuration/compare/20230209...HEAD
+[Unreleased]: https://github.com/CuBoulder/ucb_site_configuration/compare/v2.1.1...HEAD
+
+[v2.1.1]: https://github.com/CuBoulder/ucb_site_configuration/compare/20230209...v2.1.1
 
 [20230209]: https://github.com/CuBoulder/ucb_site_configuration/compare/4ed9af76cb1d44efe6155803a80aba43b7d0a448...20230209
