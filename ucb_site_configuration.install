@@ -2,14 +2,6 @@
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * v2.0 – Adds id for the admin Helpscout Beacon.
- */
-function ucb_site_configuration_update_9501() {
-	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
-	$config->set('admin_helpscout_beacon_id', '1bb01225-0287-4443-a7e5-be8f375a7766')->save();
-}
-
-/**
  * v2.1 – Adds configuration and settings for the site type and affiliation (CuBoulder/tiamat-theme#210, CuBoulder/tiamat-theme#211).
  */
 function ucb_site_configuration_update_9502() {
@@ -33,4 +25,11 @@ function ucb_site_configuration_update_9503() {
 		array_splice($editableThemeSettings, $index, 1);
 		$config->set('editable_theme_settings', $editableThemeSettings)->save();	
 	}
+}
+
+/**
+ * v2.2 – Admin Helpscout Beacon moved to ucb_admin_menus (CuBoulder/ucb_admin_menus#2).
+ */
+function ucb_site_configuration_update_9504() {
+	\Drupal::configFactory()->getEditable('ucb_site_configuration.configuration')->clear('admin_helpscout_beacon_id')->save();
 }
