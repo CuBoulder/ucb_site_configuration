@@ -1,9 +1,10 @@
 ucb_site_configuration:
   path: '/admin/config/cu-boulder'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\ucb_admin_menus\Controller\OverviewController::singleMenuOverview'
     _title: 'CU Boulder site settings'
     _description: 'Change CU Boulder site-specific settings.'
+    link_id: 'ucb_site_configuration'
   requirements:
     _permission: access administration pages
   options:
