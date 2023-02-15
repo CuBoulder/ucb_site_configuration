@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Removes the Admin Helpscout Beacon and help page redirects
+  Admin Helpscout Beacon and help page redirects moved to ucb_admin_menus (CuBoulder/ucb_admin_menus#2).
+  
+  Sister PR in: [ucb_admin_menus](https://github.com/CuBoulder/ucb_admin_menus/pull/5)
+---
+
 ## [20230209] - 2023-02-09
 
 -   ### Removes "Be Boulder slogan" from Appearance settings
