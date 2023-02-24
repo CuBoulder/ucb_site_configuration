@@ -13,3 +13,7 @@ edit ucb site contact info:
 administer ucb external services:
   title: Administer third-party services
   description: 'Enables adding, editing, and deleting supported third-party services.'
+
+edit ucb site advanced:
+  title: Edit advanced site settings
+  description: 'Enables editing of advanced CU Boulder site settings that are typically meant for support and development staff only.'

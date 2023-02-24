@@ -10,10 +10,16 @@ namespace Drupal\ucb_site_configuration\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\system\Form\ThemeSettingsForm;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Extension\ThemeHandlerInterface;
+use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\File\FileSystemInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
-class AppearanceForm extends ConfigFormBase {
+class AppearanceForm extends ThemeSettingsForm {
 
 	/**
 	 * The user site configuration service defined in this module.
@@ -23,15 +29,25 @@ class AppearanceForm extends ConfigFormBase {
 	protected $service;
 
 	/**
-	 * Constructs a AppearanceForm object.
+	 * Constructs an AppearanceForm object.
 	 *
 	 * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-	 *   The config factory.
-	 * @param \Drupal\ucb_site_configuration\UserInviteHelperService $helper
-	 *   The user invite helper service defined in this module.
+	 *   The factory for configuration objects.
+	 * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+	 *   The module handler instance to use.
+	 * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
+	 *   The theme handler.
+	 * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
+	 *   The MIME type guesser instance to use.
+	 * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
+	 *   The theme manager.
+	 * @param \Drupal\Core\File\FileSystemInterface $file_system
+	 *   The file system.
+	 * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
+	 *   The service defined in this module.
 	 */
-	public function __construct(ConfigFactoryInterface $config_factory, SiteConfiguration $service) {
-		parent::__construct($config_factory);
+	public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system, SiteConfiguration $service) {
+		parent::__construct($config_factory, $module_handler, $theme_handler, $mime_type_guesser, $theme_manager, $file_system);
 		$this->service = $service;
 	}
 
@@ -46,15 +62,13 @@ class AppearanceForm extends ConfigFormBase {
 	public static function create(ContainerInterface $container) {
 		return new static(
 			$container->get('config.factory'),
+			$container->get('module_handler'),
+			$container->get('theme_handler'),
+			$container->get('file.mime_type.guesser'),
+			$container->get('theme.manager'),
+			$container->get('file_system'),
 			$container->get('ucb_site_configuration')
 		);
-	}
-
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function getEditableConfigNames() {
-		return [$this->service->getThemeName() . '.settings', 'ucb_site_configuration.settings'];
 	}
 
 	/**
@@ -65,40 +79,21 @@ class AppearanceForm extends ConfigFormBase {
 	}
 
 	/**
-	 * @return string[]
-	 *   A list of theme settings which are editable for users with the `administer ucb site` permission
-	 *   required to access this form. Configurable in `config/install/ucb_site_configuration.configuration.yml`
-	 *   at the root of this module.
-	 */
-	protected function getEditableThemeSettings() {
-		return $this->config('ucb_site_configuration.configuration')->get('editable_theme_settings');
-	}
-
-	/**
 	 * {@inheritdoc}
 	 */
-	public function buildForm(array $form, FormStateInterface $form_state) {
-		$themeSettings = [];
-		$editableThemeSettings = $this->getEditableThemeSettings();
-		$this->service->buildThemeSettingsForm($themeSettings, $form_state);
-		foreach($themeSettings as $themeSettingName => $themeSettingValue) {
-			if(in_array($themeSettingName, $editableThemeSettings)) {
-				$form[$themeSettingName] = $themeSettingValue;
-			}
-		}
-		return parent::buildForm($form, $form_state);
+	public function buildForm(array $form, FormStateInterface $form_state, $theme = '') {
+		$theme = $this->service->getThemeName();
+		$form = parent::buildForm($form, $form_state, $theme);
+		unset($form['theme_settings'], $form['logo'], $form['favicon']); // Removes some defaults we don't care about
+		return $form;
 	}
 
 	/**
 	 * {@inheritdoc}
 	 */
 	public function submitForm(array &$form, FormStateInterface $form_state) {
-		$config = $this->config($this->service->getThemeName() . '.settings');
-		$editableThemeSettings = $this->getEditableThemeSettings();
-		foreach($editableThemeSettings as $themeSettingName) {
-			$config->set($themeSettingName, $form_state->getValue($themeSettingName));
-		}
-		$config->save();
+		// $config = $this->config($this->service->getThemeName() . '.settings');
+		// $values = $form_state->getValues();
 		parent::submitForm($form, $form_state);
 	}
 }
