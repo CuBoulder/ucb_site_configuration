@@ -13,7 +13,6 @@ use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\node\NodeInterface;
@@ -272,32 +271,6 @@ class SiteConfiguration {
 				'#default_value'  => theme_get_setting('ucb_footer_menu_default_links', $themeName),
 				'#description'    => $this->t('Check this box if you would like to display the default Boulder footer menu links in the footer.')
 			];
-		}
-	}
-
-	/**
-	 * Builds the inner settings form for an external service on a node add or edit page.
-	 * 
-	 * @param array &$form
-	 *   The form build array.
-	 * @param string $externalServiceName
-	 *   The machine name of the external srvice.
-	 * @param \Drupal\node\NodeInterface $node
-	 *   The node for which this form is being built.
-	 * @param FormStateInterface $form_state
-	 *   The current state of the form.
-	 */
-	public function buildExternalServiceContentSettingsForm(array &$form, $externalServiceName, NodeInterface $node, FormStateInterface $form_state) {
-		switch ($externalServiceName) {
-			case 'mainstay':
-				$form['ucb_external_service_' . $externalServiceName . '__college_id'] = [
-					'#type' => 'textfield',
-					'#size' => '60',
-					'#title' => $this->t('College ID'),
-					// '#default_value' => $node->get('ucb_external_service_' . $externalServiceName . '__college_id')
-				];
-			break;
-			default:
 		}
 	}
 
