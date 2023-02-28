@@ -123,8 +123,8 @@ class AppearanceForm extends ThemeSettingsForm {
 				'#description' => $this->t('Defines the scale of the custom logo image. E.g. if 2x is selected, upload an image that is <em>exactly twice</em> the normal size of the logo (meaning for a logo meant to display at 200x36, the image you will upload is 400x72). Setting this to a higher value ensures the logo always remains sharp on high-resolution devices.'),
 				'#options' => [
 					'1x' => $this->t('1x'),
-					'2x' => $this->t('2x'),
-					'3x' => $this->t('3x')
+					'2x' => $this->t('2x (Retina)'),
+					'3x' => $this->t('3x (smartphone Retina)')
 				],
 				'#default_value' => theme_get_setting('ucb_custom_logo_scale', $theme) ?? '2x'
 			];
@@ -213,6 +213,7 @@ class AppearanceForm extends ThemeSettingsForm {
 			$this->makePermanent($file);
 		$form_state->unsetValue('ucb_custom_logo_dark_upload');
 		$form_state->unsetValue('ucb_custom_logo_light_upload');
+
 		parent::submitForm($form, $form_state);
 	}
 
