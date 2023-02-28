@@ -19,6 +19,7 @@ use Drupal\Core\Theme\ThemeManagerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 use Drupal\Core\Session\AccountInterface;
+use Drupal\file\FileInterface;
 use Drupal\file\Entity\File;
 
 class AppearanceForm extends ThemeSettingsForm {
@@ -119,7 +120,7 @@ class AppearanceForm extends ThemeSettingsForm {
 			$advanced['custom_logo']['settings']['ucb_custom_logo_scale'] = [
 				'#type'  => 'select',
 				'#title' => $this->t('Custom logo scale'),
-				'#description' => $this->t('Define the scale of the custom logo image. E.g. if 2x is selected, upload an image that is <em>exactly twice</em> the normal size of the logo (meaning for a logo meant to display at 200x36, the image you will upload is 400x72). Setting this to a higher value ensures the logo always remains sharp on high-resolution devices.'),
+				'#description' => $this->t('Defines the scale of the custom logo image. E.g. if 2x is selected, upload an image that is <em>exactly twice</em> the normal size of the logo (meaning for a logo meant to display at 200x36, the image you will upload is 400x72). Setting this to a higher value ensures the logo always remains sharp on high-resolution devices.'),
 				'#options' => [
 					'1x' => $this->t('1x'),
 					'2x' => $this->t('2x'),
@@ -147,11 +148,12 @@ class AppearanceForm extends ThemeSettingsForm {
 			$advanced['custom_logo']['settings']['dark']['ucb_custom_logo_dark_upload'] = [
 				'#type' => 'managed_file',
 				'#title' => $this->t('Upload a custom logo'),
-				'#description' => $this->t('You may upload a custom logo to use here. The path will be set to the uploaded file automatically when the form is submitted.'),
+				'#description' => $this->t('You may upload a custom logo image to use here (files larger than 2 MB won\'t be accepted). The path will be set to the uploaded file automatically when the form is submitted.'),
 				'#multiple' => FALSE,
 				'#upload_location' => 'public://custom_logo/',
 				'#upload_validators' => [
-					'file_validate_is_image' => []
+					'file_validate_is_image' => [],
+					'file_validate_size' => 2048
 				]
 			];
 			$advanced['custom_logo']['settings']['light']['ucb_custom_logo_light_path'] = [
@@ -162,11 +164,12 @@ class AppearanceForm extends ThemeSettingsForm {
 			$advanced['custom_logo']['settings']['light']['ucb_custom_logo_light_upload'] = [
 				'#type' => 'managed_file',
 				'#title' => $this->t('Upload a custom logo'),
-				'#description' => $this->t('You may upload a custom logo to use here. The path will be set to the uploaded file automatically when the form is submitted.'),
+				'#description' => $this->t('You may upload a custom logo image to use here (files larger than 2 MB won\'t be accepted). The path will be set to the uploaded file automatically when the form is submitted.'),
 				'#multiple' => FALSE,
 				'#upload_location' => 'public://custom_logo/',
 				'#upload_validators' => [
-					'file_validate_is_image' => []
+					'file_validate_is_image' => [],
+					'file_validate_size' => 2048
 				]
 			];
 			$form['advanced'] = array_merge($advanced, $form['advanced']);
@@ -178,21 +181,49 @@ class AppearanceForm extends ThemeSettingsForm {
 	/**
 	 * {@inheritdoc}
 	 */
+	public function validateForm(array &$form, FormStateInterface $form_state) {
+		parent::validateForm($form, $form_state);
+		if ($form_state->getValue('ucb_use_custom_logo')) { // Validate the custom logo path fields, setting path equal to an uploaded file path (if applicable)
+			$fidsDark = $form_state->getValue('ucb_custom_logo_dark_upload');
+			if ($fidsDark && isset($fidsDark[0]) && ($file = File::load($fidsDark[0])))
+				$form_state->setValue('ucb_custom_logo_dark_path', $file->getFileUri());
+			$fidsLight = $form_state->getValue('ucb_custom_logo_light_upload');
+			if ($fidsLight && isset($fidsLight[0]) && ($file = File::load($fidsLight[0])))
+				$form_state->setValue('ucb_custom_logo_light_path', $file->getFileUri());
+			$pathDark = $this->validatePath($form_state->getValue('ucb_custom_logo_dark_path'));
+			if ($pathDark)
+				$form_state->setValue('ucb_custom_logo_dark_path', $pathDark);
+			else $form_state->setErrorByName('ucb_custom_logo_dark_path', $this->t('The white text on dark header custom logo path is invalid. Please either upload an image or specify a valid file path to use a custom logo.'));
+			$pathLight = $this->validatePath($form_state->getValue('ucb_custom_logo_light_path'));
+			if ($pathLight)
+				$form_state->setValue('ucb_custom_logo_light_path', $pathLight);
+			else $form_state->setErrorByName('ucb_custom_logo_light_path', $this->t('The black text on light header custom logo path is invalid. Please either upload an image or specify a valid file path to use a custom logo.'));
+		}
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
 	public function submitForm(array &$form, FormStateInterface $form_state) {
 		$fidsDark = $form_state->getValue('ucb_custom_logo_dark_upload');
-		if ($fidsDark && isset($fidsDark[0]) && ($file = File::load($fidsDark[0]))) {
-			$file->setPermanent();
-			$file->save();
-			$form_state->setValue('ucb_custom_logo_dark_path', $file->getFileUri());
-		}
+		if ($fidsDark && isset($fidsDark[0]) && ($file = File::load($fidsDark[0])))
+			$this->makePermanent($file);
 		$fidsLight = $form_state->getValue('ucb_custom_logo_light_upload');
-		if ($fidsLight && isset($fidsLight[0]) && ($file = File::load($fidsLight[0]))) {
-			$file->setPermanent();
-			$file->save();
-			$form_state->setValue('ucb_custom_logo_light_path', $file->getFileUri());
-		}
+		if ($fidsLight && isset($fidsLight[0]) && ($file = File::load($fidsLight[0])))
+			$this->makePermanent($file);
 		$form_state->unsetValue('ucb_custom_logo_dark_upload');
 		$form_state->unsetValue('ucb_custom_logo_light_upload');
 		parent::submitForm($form, $form_state);
+	}
+
+	/**
+	 * This helper function makes a file permanent.
+	 * 
+	 * @param \Drupal\file\FileInterface
+	 *   A file entity.
+	 */
+	protected function makePermanent(FileInterface $file) {
+		$file->setPermanent();
+		$file->save();
 	}
 }
