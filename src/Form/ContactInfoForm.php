@@ -32,11 +32,11 @@ class ContactInfoForm extends ConfigFormBase {
 	public function buildForm(array $form, FormStateInterface $form_state) {
 		$config = $this->config('ucb_site_configuration.contact_info');
 		// Toggle for icons
-		$addressStoredValues = $config->get('address');
+		$generalStoredValues = $config->get('general');
 		$emailStoredValues = $config->get('email');
 		$phoneStoredValues = $config->get('phone');
-		if($addressStoredValues)
-			$this->_buildFormSection(sizeof($addressStoredValues), 'Address', 'address', 'address', 'Label (optional)', 'Value (supports multiline)', 'textarea', 255, $addressStoredValues, $form);
+		if($generalStoredValues)
+			$this->_buildFormSection(sizeof($generalStoredValues), 'Contact information', 'contact information', 'general', 'Label (optional)', 'Value', 'text_format', 255, $generalStoredValues, $form);
 		if($emailStoredValues)
 			$this->_buildFormSection(sizeof($emailStoredValues), 'Email address', 'email address', 'email', 'Label (optional)', 'Value', 'email', 20, $emailStoredValues, $form);
 		if($phoneStoredValues)
@@ -59,7 +59,7 @@ class ContactInfoForm extends ConfigFormBase {
 		// Section "Primary x"
 		$sectionForm = [
 			'#type' => 'details',
-			'#title' => 'Primary ' . $verboseNameLower,
+			'#title' => $this->t('Primary ' . $verboseNameLower),
 			'#open' => TRUE,
 			'#states' => [
 				'visible' => [
@@ -80,7 +80,7 @@ class ContactInfoForm extends ConfigFormBase {
 			// Section "[another] x"
 			$subSectionForm = [
 				'#type' => 'details',
-				'#title' => $verboseName,
+				'#title' => $this->t($verboseName),
 				'#open' => TRUE,
 				'#states' => [
 					'visible' => [
@@ -102,11 +102,16 @@ class ContactInfoForm extends ConfigFormBase {
 			'#title' => $this->t($labelFieldLabel),
 			'#default_value' => $storedValues[$index]['label'] ?? ''
 		];
-		$form[$machineName . '_' . $index . '_value'] = [
+		$value = $storedValues[$index]['value'];
+		if(is_array($value)) {
+			$fieldDefaultFormat = $value['format'];
+			$fieldDefaultValue = $value['value'];
+		} else $fieldDefaultValue = $value;
+		$field = $form[$machineName . '_' . $index . '_value'] = [
 			'#type' => $valueFieldType,
 			// '#size' => $valueFieldSize,
 			'#title' => $this->t($valueFieldLabel),
-			'#default_value' => $storedValues[$index]['value'] ?? '',
+			'#default_value' => $fieldDefaultValue,
 			'#states' => [
 				'required' => [
 					':input[name="' . $machineName . '_0_visible"]' => ['checked' => TRUE],
@@ -115,6 +120,8 @@ class ContactInfoForm extends ConfigFormBase {
 				]
 			]
 		];
+		if($fieldDefaultFormat)
+			$field['#format'] = $fieldDefaultFormat;
 	}
 
 	/**
@@ -124,10 +131,10 @@ class ContactInfoForm extends ConfigFormBase {
 		$formValues = $form_state->getValues();
 		$config = $this->config('ucb_site_configuration.contact_info');
 		$fieldNames = ['visible', 'label', 'value'];
-		$addressStoredValues = $config->get('address');
+		$generalStoredValues = $config->get('general');
 		$emailStoredValues = $config->get('email');
 		$phoneStoredValues = $config->get('phone');
-		$this->_saveFormSection($formValues, $config, 'address', $fieldNames, sizeof($addressStoredValues));
+		$this->_saveFormSection($formValues, $config, 'general', $fieldNames, sizeof($generalStoredValues));
 		$this->_saveFormSection($formValues, $config, 'email', $fieldNames, sizeof($emailStoredValues));
 		$this->_saveFormSection($formValues, $config, 'phone', $fieldNames, sizeof($phoneStoredValues));
 		// Set icons setting and save configuration

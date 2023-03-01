@@ -27,8 +27,8 @@ class SiteInfoBlock extends BlockBase {
 		return [
 			'#data' => [
 				'icons_visible' => $config->get('icons_visible'),
-				'address_visible' => $config->get('address_visible'),
-				'address' => $config->get('address'),
+				'general_visible' => $config->get('general_visible'),
+				'general' => $config->get('general'),
 				'email_visible' => $config->get('email_visible'),
 				'email' => $config->get('email'),
 				'phone_visible' => $config->get('phone_visible'),

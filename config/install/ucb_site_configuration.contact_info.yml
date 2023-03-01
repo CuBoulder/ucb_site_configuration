@@ -4,16 +4,12 @@
 
 icons_visible: true
 
-address_visible: false
-address:
+general_visible: false
+general:
   -
     visible: false
     label: ''
-    value: ''
-  -
-    visible: false
-    label: ''
-    value: ''
+    value: { value: '', format: 'wysiwyg' }
 
 email_visible: false
 email:

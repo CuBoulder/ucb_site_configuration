@@ -33,3 +33,20 @@ function ucb_site_configuration_update_9503() {
 function ucb_site_configuration_update_9504() {
 	\Drupal::configFactory()->getEditable('ucb_site_configuration.configuration')->clear('admin_helpscout_beacon_id')->save();
 }
+
+/**
+ * v2.3 – Modififies contact info settings (CuBoulder/tiamat-theme#269).
+ */
+function ucb_site_configuration_update_9505() {
+	\Drupal::configFactory()->getEditable('ucb_site_configuration.contact_info')
+		->clear('address_visible')
+		->clear('address')
+		->set('general_visible', FALSE)
+		->set('general', [
+			[
+				'visible' => FALSE,
+				'label' => '',
+				'value' => [ 'value' => '', 'format' => 'wysiwyg' ]
+			]])
+		->save();
+}
