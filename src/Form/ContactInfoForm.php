@@ -107,7 +107,7 @@ class ContactInfoForm extends ConfigFormBase {
 			$fieldDefaultFormat = $value['format'];
 			$fieldDefaultValue = $value['value'];
 		} else $fieldDefaultValue = $value;
-		$field = $form[$machineName . '_' . $index . '_value'] = [
+		$form[$machineName . '_' . $index . '_value'] = [
 			'#type' => $valueFieldType,
 			// '#size' => $valueFieldSize,
 			'#title' => $this->t($valueFieldLabel),
@@ -120,8 +120,8 @@ class ContactInfoForm extends ConfigFormBase {
 				]
 			]
 		];
-		if($fieldDefaultFormat)
-			$field['#format'] = $fieldDefaultFormat;
+		if(isset($fieldDefaultFormat))
+			$form[$machineName . '_' . $index . '_value']['#format'] = $fieldDefaultFormat;
 	}
 
 	/**
