@@ -103,25 +103,26 @@ class ContactInfoForm extends ConfigFormBase {
 			'#default_value' => $storedValues[$index]['label'] ?? ''
 		];
 		$value = $storedValues[$index]['value'];
-		if(is_array($value)) {
-			$fieldDefaultFormat = $value['format'];
-			$fieldDefaultValue = $value['value'];
-		} else $fieldDefaultValue = $value;
-		$form[$machineName . '_' . $index . '_value'] = [
+		$fieldName = $machineName . '_' . $index . '_value';
+		$form[$fieldName] = [
 			'#type' => $valueFieldType,
 			// '#size' => $valueFieldSize,
 			'#title' => $this->t($valueFieldLabel),
-			'#default_value' => $fieldDefaultValue,
+			'#default_value' => is_array($value) ? $value['value'] : $value,
 			'#states' => [
 				'required' => [
-					':input[name="' . $machineName . '_0_visible"]' => ['checked' => TRUE],
-					'and',
-					':input[name="' . $machineName . '_' . $index . '_visible"]' => ['checked' => TRUE]
+					':input[name="' . $machineName . '_0_visible"]' => ['checked' => TRUE]
 				]
 			]
 		];
-		if(isset($fieldDefaultFormat))
-			$form[$machineName . '_' . $index . '_value']['#format'] = $fieldDefaultFormat;
+		if ($valueFieldType == 'text_format') {
+			$form[$fieldName]['#format'] = $value['format'] ?? '';
+			$form[$fieldName]['#base_type'] = 'textarea';
+			$form[$fieldName]['#states']['required'] = [];
+		} else if ($index > 0) {
+			$form[$fieldName]['#states']['required'][] = 'and';
+			$form[$fieldName]['#states']['required'][':input[name="' . $machineName . '_' . $index . '_visible"]'] = ['checked' => TRUE];
+		}
 	}
 
 	/**
