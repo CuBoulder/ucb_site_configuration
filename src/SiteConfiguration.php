@@ -13,11 +13,13 @@ use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\StringTranslation\TranslationManager;
 use Drupal\node\NodeInterface;
 use Drupal\ucb_site_configuration\Entity\ExternalServiceInclude;
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Url;
 
 class SiteConfiguration {
 	use StringTranslationTrait;
@@ -58,6 +60,20 @@ class SiteConfiguration {
 	protected $entityTypeRepository;
 
 	/**
+	 * The current route match.
+	 *
+	 * @var \Drupal\Core\Routing\RouteMatchInterface
+	 */
+	protected $currentRouteMatch;
+
+	/**
+	 * The Messenger service.
+	 *
+	 * @var \Drupal\Core\Messenger\MessengerInterface
+	 */
+	protected $messenger;
+
+	/**
 	 * Constructs a UserInviteHelperService.
 	 *
 	 * @param \Drupal\Core\Session\AccountInterface $user
@@ -72,6 +88,10 @@ class SiteConfiguration {
 	 *   The entity type manager.
 	 * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
 	 *   The entity type repository.
+	 * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
+	 *   The current route match.
+	 * @param \Drupal\Core\Messenger\MessengerInterface $messenger
+	 *   The messenger service.
 	 */
 	public function __construct(
 		AccountInterface $user,
@@ -79,7 +99,9 @@ class SiteConfiguration {
 		ConfigFactoryInterface $config_factory,
 		TranslationManager $string_translation,
 		EntityTypeManagerInterface $entity_type_manager,
-		EntityTypeRepositoryInterface $entity_type_repository
+		EntityTypeRepositoryInterface $entity_type_repository,
+		RouteMatchInterface $current_route_match,
+		MessengerInterface $messenger
 	) {
 		$this->user = $user;
 		$this->moduleHandler = $module_handler;
@@ -87,6 +109,8 @@ class SiteConfiguration {
 		$this->stringTranslation = $string_translation;
 		$this->entityTypeManager = $entity_type_manager;
 		$this->entityTypeRepository = $entity_type_repository;
+		$this->currentRouteMatch = $current_route_match;
+		$this->messenger = $messenger;
 	}
 
 	/**
@@ -106,6 +130,11 @@ class SiteConfiguration {
 	 *   The form state.
 	 */
 	public function buildThemeSettingsForm(array &$form, FormStateInterface &$form_state) {
+		if($this->currentRouteMatch->getRouteName() != 'ucb_site_configuration.appearance_form') { // Accessing these theme settings is no longer possible from the Drupal default theme settings
+			$this->messenger->addMessage($this->t('Please visit <a href="@url">CU Boulder site settings → Appearance</a> to customize the appearance of this site.', ['@url' => Url::fromRoute('ucb_site_configuration.appearance_form')->toString()]));
+			return;
+		}
+
 		$themeName = $this->getThemeName();
 
 		$form['ucb_campus_header_color'] = [
@@ -143,18 +172,6 @@ class SiteConfiguration {
 			'#description'    => $this->t('Select if sidebar content should appear on the left or right side of a page.')
 		];
 
-		$form['ucb_be_boulder'] = [
-			'#type'           => 'select',
-			'#title'          => $this->t('Where to display the Be Boulder slogan on the site.'),
-			'#default_value'  => theme_get_setting('ucb_be_boulder', $themeName),
-			'#options'        => [
-				$this->t('None'),
-				$this->t('Footer'),
-				$this->t('Header')
-			],
-			'#description'    => $this->t('Check this box if you would like to display the "Be Boulder" slogan in the header.')
-		];
-
 		$form['ucb_rave_alerts'] = [
 			'#type'           => 'checkbox',
 			'#title'          => $this->t('Show campus-wide alerts'),
@@ -176,13 +193,6 @@ class SiteConfiguration {
 			'#description'    => $this->t('Google Tag Manager account number e.g. GTM-123456.'),
 		];
 
-		$form['ucb_secondary_menu_default_links'] = [
-			'#type'           => 'checkbox',
-			'#title'          => $this->t('Display the standard Boulder secondary menu in the header navigation region.'),
-			'#default_value'  => theme_get_setting('ucb_secondary_menu_default_links', $themeName),
-			'#description'    => $this->t('Check this box if you would like to display the default Boulder secondary menu links in the header.')
-		];
-
 		$form['ucb_secondary_menu_position'] = [
 			'#type'           => 'select',
 			'#title'          => $this->t('Position of the secondary menu'),
@@ -201,12 +211,6 @@ class SiteConfiguration {
 			'#description'    => $this->t('Check this box to display the links in the secondary menu of this site as buttons instead of links.')
 		];
 
-		$form['ucb_footer_menu_default_links'] = [
-			'#type'           => 'checkbox',
-			'#title'          => $this->t('Display the standard Boulder menus in the footer region.'),
-			'#default_value'  => theme_get_setting('ucb_footer_menu_default_links', $themeName),
-			'#description'    => $this->t('Check this box if you would like to display the default Boulder footer menu links in the footer.')
-		];
 		// Choose where social share buttons are positioned on each page
 		$form['ucb_social_share_position'] = [
 			'#type'           => 'select',
@@ -237,31 +241,36 @@ class SiteConfiguration {
 			],
 			'#description'    => $this->t('Select the preferred Global Date/Time format for dates on your site.')
 		];
-	}
-
-	/**
-	 * Builds the inner settings form for an external service on a node add or edit page.
-	 * 
-	 * @param array &$form
-	 *   The form build array.
-	 * @param string $externalServiceName
-	 *   The machine name of the external srvice.
-	 * @param \Drupal\node\NodeInterface $node
-	 *   The node for which this form is being built.
-	 * @param FormStateInterface $form_state
-	 *   The current state of the form.
-	 */
-	public function buildExternalServiceContentSettingsForm(array &$form, $externalServiceName, NodeInterface $node, FormStateInterface $form_state) {
-		switch ($externalServiceName) {
-			case 'mainstay':
-				$form['ucb_external_service_' . $externalServiceName . '__college_id'] = [
-					'#type' => 'textfield',
-					'#size' => '60',
-					'#title' => $this->t('College ID'),
-					// '#default_value' => $node->get('ucb_external_service_' . $externalServiceName . '__college_id')
-				];
-			break;
-			default:
+		if($this->user->hasPermission('edit ucb site advanced')) {
+			$form['advanced'] = [
+				'#type'  => 'details',
+				'#title' => $this->t('Advanced'),
+				'#open'  => FALSE
+			];
+			// @TODO: Add the custom logo stuff here
+			$form['advanced']['ucb_be_boulder'] = [
+				'#type'           => 'select',
+				'#title'          => $this->t('Where to display the Be Boulder slogan on the site.'),
+				'#default_value'  => theme_get_setting('ucb_be_boulder', $themeName),
+				'#options'        => [
+					$this->t('None'),
+					$this->t('Footer'),
+					$this->t('Header')
+				],
+				'#description'    => $this->t('Check this box if you would like to display the "Be Boulder" slogan in the header.')
+			];
+			$form['advanced']['ucb_secondary_menu_default_links'] = [
+				'#type'           => 'checkbox',
+				'#title'          => $this->t('Display the standard Boulder secondary menu in the header navigation region.'),
+				'#default_value'  => theme_get_setting('ucb_secondary_menu_default_links', $themeName),
+				'#description'    => $this->t('Check this box if you would like to display the default Boulder secondary menu links in the header.')
+			];	
+			$form['advanced']['ucb_footer_menu_default_links'] = [
+				'#type'           => 'checkbox',
+				'#title'          => $this->t('Display the standard Boulder menus in the footer region.'),
+				'#default_value'  => theme_get_setting('ucb_footer_menu_default_links', $themeName),
+				'#description'    => $this->t('Check this box if you would like to display the default Boulder footer menu links in the footer.')
+			];
 		}
 	}
 

@@ -2,9 +2,11 @@ name: CU Boulder Site Configuration
 description: 'Allows CU Boulder site administrators to configure site-specific settings.'
 core_version_requirement: ^9 || ^10
 type: module
-version: '2.2.1'
+version: '2.3'
 package: CU Boulder
 dependencies:
   - block
+  - file
   - node
   - ucb_admin_menus
+  - system
