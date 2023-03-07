@@ -186,6 +186,13 @@ class SiteConfiguration {
 			'#description'    => $this->t('If enabled, the breadcrumb navigation will be shown at the top of pages, helping visitors find their way around the site.')
 		];
 
+		$form['ucb_sticky_menu'] = [
+			'#type'           => 'checkbox',
+			'#title'          => $this->t('Show sticky menu'),
+			'#default_value'  => theme_get_setting('ucb_sticky_menu', $themeName),
+			'#description'    => $this->t('The sticky menu appears at the top of the page when scrolling on large-screen devices, allowing for quick access to links.')
+		];
+
 		$form['ucb_gtm_account'] = [
 			'#type'           => 'textfield',
 			'#title'          => $this->t('GTM Account Number'),
