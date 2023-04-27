@@ -107,10 +107,9 @@ class RelatedArticlesForm extends ConfigFormBase {
 	 * {@inheritdoc}
 	 */
 	public function submitForm(array &$form, FormStateInterface $form_state) {
-		$formValues = $form_state->getValues();
 		$this->config('ucb_site_configuration.settings')
-			->set('related_articles_exclude_categories', $form_state->getValue('exclude_categories'))
-			->set('related_articles_exclude_tags', $form_state->getValue('exclude_tags'))
+			->set('related_articles_exclude_categories', array_keys(array_filter($form_state->getValue('exclude_categories'))))
+			->set('related_articles_exclude_tags', array_keys(array_filter($form_state->getValue('exclude_tags'))))
 			->save();
 		parent::submitForm($form, $form_state);
 	}
