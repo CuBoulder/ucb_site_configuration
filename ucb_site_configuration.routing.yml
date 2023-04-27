@@ -40,6 +40,16 @@ ucb_site_configuration.contact_info_form:
   options:
     _admin_route: true
 
+ucb_site_configuration.related_articles_form:
+  path: '/admin/config/cu-boulder/related-articles'
+  defaults:
+    _form: '\Drupal\ucb_site_configuration\Form\RelatedArticlesForm'
+    _title: Related articles
+  requirements:
+    _permission: configure ucb related articles
+  options:
+    _admin_route: true
+
 entity.ucb_external_service_include.collection:
   path: '/admin/config/cu-boulder/services'
   defaults:

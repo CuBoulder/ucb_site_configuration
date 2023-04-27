@@ -4,3 +4,6 @@ site_type: ''
 site_affiliation: ''
 site_affiliation_label: ''
 site_affiliation_url: ''
+
+related_articles_exclude_categories: []
+related_articles_exclude_tags: []
