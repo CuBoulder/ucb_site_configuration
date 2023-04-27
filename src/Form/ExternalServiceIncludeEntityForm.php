@@ -232,7 +232,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 					'#size' => 24,
 					'#maxlength' => 24,
 					'#title' => $this->t('Bot token'),
-					'#default_value' => $externalServiceSettings['bot_token'],
+					'#default_value' => $externalServiceSettings['bot_token'] ?? '',
 					'#states' => [
 						'required' => [
 							':input[name="service_name"]' => ['value' => $externalServiceName]
@@ -244,7 +244,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 					'#size' => 64,
 					'#maxlength' => 64,
 					'#title' => $this->t('College ID'),
-					'#default_value' => $externalServiceSettings['college_id'],
+					'#default_value' => $externalServiceSettings['college_id'] ?? '',
 					'#states' => [
 						'required' => [
 							':input[name="service_name"]' => ['value' => $externalServiceName]
@@ -258,7 +258,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 					'#size' => 12,
 					'#maxlength' => 12,
 					'#title' => $this->t('License ID'),
-					'#default_value' => $externalServiceSettings['license_id'],
+					'#default_value' => $externalServiceSettings['license_id'] ?? '',
 					'#states' => [
 						'required' => [
 							':input[name="service_name"]' => ['value' => $externalServiceName]
@@ -272,7 +272,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
 					'#size' => 12,
 					'#maxlength' => 12,
 					'#title' => $this->t('Page ID'),
-					'#default_value' => $externalServiceSettings['page_id'],
+					'#default_value' => $externalServiceSettings['page_id'] ?? '',
 					'#states' => [
 						'required' => [
 							':input[name="service_name"]' => ['value' => $externalServiceName]
