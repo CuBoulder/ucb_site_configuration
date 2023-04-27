@@ -19,6 +19,17 @@ function ucb_site_configuration_preprocess_page(array &$variables) {
 }
 
 /**
+ * Exposes related article configuration to the Article node template.
+ * Implements hook_preprocess_HOOK().
+ */
+function ucb_site_configuration_preprocess_node(array &$variables) {
+	/** @var \Drupal\node\NodeInterface $node */
+	$node = $variables['node'];
+	if ($node->getType() == 'ucb_article')
+		\Drupal::service('ucb_site_configuration')->attachRelatedArticlesConfiguration($variables);
+}
+
+/**
  * Adds third-party service configuration options to node form sidebars.
  * Implements hook_form_BASE_FORM_ID_alter().
  */

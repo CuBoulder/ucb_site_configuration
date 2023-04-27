@@ -132,7 +132,6 @@ class GeneralForm extends ConfigFormBase {
 	 */
 	public function submitForm(array &$form, FormStateInterface $form_state) {
 		$configuration = $this->service->getConfiguration();
-		$settings = $this->config('ucb_site_configuration.settings');
 		$siteTypeOptions = $configuration->get('site_type_options');
 		$this->config('system.site')->set('name', $form_state->getValue('site_name'))->save();
 		$siteTypeId = $form_state->getValue('site_type');
