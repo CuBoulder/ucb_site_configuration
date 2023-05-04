@@ -316,6 +316,18 @@ class SiteConfiguration {
 	}
 
 	/**
+	 * This helper function attaches related articles configuration to Articles.
+	 * 
+	 * @param array &$variables
+	 *   The array to add the site information to.
+	 */
+	public function attachRelatedArticlesConfiguration(array &$variables) {
+		$settings = $this->getSettings();
+		$variables['related_articles_exclude_categories'] = $settings->get('related_articles_exclude_categories') ?? [];
+		$variables['related_articles_exclude_tags'] = $settings->get('related_articles_exclude_tags') ?? [];
+	}
+
+	/**
 	 * This helper function attaches external service includes if called from hook_preprocess in the .module file.
 	 * Variables can be referenced from the template using `service_servicename_includes`.
 	 * 

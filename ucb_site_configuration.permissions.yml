@@ -10,6 +10,10 @@ edit ucb site contact info:
   title: Edit the site contact info
   description: 'Enables editing of the CU Boulder site contact info.'
 
+configure ucb related articles:
+  title: Configure related articles
+  description: 'Exclude categories or tags from related articles.'
+
 administer ucb external services:
   title: Administer third-party services
   description: 'Enables adding, editing, and deleting supported third-party services.'

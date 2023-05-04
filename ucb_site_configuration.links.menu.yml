@@ -23,9 +23,15 @@ ucb_site_configuration.contact_info_form:
   route_name: ucb_site_configuration.contact_info_form
   parent: ucb_site_configuration
   weight: 2
+ucb_site_configuration.related_articles_form:
+  title: Related articles
+  description: 'Exclude categories or tags from related articles.'
+  route_name: ucb_site_configuration.related_articles_form
+  parent: ucb_site_configuration
+  weight: 3
 ucb_site_configuration.external_services:
   title: Third-party services
   description: 'Configure third-party services to be used on the site.'
   route_name: entity.ucb_external_service_include.collection
   parent: ucb_site_configuration
-  weight: 3
+  weight: 4

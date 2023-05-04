@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds a global "Related articles" configuration form to CU Boulder Site Settings
+  This update adds a "Related articles" configuration form to CU Boulder Site Settings, accessible via the menu or `/admin/config/cu-boulder/related-articles`. Here users with permission can exclude articles with specific categories or tags from appearing in "related articles" sections. Resolves CuBoulder/ucb_site_configuration#22
+  
+  This update also fixes a bug which caused warnings to appear when configuring a third-party service. Resolves CuBoulder/ucb_site_configuration#21
+  
+  Sister PR in: [tiamat-profile](https://github.com/CuBoulder/tiamat-profile/pull/47), [tiamat10-profile](https://github.com/CuBoulder/tiamat10-profile/pull/7)
+---
+
 - ### Adds sticky menu
   This update adds an optional "sticky menu" component to all pages on a site, enabled by visiting CU Boulder site settings → Appearance and toggling on _Show sticky menu_. The menu appears automatically when a user scrolls down passed the main website header, and only on large screen devices (at least 960 pixels wide).
   
