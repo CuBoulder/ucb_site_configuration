@@ -1,7 +1,5 @@
 <?php
 
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
@@ -43,7 +41,7 @@ function ucb_site_configuration_field_widget_single_element_form_alter(array &$e
 }
 
 /**
- * Adds configuration options to node form sidebars.
+ * Adds third-party service configuration options to node form sidebars.
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInterface $form_state) {
@@ -62,7 +60,7 @@ function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInte
 	}
 	/** @var \Symfony\Component\Routing\Route */
     $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('entity.ucb_external_service_include.collection');
-	$form['ucb_external_services'] = [ // Adds third-party service includes to node sidebar
+	$form['ucb_external_services'] = [
 		'#type' => 'details',
    		'#title' => t('Third-party services'),
 		'#group' => 'advanced',
