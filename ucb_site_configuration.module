@@ -1,5 +1,7 @@
 <?php
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
@@ -23,7 +25,7 @@ function ucb_site_configuration_preprocess_page(array &$variables) {
  * Implements hook_preprocess_HOOK().
  */
 function ucb_site_configuration_preprocess_node(array &$variables) {
-	/** @var \Drupal\node\NodeInterface $node */
+	/** @var \Drupal\node\NodeInterface */
 	$node = $variables['node'];
 	if ($node->getType() === 'ucb_article') {
 		\Drupal::service('ucb_site_configuration')->attachRelatedArticlesConfiguration($variables);
@@ -32,13 +34,22 @@ function ucb_site_configuration_preprocess_node(array &$variables) {
 }
 
 /**
- * Adds third-party service configuration options to node form sidebars.
+ * Sets related articles setting to the global setting by default.
+ * Implements hook_field_widget_single_element_form_alter().  
+ */  
+function ucb_site_configuration_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context) {
+	if ($context['items']->getFieldDefinition()->getName() === 'field_ucb_related_articles_parag' && !$form_state->getFormObject()->getEntity()->id())
+		$element['subform']['field_ucb_related_articles_bool']['widget']['value']['#default_value'] = \Drupal::service('ucb_site_configuration')->getSettings()->get('related_articles_enabled_by_default') ?? FALSE;	
+}
+
+/**
+ * Adds configuration options to node form sidebars.
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInterface $form_state) {
 	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
 	$service = \Drupal::service('ucb_site_configuration');
-	/** @var \Drupal\node\NodeInterface $node */
+	/** @var \Drupal\node\NodeInterface */
 	$node = $form_state->getFormObject()->getEntity();
 	$contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
 	$contentServicesFieldAllowedOptions = [];
@@ -51,7 +62,7 @@ function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInte
 	}
 	/** @var \Symfony\Component\Routing\Route */
     $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('entity.ucb_external_service_include.collection');
-	$form['ucb_external_services'] = [
+	$form['ucb_external_services'] = [ // Adds third-party service includes to node sidebar
 		'#type' => 'details',
    		'#title' => t('Third-party services'),
 		'#group' => 'advanced',

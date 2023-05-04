@@ -86,6 +86,13 @@ class RelatedArticlesForm extends ConfigFormBase {
 			$categoryOptions[$categoryTerm->id()] = $categoryTerm->label();
 		foreach ($tagTerms as $tagTerm)
 			$tagOptions[$tagTerm->id()] = $tagTerm->label();
+		$form['enabled_by_default'] = [
+			'#type' => 'checkbox',
+			'#title' => $this->t('Enable related articles by default for new articles'),
+			'#description' => $this->t('If enabled, related articles will default to on when creating a new article. A content author may still turn on or off related articles manually for an individual article.'),
+			'#default_value' => $settings->get('related_articles_enabled_by_default') ?? FALSE,
+			'#required' => FALSE
+		];
 		$form['exclude_categories'] = [
 			'#type' => 'checkboxes',
 			'#title' => $this->t('Exclude categories'),
@@ -108,6 +115,7 @@ class RelatedArticlesForm extends ConfigFormBase {
 	 */
 	public function submitForm(array &$form, FormStateInterface $form_state) {
 		$this->config('ucb_site_configuration.settings')
+			->set('related_articles_enabled_by_default', $form_state->getValue('enabled_by_default'))
 			->set('related_articles_exclude_categories', array_keys(array_filter($form_state->getValue('exclude_categories'))))
 			->set('related_articles_exclude_tags', array_keys(array_filter($form_state->getValue('exclude_tags'))))
 			->save();
