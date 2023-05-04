@@ -161,6 +161,27 @@ class SiteConfiguration {
 			'#description'    => $this->t('Select the color for the header background for the site information at the top of the page.')
 		];
 
+		$form['ucb_menu_style'] = [
+			'#type'           => 'select',
+			'#title'          => $this->t('Menu style'),
+			'#default_value'  => theme_get_setting('ucb_menu_style', $themeName) ?? 'default',
+			'#options'        => [
+				'default' => $this->t('Default'),
+				'highlight'  => $this->t('Highlight'),
+				'ivory'  => $this->t('Ivory'),
+				'layers'  => $this->t('Layers'),
+				'minimal'  => $this->t('Minimal'),
+				'modern'  => $this->t('Modern'),
+				'rise'  => $this->t('Rise'),
+				'simple'  => $this->t('Simple'),
+				'shadow'  => $this->t('Shadow'),
+				'spirit'  => $this->t('Spirit'),
+				'swatch'  => $this->t('Swatch'),
+				'tradition'  => $this->t('Tradition')
+			],
+			'#description'    => $this->t('Select a style for the main navigation menu.')
+		];
+
 		$form['ucb_sidebar_position'] = [
 			'#type'           => 'select',
 			'#title'          => $this->t('Where to show sidebar content on a page'),
