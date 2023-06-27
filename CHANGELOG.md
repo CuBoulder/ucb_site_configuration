@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds "Menu style" setting to Appearance
+  CU Boulder Site Settings → Appearance features a new "Menu style" menu. Resolves CuBoulder/ucb_site_configuration#24.
+  
+  Sister issue as: CuBoulder/tiamat-theme#330 (PR [here](https://github.com/CuBoulder/tiamat-theme/pull/416))
+---
+
 - ### Adds a global "Related articles" configuration form to CU Boulder Site Settings
   This update adds a "Related articles" configuration form to CU Boulder Site Settings, accessible via the menu or `/admin/config/cu-boulder/related-articles`. Here users with permission can exclude articles with specific categories or tags from appearing in "related articles" sections. Resolves CuBoulder/ucb_site_configuration#22
   
