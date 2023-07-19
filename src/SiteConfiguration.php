@@ -118,7 +118,7 @@ class SiteConfiguration {
 	 *   The machine name of the CU Boulder base theme to configure.
 	 */
 	public function getThemeName() {
-		return 'boulderD9_base';
+		return 'boulder_base';
 	}
 
 	/**
