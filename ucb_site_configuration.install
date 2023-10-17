@@ -1,52 +1,60 @@
 <?php
+
+/**
+ * @file
+ * Contains update hooks used by the CU Boulder Site Configuration module.
+ */
+
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * v2.1 – Adds configuration and settings for the site type and affiliation (CuBoulder/tiamat-theme#210, CuBoulder/tiamat-theme#211).
+ * V2.1 – Adds configuration and settings for the site type and affiliation (CuBoulder/tiamat-theme#210, CuBoulder/tiamat-theme#211).
  */
 function ucb_site_configuration_update_9502() {
-	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
-	$settings = \Drupal::configFactory()->getEditable('ucb_site_configuration.settings');
-	$yaml = Yaml::parse(file_get_contents(drupal_get_path('module', 'ucb_site_configuration') . '/config/install/ucb_site_configuration.configuration.yml'));
-	if (!is_array($yaml))
-		throw new \RuntimeException('Oh no! Failed to get or parse site type and affiliation configuration YAML.');
-	$config->set('site_type_options', $yaml['site_type_options'])->set('site_affiliation_options', $yaml['site_affiliation_options'])->save();
-	$settings->set('site_type', '')->set('site_affiliation', '')->set('site_affiliation_label', '')->set('site_affiliation_url', '')->save();
+  $config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
+  $settings = \Drupal::configFactory()->getEditable('ucb_site_configuration.settings');
+  $yaml = Yaml::parse(file_get_contents(drupal_get_path('module', 'ucb_site_configuration') . '/config/install/ucb_site_configuration.configuration.yml'));
+  if (!is_array($yaml)) {
+    throw new \RuntimeException('Oh no! Failed to get or parse site type and affiliation configuration YAML.');
+  }
+  $config->set('site_type_options', $yaml['site_type_options'])->set('site_affiliation_options', $yaml['site_affiliation_options'])->save();
+  $settings->set('site_type', '')->set('site_affiliation', '')->set('site_affiliation_label', '')->set('site_affiliation_url', '')->save();
 }
 
 /**
- * v2.1.1 – Removes "Be Boulder slogan" from Appearance settings (CuBoulder/tiamat-theme#230).
+ * V2.1.1 – Removes "Be Boulder slogan" from Appearance settings (CuBoulder/tiamat-theme#230).
  */
 function ucb_site_configuration_update_9503() {
-	$config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
-	$editableThemeSettings = $config->get('editable_theme_settings');
-	$index = array_search('ucb_be_boulder', $editableThemeSettings);
-	if ($index !== false) {
-		array_splice($editableThemeSettings, $index, 1);
-		$config->set('editable_theme_settings', $editableThemeSettings)->save();	
-	}
+  $config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
+  $editableThemeSettings = $config->get('editable_theme_settings');
+  $index = array_search('ucb_be_boulder', $editableThemeSettings);
+  if ($index !== FALSE) {
+    array_splice($editableThemeSettings, $index, 1);
+    $config->set('editable_theme_settings', $editableThemeSettings)->save();
+  }
 }
 
 /**
- * v2.2 – Admin Helpscout Beacon moved to ucb_admin_menus (CuBoulder/ucb_admin_menus#2).
+ * V2.2 – Admin Helpscout Beacon moved to ucb_admin_menus (CuBoulder/ucb_admin_menus#2).
  */
 function ucb_site_configuration_update_9504() {
-	\Drupal::configFactory()->getEditable('ucb_site_configuration.configuration')->clear('admin_helpscout_beacon_id')->save();
+  \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration')->clear('admin_helpscout_beacon_id')->save();
 }
 
 /**
- * v2.3 – Modififies contact info settings (CuBoulder/tiamat-theme#269).
+ * V2.3 – Modififies contact info settings (CuBoulder/tiamat-theme#269).
  */
 function ucb_site_configuration_update_9505() {
-	\Drupal::configFactory()->getEditable('ucb_site_configuration.contact_info')
-		->clear('address_visible')
-		->clear('address')
-		->set('general_visible', FALSE)
-		->set('general', [
-			[
-				'visible' => FALSE,
-				'label' => '',
-				'value' => [ 'value' => '', 'format' => 'wysiwyg' ]
-			]])
-		->save();
+  \Drupal::configFactory()->getEditable('ucb_site_configuration.contact_info')
+    ->clear('address_visible')
+    ->clear('address')
+    ->set('general_visible', FALSE)
+    ->set('general', [
+      [
+        'visible' => FALSE,
+        'label' => '',
+        'value' => ['value' => '', 'format' => 'wysiwyg'],
+      ],
+    ])
+    ->save();
 }

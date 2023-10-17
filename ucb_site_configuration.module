@@ -1,109 +1,126 @@
 <?php
 
+/**
+ * @file
+ * Contains functional hooks used by the CU Boulder Site Configuration module.
+ */
+
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
  * Enables external service includes to be referenced from the page template.
+ *
  * Implements hook_preprocess_HOOK().
  */
 function ucb_site_configuration_preprocess_page(array &$variables) {
-	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
-	$service = \Drupal::service('ucb_site_configuration');
-	$service->attachSiteInformation($variables);
-	if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
-		$service->attachExternalServiceIncludes($variables, $node);
-	} else $service->attachExternalServiceIncludes($variables);
-	$variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
-	$variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
+  /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+  $service = \Drupal::service('ucb_site_configuration');
+  $service->attachSiteInformation($variables);
+  if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
+    $service->attachExternalServiceIncludes($variables, $node);
+  }
+  else {
+    $service->attachExternalServiceIncludes($variables);
+  }
+  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
+  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
 }
 
 /**
  * Exposes related article configuration to the Article node template.
+ *
  * Implements hook_preprocess_HOOK().
  */
 function ucb_site_configuration_preprocess_node(array &$variables) {
-	/** @var \Drupal\node\NodeInterface */
-	$node = $variables['node'];
-	if ($node->getType() === 'ucb_article') {
-		\Drupal::service('ucb_site_configuration')->attachRelatedArticlesConfiguration($variables);
-		$variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
-	}
+  /** @var \Drupal\node\NodeInterface */
+  $node = $variables['node'];
+  if ($node->getType() === 'ucb_article') {
+    \Drupal::service('ucb_site_configuration')->attachRelatedArticlesConfiguration($variables);
+    $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
+  }
 }
 
 /**
  * Sets related articles setting to the global setting by default.
- * Implements hook_field_widget_single_element_form_alter().  
- */  
+ *
+ * Implements hook_field_widget_single_element_form_alter().
+ */
 function ucb_site_configuration_field_widget_single_element_form_alter(array &$element, FormStateInterface $form_state, array $context) {
-	if ($context['items']->getFieldDefinition()->getName() === 'field_ucb_related_articles_parag' && !$form_state->getFormObject()->getEntity()->id())
-		$element['subform']['field_ucb_related_articles_bool']['widget']['value']['#default_value'] = \Drupal::service('ucb_site_configuration')->getSettings()->get('related_articles_enabled_by_default') ?? FALSE;	
+  if ($context['items']->getFieldDefinition()->getName() === 'field_ucb_related_articles_parag' && !$form_state->getFormObject()->getEntity()->id()) {
+    $element['subform']['field_ucb_related_articles_bool']['widget']['value']['#default_value'] = \Drupal::service('ucb_site_configuration')->getSettings()->get('related_articles_enabled_by_default') ?? FALSE;
+  }
 }
 
 /**
  * Adds third-party service configuration options to node form sidebars.
+ *
  * Implements hook_form_BASE_FORM_ID_alter().
  */
 function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInterface $form_state) {
-	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
-	$service = \Drupal::service('ucb_site_configuration');
-	/** @var \Drupal\node\NodeInterface */
-	$node = $form_state->getFormObject()->getEntity();
-	$contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
-	$contentServicesFieldAllowedOptions = [];
-	$contentServicesFieldDefaultOptions = [];
-	foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
-		$includeId = $externalServiceInclude->id();
-		$contentServicesFieldAllowedOptions[$includeId] = $externalServiceInclude->label();
-		if (in_array($node->id(), $externalServiceInclude->getNodeIds()))
-			$contentServicesFieldDefaultOptions[] = $includeId;
-	}
-	/** @var \Symfony\Component\Routing\Route */
-    $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('entity.ucb_external_service_include.collection');
-	$form['ucb_external_services'] = [
-		'#type' => 'details',
-   		'#title' => t('Third-party services'),
-		'#group' => 'advanced',
-		'#open' => (bool) $contentServicesFieldDefaultOptions,
-		'ucb_external_services_enabled' => [
-			'#type'  => 'checkboxes',
-			'#title' => t('Third-party services'),
-			'#description' => t('A user with permission can <a href="@settings_form_uri">configure third-party services</a> to display here. Third-party services aren\'t included in previews.', ['@settings_form_uri' => $siteSettingsRoute->getPath()]),
-			'#options' => $contentServicesFieldAllowedOptions,
-			'#default_value' => $contentServicesFieldDefaultOptions
-		]
-	];
-	// Binds submit action
-	foreach (array_keys($form['actions']) as $action) {
-		if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
-			$form['actions'][$action]['#submit'][] = 'ucb_site_configuration_form_node_form_submit';
-		}
-	}
+  /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+  $service = \Drupal::service('ucb_site_configuration');
+  /** @var \Drupal\node\NodeInterface */
+  $node = $form_state->getFormObject()->getEntity();
+  $contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
+  $contentServicesFieldAllowedOptions = [];
+  $contentServicesFieldDefaultOptions = [];
+  foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
+    $includeId = $externalServiceInclude->id();
+    $contentServicesFieldAllowedOptions[$includeId] = $externalServiceInclude->label();
+    if (in_array($node->id(), $externalServiceInclude->getNodeIds())) {
+      $contentServicesFieldDefaultOptions[] = $includeId;
+    }
+  }
+  /** @var \Symfony\Component\Routing\Route */
+  $siteSettingsRoute = \Drupal::service('router.route_provider')->getRouteByName('entity.ucb_external_service_include.collection');
+  $form['ucb_external_services'] = [
+    '#type' => 'details',
+    '#title' => t('Third-party services'),
+    '#group' => 'advanced',
+    '#open' => (bool) $contentServicesFieldDefaultOptions,
+    'ucb_external_services_enabled' => [
+      '#type'  => 'checkboxes',
+      '#title' => t('Third-party services'),
+      '#description' => t('A user with permission can <a href="@settings_form_uri">configure third-party services</a> to display here. Third-party services aren\'t included in previews.', ['@settings_form_uri' => $siteSettingsRoute->getPath()]),
+      '#options' => $contentServicesFieldAllowedOptions,
+      '#default_value' => $contentServicesFieldDefaultOptions,
+    ],
+  ];
+  // Binds submit action.
+  foreach (array_keys($form['actions']) as $action) {
+    if ($action != 'preview' && isset($form['actions'][$action]['#type']) && $form['actions'][$action]['#type'] === 'submit') {
+      $form['actions'][$action]['#submit'][] = 'ucb_site_configuration_form_node_form_submit';
+    }
+  }
 }
 
 /**
  * Saves the third-party services settings when a node is saved.
  */
 function ucb_site_configuration_form_node_form_submit(array &$form, FormStateInterface $form_state) {
-	/** @var \Drupal\ucb_site_configuration\SiteConfiguration */
-	$service = \Drupal::service('ucb_site_configuration');
-	/** @var \Drupal\node\NodeInterface */
-	$node = $form_state->getFormObject()->getEntity();
-	$contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
-	$contentServicesFieldSelectedIds = $form_state->getValue('ucb_external_services_enabled');
-	foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
-		$includeId = $externalServiceInclude->id();
-		$nodeIds = $externalServiceInclude->getNodeIds();
-		$index = array_search($node->id(), $nodeIds);
-		$isSelected = (bool) $contentServicesFieldSelectedIds[$includeId];
-		if ($isSelected && $index === false) { // add the node to the include
-			$nodeIds[] = $node->id();
-			$externalServiceInclude->set('nodes', $nodeIds);
-			$externalServiceInclude->save();
-		} else if (!$isSelected && $index !== false) { // remove the node from the include
-			unset($nodeIds[$index]);
-			$externalServiceInclude->set('nodes', $nodeIds);
-			$externalServiceInclude->save();
-		}
-	}
+  /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+  $service = \Drupal::service('ucb_site_configuration');
+  /** @var \Drupal\node\NodeInterface */
+  $node = $form_state->getFormObject()->getEntity();
+  $contentAccessibleExternalServiceIncludes = $service->getContentAccessibleExternalServiceIncludes();
+  $contentServicesFieldSelectedIds = $form_state->getValue('ucb_external_services_enabled');
+  foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
+    $includeId = $externalServiceInclude->id();
+    $nodeIds = $externalServiceInclude->getNodeIds();
+    $index = array_search($node->id(), $nodeIds);
+    $isSelected = (bool) $contentServicesFieldSelectedIds[$includeId];
+    // Add the node to the include.
+    if ($isSelected && $index === FALSE) {
+      $nodeIds[] = $node->id();
+      $externalServiceInclude->set('nodes', $nodeIds);
+      $externalServiceInclude->save();
+      // Remove the node from the include.
+    }
+    elseif (!$isSelected && $index !== FALSE) {
+      unset($nodeIds[$index]);
+      $externalServiceInclude->set('nodes', $nodeIds);
+      $externalServiceInclude->save();
+    }
+  }
 }

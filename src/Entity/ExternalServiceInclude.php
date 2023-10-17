@@ -1,18 +1,17 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\ucb_site_configuration\Entity\ExternalServiceInclude.
- */
-
 namespace Drupal\ucb_site_configuration\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\node\Entity\Node;
 
 /**
- * Defines the ExternalServiceInclude entity.
- * 
+ * The entity used to add a node-level third-party service service to a site.
+ *
+ * This is distinct from block-level third-party services, or third-party
+ * services such as Google Maps that can be added from a plugin in the
+ * WYSIWYG editor, which aren't handled by this module.
+ *
  * @ConfigEntityType(
  *  id = "ucb_external_service_include",
  *  label = @Translation("Third-party service"),
@@ -22,7 +21,7 @@ use Drupal\node\Entity\Node;
  *   "form" = {
  *    "add" = "Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityForm",
  *    "edit" = "Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityForm",
- *    "delete" = "Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityDeleteForm" 
+ *    "delete" = "Drupal\ucb_site_configuration\Form\ExternalServiceIncludeEntityDeleteForm"
  *   }
  *  },
  *  config_prefix = "external_service_includes",
@@ -55,90 +54,95 @@ use Drupal\node\Entity\Node;
  */
 class ExternalServiceInclude extends ConfigEntityBase implements ExternalServiceIncludeInterface {
 
-	/**
-	 * The machine name of this include.
-	 *
-	 * @var string
-	 */
-	protected $id = '';
+  /**
+   * The machine name of this include.
+   *
+   * @var string
+   */
+  protected $id = '';
 
-	/**
-	 * The label of this include.
-	 *
-	 * @var string
-	 */
-	protected $label = '';
+  /**
+   * The label of this include.
+   *
+   * @var string
+   */
+  protected $label = '';
 
-	/**
-	 * The name of the service of this include.
-	 *
-	 * @var string
-	 */
-	protected $service_name = '';
+  /**
+   * The name of the service of this include.
+   *
+   * @var string
+   */
+  protected $service_name = '';
 
-	/**
-	 * The settings of the service of this include.
-	 *
-	 * @var array
-	 */
-	protected $service_settings = [];
+  /**
+   * The settings of the service of this include.
+   *
+   * @var array
+   */
+  protected $service_settings = [];
 
-	/**
-	 * True if this include applies to the entire site rather than specific nodes.
-	 */
-	protected $sitewide = FALSE;
+  /**
+   * True if this include applies to the entire site rather than specific nodes.
+   *
+   * @var bool
+   */
+  protected $sitewide = FALSE;
 
-	/**
-	 * True if this include can be added or removed by content authors.
-	 */
-	protected $content_editing_enabled = TRUE;
+  /**
+   * True if this include can be added or removed by content authors.
+   *
+   * @var bool
+   */
+  protected $content_editing_enabled = TRUE;
 
-	/**
-	 * The ids for nodes that this include applies to.
-	 *
-	 * @var string[]
-	 */
-	protected $nodes = [];
+  /**
+   * The ids for nodes that this include applies to.
+   *
+   * @var string[]
+   */
+  protected $nodes = [];
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getServiceName() {
-		return $this->service_name;
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function getServiceName() {
+    return $this->service_name;
+  }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getServiceSettings() {
-		return $this->service_settings;
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function getServiceSettings() {
+    return $this->service_settings;
+  }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isSitewide() {
-		return (bool) $this->sitewide;
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function isSitewide() {
+    return (bool) $this->sitewide;
+  }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function isContentEditingEnabled() {
-		return (bool) $this->content_editing_enabled;
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function isContentEditingEnabled() {
+    return (bool) $this->content_editing_enabled;
+  }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getNodeIds() {
-		return $this->nodes;
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function getNodeIds() {
+    return $this->nodes;
+  }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	public function getNodes() {
-		return Node::loadMultiple($this->nodes);
-	}
+  /**
+   * {@inheritdoc}
+   */
+  public function getNodes() {
+    return Node::loadMultiple($this->nodes);
+  }
+
 }
