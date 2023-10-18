@@ -22,7 +22,7 @@ class ExternalServiceIncludeListBuilder extends ConfigEntityListBuilder {
   protected $service;
 
   /**
-   * Constructs a new ExternalServiceIncludeListBuilder object.
+   * Constructs an ExternalServiceIncludeListBuilder object.
    *
    * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
    *   The entity type definition.

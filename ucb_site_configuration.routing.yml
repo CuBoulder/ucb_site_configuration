@@ -16,7 +16,7 @@ ucb_site_configuration.general_form:
     _form: '\Drupal\ucb_site_configuration\Form\GeneralForm'
     _title: General
   requirements:
-    _permission: edit ucb site general
+    _custom_access: '\Drupal\ucb_site_configuration\Controller\SiteSettingsAccessController::accessGeneral'
   options:
     _admin_route: true
 

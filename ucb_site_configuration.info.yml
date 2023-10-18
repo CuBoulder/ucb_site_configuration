@@ -8,5 +8,6 @@ dependencies:
   - block
   - file
   - node
+  - path_alias
   - ucb_admin_menus
   - system
