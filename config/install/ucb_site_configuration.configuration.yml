@@ -166,9 +166,11 @@ site_search_options:
   custom:
     url: ''
     label: 'This site'
+    placeholder: 'Search this site'
   default:
     url: 'https://www.colorado.edu/search'
     label: 'All of Colorado.edu'
+    placeholder: 'Search Colorado.edu'
 
 external_services:
   mainstay: 

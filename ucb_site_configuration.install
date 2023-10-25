@@ -116,6 +116,7 @@ function ucb_site_configuration_update_9506() {
   _ucb_site_configuration_update_settings([
     'site_search_enabled',
     'site_search_label',
+    'site_search_placeholder',
     'site_search_url',
   ]);
 }

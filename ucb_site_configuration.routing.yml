@@ -16,7 +16,7 @@ ucb_site_configuration.general_form:
     _form: '\Drupal\ucb_site_configuration\Form\GeneralForm'
     _title: General
   requirements:
-    _custom_access: '\Drupal\ucb_site_configuration\Controller\SiteSettingsAccessController::accessGeneral'
+    _permission: edit ucb site general
   options:
     _admin_route: true
 
@@ -27,6 +27,16 @@ ucb_site_configuration.appearance_form:
     _title: Appearance
   requirements:
     _permission: edit ucb site appearance
+  options:
+    _admin_route: true
+
+ucb_site_configuration.pages_form:
+  path: '/admin/config/cu-boulder/pages'
+  defaults:
+    _form: '\Drupal\ucb_site_configuration\Form\PagesForm'
+    _title: Pages & search
+  requirements:
+    _permission: edit ucb site pages
   options:
     _admin_route: true
 
