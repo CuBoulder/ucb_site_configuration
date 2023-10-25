@@ -162,6 +162,14 @@ site_affiliation_options:
     label: 'A CU Boulder Sport Club'
     type_restricted: true
 
+site_search_options:
+  custom:
+    url: ''
+    label: 'This site'
+  default:
+    url: 'https://www.colorado.edu/search'
+    label: 'All of Colorado.edu'
+
 external_services:
   mainstay: 
     label: Mainstay

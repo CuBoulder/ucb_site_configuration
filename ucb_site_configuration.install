@@ -8,21 +8,62 @@
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * V2.1 – Adds configuration and settings for the site type and affiliation (CuBoulder/tiamat-theme#210, CuBoulder/tiamat-theme#211).
+ * Updates the configuration.
+ *
+ * @param string[] $configKeys
+ *   The configuration to update.
  */
-function ucb_site_configuration_update_9502() {
-  $config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
-  $settings = \Drupal::configFactory()->getEditable('ucb_site_configuration.settings');
-  $yaml = Yaml::parse(file_get_contents(drupal_get_path('module', 'ucb_site_configuration') . '/config/install/ucb_site_configuration.configuration.yml'));
-  if (!is_array($yaml)) {
-    throw new \RuntimeException('Oh no! Failed to get or parse site type and affiliation configuration YAML.');
+function _ucb_site_configuration_update_config(array $configKeys) {
+  $modulePath = Drupal::getContainer()->get('extension.path.resolver')->getPath('module', 'ucb_site_configuration');
+  $configYaml = Yaml::parse(file_get_contents($modulePath . '/config/install/ucb_site_configuration.configuration.yml'));
+  $configEditable = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
+  foreach ($configKeys as $configKey) {
+    $configEditable->set($configKey, $configYaml[$configKey]);
   }
-  $config->set('site_type_options', $yaml['site_type_options'])->set('site_affiliation_options', $yaml['site_affiliation_options'])->save();
-  $settings->set('site_type', '')->set('site_affiliation', '')->set('site_affiliation_label', '')->set('site_affiliation_url', '')->save();
+  $configEditable->save();
 }
 
 /**
- * V2.1.1 – Removes "Be Boulder slogan" from Appearance settings (CuBoulder/tiamat-theme#230).
+ * Updates the settings.
+ *
+ * Important: This will override any user-defined settings. Recommended only
+ * for adding previously non-existent settings.
+ *
+ * @param string[] $settingKeys
+ *   The settings to update.
+ */
+function _ucb_site_configuration_update_settings(array $settingKeys) {
+  $modulePath = Drupal::getContainer()->get('extension.path.resolver')->getPath('module', 'ucb_site_configuration');
+  $settingsYaml = Yaml::parse(file_get_contents($modulePath . '/config/install/ucb_site_configuration.settings.yml'));
+  $settingsEditable = \Drupal::configFactory()->getEditable('ucb_site_configuration.settings');
+  foreach ($settingKeys as $settingKey) {
+    $settingsEditable->set($settingKey, $settingsYaml[$settingKey]);
+  }
+  $settingsEditable->save();
+}
+
+/**
+ * Adds configuration and settings for the site type and affiliation.
+ *
+ * Introduced in version 2.1 to address tiamat-theme#210, tiamat-theme#211.
+ */
+function ucb_site_configuration_update_9502() {
+  _ucb_site_configuration_update_config([
+    'site_type_options',
+    'site_affiliation_options',
+  ]);
+  _ucb_site_configuration_update_settings([
+    'site_type',
+    'site_affiliation',
+    'site_affiliation_label',
+    'site_affiliation_url',
+  ]);
+}
+
+/**
+ * Removes "Be Boulder slogan" from Appearance settings.
+ *
+ * Introduced in version 2.1.1 to address tiamat-theme#230.
  */
 function ucb_site_configuration_update_9503() {
   $config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
@@ -35,14 +76,18 @@ function ucb_site_configuration_update_9503() {
 }
 
 /**
- * V2.2 – Admin Helpscout Beacon moved to ucb_admin_menus (CuBoulder/ucb_admin_menus#2).
+ * Admin Helpscout Beacon moved to ucb_admin_menus.
+ *
+ * Introduced in version 2.2 to address ucb_admin_menus#2.
  */
 function ucb_site_configuration_update_9504() {
   \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration')->clear('admin_helpscout_beacon_id')->save();
 }
 
 /**
- * V2.3 – Modififies contact info settings (CuBoulder/tiamat-theme#269).
+ * Modifies contact info settings.
+ *
+ * Introduced in version 2.3 to address tiamat-theme#269.
  */
 function ucb_site_configuration_update_9505() {
   \Drupal::configFactory()->getEditable('ucb_site_configuration.contact_info')
@@ -57,4 +102,20 @@ function ucb_site_configuration_update_9505() {
       ],
     ])
     ->save();
+}
+
+/**
+ * Adds configuration and settings for the site search.
+ *
+ * Introduced in version 2.5 to address tiamat-theme#266.
+ */
+function ucb_site_configuration_update_9506() {
+  _ucb_site_configuration_update_config([
+    'site_search_options',
+  ]);
+  _ucb_site_configuration_update_settings([
+    'site_search_enabled',
+    'site_search_label',
+    'site_search_url',
+  ]);
 }

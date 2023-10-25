@@ -160,7 +160,7 @@ class GeneralForm extends ConfigFormBase {
           '#title' => $this->t('Affiliation'),
           '#default_value' => $settings->get('site_affiliation'),
           '#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) {
-                    return $value['label'];
+            return $value['label'];
           }, $siteAffiliationOptions), ['custom' => $this->t('Custom')]),
           '#required' => FALSE,
         ],
@@ -188,6 +188,8 @@ class GeneralForm extends ConfigFormBase {
       ];
     }
     if ($this->user->hasPermission('edit ucb site pages')) {
+      $siteSearchOptions = $configuration->get('site_search_options');
+      $siteSearchEnabled = $settings->get('site_search_enabled');
       $form['site_frontpage'] = [
         '#type' => 'textfield',
         '#title' => $this->t('Home page'),
@@ -195,6 +197,44 @@ class GeneralForm extends ConfigFormBase {
         '#required' => TRUE,
         '#size' => 40,
         '#description' => $this->t('Specify a relative URL to display as the home page.'),
+        '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
+      ];
+      $form['site_search_enabled'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Enable searching'),
+      ];
+      foreach ($siteSearchOptions as $key => $value) {
+        $form['site_search_enabled']['site_search_enabled_' . $key] = [
+          '#type' => 'checkbox',
+          '#title' => $value['label'],
+          '#default_value' => in_array($key, $siteSearchEnabled),
+        ];
+      }
+      $form['site_search'] = [
+        '#type' => 'fieldset',
+        '#title' => $this->t('Site search'),
+        '#states' => [
+          'visible' => [[':input[name="site_search_enabled_custom"]' => ['checked' => TRUE]]],
+        ],
+      ];
+      $form['site_search']['site_search_label'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Label'),
+        '#default_value' => $settings->get('site_search_label'),
+        '#placeholder' => $siteSearchOptions['custom']['label'],
+        '#required' => FALSE,
+        '#size' => 32,
+        '#description' => $this->t('Leave blank to use the default label.'),
+      ];
+      $form['site_search']['site_search_url'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Search page'),
+        '#default_value' => $settings->get('site_search_url') ? $this->aliasManager->getAliasByPath($settings->get('site_search_url')) : '',
+        '#states' => [
+          'required' => [[':input[name="site_search_enabled_custom"]' => ['checked' => TRUE]]],
+        ],
+        '#size' => 40,
+        '#description' => $this->t('Specify a relative URL to use as the site search page.'),
         '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
       ];
     }
@@ -215,6 +255,14 @@ class GeneralForm extends ConfigFormBase {
       if (!$this->pathValidator->isValid($form_state->getValue('site_frontpage'))) {
         $form_state->setErrorByName('site_frontpage', $this->t("The path '%path' is invalid.", ['%path' => $form_state->getValue('site_frontpage')]));
       }
+      if ($form_state->getValues('site_search_enabled')['site_search_enabled_custom']) {
+        if (($value = $form_state->getValue('site_search_url')) && $value[0] !== '/') {
+          $form_state->setErrorByName('site_search_url', $this->t("The path '%path' has to start with a slash.", ['%path' => $form_state->getValue('site_search_url')]));
+        }
+        if (!$this->pathValidator->isValid($form_state->getValue('site_search_url'))) {
+          $form_state->setErrorByName('site_search_url', $this->t("The path '%path' is invalid.", ['%path' => $form_state->getValue('site_search_url')]));
+        }
+      }
     }
   }
 
@@ -231,11 +279,22 @@ class GeneralForm extends ConfigFormBase {
       if ($siteTypeId && isset($siteTypeOptions[$siteTypeId]) && isset($siteTypeOptions[$siteTypeId]['affiliation'])) {
         $siteAffiliationId = $siteTypeOptions[$siteTypeId]['affiliation'];
       }
+      $siteSearchEnabled = [];
+      $siteSearchEnabledFormValues = $form_state->getValues('site_search_enabled');
+      $siteSearchFormValues = $form_state->getValues('site_search');
+      foreach ($configuration->get('site_search_options') as $key => $value) {
+        if ($siteSearchEnabledFormValues['site_search_enabled_' . $key]) {
+          $siteSearchEnabled[] = $key;
+        }
+      }
       $this->config('ucb_site_configuration.settings')
         ->set('site_type', $siteTypeId)
         ->set('site_affiliation', $siteAffiliationId)
         ->set('site_affiliation_label', $form_state->getValue('site_affiliation_label'))
         ->set('site_affiliation_url', $form_state->getValue('site_affiliation_url'))
+        ->set('site_search_enabled', $siteSearchEnabled)
+        ->set('site_search_label', $siteSearchFormValues['site_search_label'])
+        ->set('site_search_url', $siteSearchFormValues['site_search_url'])
         ->save();
     }
     if ($this->user->hasPermission('edit ucb site pages')) {
