@@ -7,18 +7,18 @@ ucb_site_configuration:
 
 ucb_site_configuration.general_form:
   title: General
-  description: 'Modify general settings or information about the site.'
+  description: 'Modify the site name, type, or affiliation.'
   route_name: ucb_site_configuration.general_form
   parent: ucb_site_configuration
   weight: 0
 ucb_site_configuration.appearance_form:
-  title: Appearance
-  description: 'Change the appearance, layout, and formatting of the site theme.'
+  title: Appearance and layout
+  description: 'Change the appearance, layout, or formatting options of the site.'
   route_name: ucb_site_configuration.appearance_form
   parent: ucb_site_configuration
   weight: 1
 ucb_site_configuration.pages_form:
-  title: Pages & search
+  title: Pages and search
   description: 'Change the site home page or search options.'
   route_name: ucb_site_configuration.pages_form
   parent: ucb_site_configuration

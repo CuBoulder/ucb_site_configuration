@@ -5,7 +5,6 @@ namespace Drupal\ucb_site_configuration\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -13,13 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * The form for the "General" tab in CU Boulder site settings.
  */
 class GeneralForm extends ConfigFormBase {
-
-  /**
-   * The current user.
-   *
-   * @var \Drupal\Core\Session\AccountInterface
-   */
-  protected $user;
 
   /**
    * The request context.
@@ -40,14 +32,11 @@ class GeneralForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\Core\Session\AccountInterface $user
-   *   The current user.
    * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
    *   The site configuration service defined in this module.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AccountInterface $user, SiteConfiguration $service) {
+  public function __construct(ConfigFactoryInterface $config_factory, SiteConfiguration $service) {
     parent::__construct($config_factory);
-    $this->user = $user;
     $this->service = $service;
   }
 
@@ -62,7 +51,6 @@ class GeneralForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('current_user'),
       $container->get('ucb_site_configuration')
     );
   }

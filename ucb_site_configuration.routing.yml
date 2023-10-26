@@ -24,7 +24,7 @@ ucb_site_configuration.appearance_form:
   path: '/admin/config/cu-boulder/appearance'
   defaults:
     _form: '\Drupal\ucb_site_configuration\Form\AppearanceForm'
-    _title: Appearance
+    _title: Appearance and layout
   requirements:
     _permission: edit ucb site appearance
   options:
@@ -34,7 +34,7 @@ ucb_site_configuration.pages_form:
   path: '/admin/config/cu-boulder/pages'
   defaults:
     _form: '\Drupal\ucb_site_configuration\Form\PagesForm'
-    _title: Pages & search
+    _title: Pages and search
   requirements:
     _permission: edit ucb site pages
   options:

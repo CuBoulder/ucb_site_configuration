@@ -5,12 +5,12 @@ ucb_site_configuration.general_form:
   weight: 0
 ucb_site_configuration.appearance_form:
   route_name: ucb_site_configuration.appearance_form
-  title: 'Appearance'
+  title: 'Appearance and layout'
   base_route: ucb_site_configuration
   weight: 1
 ucb_site_configuration.pages_form:
   route_name: ucb_site_configuration.pages_form
-  title: 'Pages & search'
+  title: 'Pages and search'
   base_route: ucb_site_configuration
   weight: 2
 ucb_site_configuration.contact_info_form:
