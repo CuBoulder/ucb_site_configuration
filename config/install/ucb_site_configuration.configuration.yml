@@ -171,6 +171,7 @@ site_search_options:
     url: 'https://www.colorado.edu/search'
     label: 'All of Colorado.edu'
     placeholder: 'Search Colorado.edu'
+    parameter: 'cse'
 
 external_services:
   mainstay: 
