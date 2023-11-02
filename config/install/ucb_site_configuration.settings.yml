@@ -4,6 +4,10 @@ site_type: ''
 site_affiliation: ''
 site_affiliation_label: ''
 site_affiliation_url: ''
+site_search_enabled:
+  - default
+site_search_label: ''
+site_search_url: ''
 
 related_articles_enabled_by_default: FALSE
 related_articles_exclude_categories: []

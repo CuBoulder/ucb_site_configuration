@@ -348,6 +348,28 @@ class SiteConfiguration {
       'url' => '',
     ]);
     $variables['site_affiliation'] = array_merge(['id' => $siteAffiliationId], $siteAffiliationAttribs);
+    $siteSearchOptions = $configuration->get('site_search_options');
+    $siteSearchEnabled = $settings->get('site_search_enabled');
+    $variables['site_search'] = [];
+    foreach ($siteSearchEnabled as $name) {
+      $siteSearchOption = $siteSearchOptions[$name];
+      $siteSearchOption['name'] = $name;
+      if ('custom' == $name) {
+        $searchLabel = $settings->get('site_search_label');
+        if ($searchLabel) {
+          $siteSearchOption['label'] = $searchLabel;
+        }
+        $searchPlaceholder = $settings->get('site_search_placeholder');
+        if ($searchPlaceholder) {
+          $siteSearchOption['placeholder'] = $searchPlaceholder;
+        }
+        $searchUrl = $settings->get('site_search_url');
+        if ($searchUrl) {
+          $siteSearchOption['url'] = $searchUrl;
+        }
+      }
+      $variables['site_search'][] = $siteSearchOption;
+    }
   }
 
   /**

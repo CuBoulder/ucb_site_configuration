@@ -7,31 +7,37 @@ ucb_site_configuration:
 
 ucb_site_configuration.general_form:
   title: General
-  description: 'Modify general settings and information such as the site name, type, and affiliation.'
+  description: 'Modify the site name, type, or affiliation.'
   route_name: ucb_site_configuration.general_form
   parent: ucb_site_configuration
   weight: 0
 ucb_site_configuration.appearance_form:
-  title: Appearance
-  description: 'Change the appearance, layout, and formatting of the site theme.'
+  title: Appearance and layout
+  description: 'Change the appearance, layout, or formatting options of the site.'
   route_name: ucb_site_configuration.appearance_form
   parent: ucb_site_configuration
   weight: 1
+ucb_site_configuration.pages_form:
+  title: Pages and search
+  description: 'Change the site home page or search options.'
+  route_name: ucb_site_configuration.pages_form
+  parent: ucb_site_configuration
+  weight: 2
 ucb_site_configuration.contact_info_form:
   title: Contact info
   description: 'Modify the contact info for the site as it appears in the site footer.'
   route_name: ucb_site_configuration.contact_info_form
   parent: ucb_site_configuration
-  weight: 2
+  weight: 3
 ucb_site_configuration.related_articles_form:
   title: Related articles
   description: 'Exclude categories or tags from related articles.'
   route_name: ucb_site_configuration.related_articles_form
   parent: ucb_site_configuration
-  weight: 3
+  weight: 4
 ucb_site_configuration.external_services:
   title: Third-party services
   description: 'Configure third-party services to be used on the site.'
   route_name: entity.ucb_external_service_include.collection
   parent: ucb_site_configuration
-  weight: 4
+  weight: 5
