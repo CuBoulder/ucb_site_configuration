@@ -78,6 +78,7 @@ function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInte
     '#type' => 'details',
     '#title' => t('Third-party services'),
     '#group' => 'advanced',
+    '#weight' => 35,
     '#open' => (bool) $contentServicesFieldDefaultOptions,
     'ucb_external_services_enabled' => [
       '#type'  => 'checkboxes',
