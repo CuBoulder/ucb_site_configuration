@@ -195,13 +195,6 @@ class SiteConfiguration {
       '#description'    => $this->t('Select if sidebar content should appear on the left or right side of a page.'),
     ];
 
-    $form['ucb_rave_alerts'] = [
-      '#type'           => 'checkbox',
-      '#title'          => $this->t('Show campus-wide alerts'),
-      '#default_value'  => theme_get_setting('ucb_rave_alerts', $themeName),
-      '#description'    => $this->t('If enabled, campus-wide alerts will be displayed at the top of the site.'),
-    ];
-
     $form['ucb_breadcrumb_nav'] = [
       '#type'           => 'checkbox',
       '#title'          => $this->t('Show breadcrumb navigation on pages'),
