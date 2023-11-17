@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder site configuration 2.5.1
+  This update:
+  - Moves campus alerts setting into "Advanced". Resolves CuBoulder/ucb_site_configuration#31
+  - Sets the weight of "Third-party services" in node sidebars to 35, placing it below "URL alias". Resolves CuBoulder/ucb_site_configuration#30
+  
+---
+
 - ### Adds search frontend and settings
   This update:
   - Adds a search modal which appears when clicking on the search icon in the top bar.
