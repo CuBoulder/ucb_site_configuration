@@ -264,6 +264,26 @@ class SiteConfiguration {
       ],
       '#description'    => $this->t('Select the preferred Global Date/Time format for dates on your site.'),
     ];
+    // Custom labels for filters 1-3 on People List Pages
+    $form['ucb_filter_1_label'] = [
+      '#type'           => 'textfield',
+      '#title'          => $this->t('Filter 1 Label'),
+      '#default_value'  => theme_get_setting('ucb_filter_1_label', $themeName),
+      '#description'    => $this->t('Choose the label that will be used for "Filter 1" on People List Pages'),
+    ];
+    $form['ucb_filter_2_label'] = [
+      '#type'           => 'textfield',
+      '#title'          => $this->t('Filter 2 Label'),
+      '#default_value'  => theme_get_setting('ucb_filter_2_label', $themeName),
+      '#description'    => $this->t('Choose the label that will be used for "Filter 2" on People List Pages'),
+    ];
+    $form['ucb_filter_3_label'] = [
+      '#type'           => 'textfield',
+      '#title'          => $this->t('Filter 3 Label'),
+      '#default_value'  => theme_get_setting('ucb_filter_3_label', $themeName),
+      '#description'    => $this->t('Choose the label that will be used for "Filter 3" on People List Pages'),
+    ];
+
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $form['advanced'] = [
         '#type'  => 'details',
