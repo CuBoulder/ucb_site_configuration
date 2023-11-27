@@ -5,6 +5,7 @@ namespace Drupal\ucb_site_configuration\Form;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -14,11 +15,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GeneralForm extends ConfigFormBase {
 
   /**
-   * The request context.
+   * The current user.
    *
-   * @var \Drupal\Core\Routing\RequestContext
+   * @var \Drupal\Core\Session\AccountInterface
    */
-  protected $requestContext;
+  protected $user;
 
   /**
    * The site configuration service defined in this module.
@@ -32,11 +33,14 @@ class GeneralForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
+   * @param \Drupal\Core\Session\AccountInterface $user
+   *   The current user.
    * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
    *   The site configuration service defined in this module.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, SiteConfiguration $service) {
+  public function __construct(ConfigFactoryInterface $config_factory, AccountInterface $user, SiteConfiguration $service) {
     parent::__construct($config_factory);
+    $this->user = $user;
     $this->service = $service;
   }
 
@@ -51,6 +55,7 @@ class GeneralForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('current_user'),
       $container->get('ucb_site_configuration')
     );
   }
@@ -86,57 +91,65 @@ class GeneralForm extends ConfigFormBase {
       '#default_value' => $systemSiteSettings->get('name'),
       '#required' => TRUE,
     ];
-    $form['site_type'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Type'),
-      '#default_value' => $settings->get('site_type'),
-      '#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) {
-          return $value['label'];
-      }, $siteTypeOptions)),
-      '#required' => FALSE,
-    ];
-    $affiliationHidesOn = [];
-    foreach ($siteTypeOptions as $siteTypeId => $siteType) {
-      if (isset($siteType['affiliation'])) {
-        array_push($affiliationHidesOn, [':input[name="site_type"]' => ['value' => $siteTypeId]]);
-      }
-    }
-    $form['site_affiliation_container'] = [
-      '#type' => 'container',
-      '#states' => [
-        'invisible' => $affiliationHidesOn,
-      ],
-      'site_affiliation' => [
+    if ($this->user->hasPermission('edit ucb site advanced')) {
+      $advanced = [
+        '#type'  => 'details',
+        '#title' => $this->t('Advanced'),
+        '#open'  => FALSE,
+      ];
+      $advanced['site_type'] = [
         '#type' => 'select',
-        '#title' => $this->t('Affiliation'),
-        '#default_value' => $settings->get('site_affiliation'),
+        '#title' => $this->t('Type'),
+        '#default_value' => $settings->get('site_type'),
         '#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) {
             return $value['label'];
-        }, $siteAffiliationOptions), ['custom' => $this->t('Custom')]),
+        }, $siteTypeOptions)),
         '#required' => FALSE,
-      ],
-      'site_affiliation_custom' => [
-        '#type' => 'fieldset',
-        '#description' => $this->t('Define a title and optional URL for the custom affiliation.'),
+      ];
+      $affiliationHidesOn = [];
+      foreach ($siteTypeOptions as $siteTypeId => $siteType) {
+        if (isset($siteType['affiliation'])) {
+          array_push($affiliationHidesOn, [':input[name="site_type"]' => ['value' => $siteTypeId]]);
+        }
+      }
+      $advanced['site_affiliation_container'] = [
+        '#type' => 'container',
         '#states' => [
-          'visible' => [[':input[name="site_affiliation"]' => ['value' => 'custom']]],
+          'invisible' => $affiliationHidesOn,
         ],
-        'site_affiliation_label' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('Title'),
-          '#default_value' => $settings->get('site_affiliation_label'),
+        'site_affiliation' => [
+          '#type' => 'select',
+          '#title' => $this->t('Affiliation'),
+          '#default_value' => $settings->get('site_affiliation'),
+          '#options' => array_merge(['' => $this->t('- None -')], array_map(function ($value) {
+              return $value['label'];
+          }, $siteAffiliationOptions), ['custom' => $this->t('Custom')]),
           '#required' => FALSE,
-          '#maxlength' => 255,
         ],
-        'site_affiliation_url' => [
-          '#type' => 'textfield',
-          '#title' => $this->t('URL'),
-          '#default_value' => $settings->get('site_affiliation_url'),
-          '#required' => FALSE,
-          '#maxlength' => 255,
+        'site_affiliation_custom' => [
+          '#type' => 'fieldset',
+          '#description' => $this->t('Define a title and optional URL for the custom affiliation.'),
+          '#states' => [
+            'visible' => [[':input[name="site_affiliation"]' => ['value' => 'custom']]],
+          ],
+          'site_affiliation_label' => [
+            '#type' => 'textfield',
+            '#title' => $this->t('Title'),
+            '#default_value' => $settings->get('site_affiliation_label'),
+            '#required' => FALSE,
+            '#maxlength' => 255,
+          ],
+          'site_affiliation_url' => [
+            '#type' => 'textfield',
+            '#title' => $this->t('URL'),
+            '#default_value' => $settings->get('site_affiliation_url'),
+            '#required' => FALSE,
+            '#maxlength' => 255,
+          ],
         ],
-      ],
-    ];
+      ];
+      $form['advanced'] = $advanced;
+    }
     return parent::buildForm($form, $form_state);
   }
 

@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder Site Configuration 2.5.2
+  This update:
+  - Places "Type" and "Affiliation" under  an "Advanced" section in the "General" settings. This section behaves identically to the one in "Appearance and layout", requiring the same special permission to access.
+  - Gives the "Site Manager" role the `edit ucb site general` permission to access the "General" settings.
+  
+  Sister PR in: [tiamat10-profile](https://github.com/CuBoulder/tiamat10-profile/pull/52)
+  Resolves CuBoulder/ucb_site_configuration#33
+---
+
 - ### CU Boulder site configuration 2.5.1
   This update:
   - Moves campus alerts setting into "Advanced". Resolves CuBoulder/ucb_site_configuration#31
