@@ -7,7 +7,7 @@ ucb_site_configuration:
 
 ucb_site_configuration.general_form:
   title: General
-  description: 'Modify the site name, type, or affiliation.'
+  description: 'Modify general site information.'
   route_name: ucb_site_configuration.general_form
   parent: ucb_site_configuration
   weight: 0
