@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### People List Filter Labels as a Global Setting
+  Changes the People List `Filter 1`, `Filter 2`, and `Filter 3` custom labels to a Global Setting in Site Configuration, rather than being set per-page. These labels will be set under Configuration => Cu Boulder Site Settings => Appearance and Layout.
+  
+  Resolves [#543 ](https://github.com/CuBoulder/tiamat-theme/issues/543)
+  
+  Includes:
+  - `ucb_site_configuarion` => https://github.com/CuBoulder/ucb_site_configuration/pull/35
+  -  `tiamat-theme` => https://github.com/CuBoulder/tiamat-theme/pull/560
+  -  `ucb_custom_entities` => https://github.com/CuBoulder/tiamat-custom-entities/pull/87
+---
+
 - ### CU Boulder Site Configuration 2.5.2
   This update:
   - Places "Type" and "Affiliation" under  an "Advanced" section in the "General" settings. This section behaves identically to the one in "Appearance and layout", requiring the same special permission to access.
