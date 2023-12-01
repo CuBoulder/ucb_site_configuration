@@ -97,26 +97,45 @@ class ContentTypesForm extends ConfigFormBase {
       '#type'  => 'details',
       '#title' => $this->t('Article'),
       '#open'  => TRUE,
-      'enabled_by_default' => [
-        '#type' => 'checkbox',
-        '#title' => $this->t('Enable related articles by default for new articles'),
-        '#description' => $this->t('If enabled, related articles will default to on when creating a new article. A content author may still turn on or off related articles manually for an individual article.'),
-        '#default_value' => $settings->get('related_articles_enabled_by_default') ?? FALSE,
-        '#required' => FALSE,
+      'article_date_format' => [
+        '#type'           => 'select',
+        '#title'          => $this->t('Article date format'),
+        '#default_value'  => $settings->get('article_date_format') ?? '0',
+        '#options'        => [
+          $this->t('Short Date'),
+          $this->t('Medium Date'),
+          $this->t('Long Date'),
+          $this->t('Short Date with Time'),
+          $this->t('Medium Date with Time'),
+          $this->t('Long Date with Time'),
+          $this->t('None - Hide'),
+        ],
+        '#description'    => $this->t('Select the date/time format for dates on articles.'),
       ],
-      'exclude_categories' => [
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Exclude categories'),
-        '#default_value' => $settings->get('related_articles_exclude_categories') ?? [],
-        '#options' => $categoryOptions,
-        '#required' => FALSE,
-      ],
-      'exclude_tags' => [
-        '#type' => 'checkboxes',
-        '#title' => $this->t('Exclude tags'),
-        '#default_value' => $settings->get('related_articles_exclude_tags') ?? [],
-        '#options' => $tagOptions,
-        '#required' => FALSE,
+      'related_articles' => [
+        '#type'  => 'fieldset',
+        '#title' => $this->t('Related articles'),
+        'related_articles_enabled_by_default' => [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Enable related articles by default for new articles'),
+          '#description' => $this->t('If enabled, related articles will default to on when creating a new article. A content author may still turn on or off related articles manually for an individual article.'),
+          '#default_value' => $settings->get('related_articles_enabled_by_default') ?? FALSE,
+          '#required' => FALSE,
+        ],
+        'related_articles_exclude_categories' => [
+          '#type' => 'checkboxes',
+          '#title' => $this->t('Exclude categories'),
+          '#default_value' => $settings->get('related_articles_exclude_categories') ?? [],
+          '#options' => $categoryOptions,
+          '#required' => FALSE,
+        ],
+        'related_articles_exclude_tags' => [
+          '#type' => 'checkboxes',
+          '#title' => $this->t('Exclude tags'),
+          '#default_value' => $settings->get('related_articles_exclude_tags') ?? [],
+          '#options' => $tagOptions,
+          '#required' => FALSE,
+        ],
       ],
     ];
     $form['people_list'] = [
@@ -150,9 +169,10 @@ class ContentTypesForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->config('ucb_site_configuration.settings')
-      ->set('related_articles_enabled_by_default', $form_state->getValue('enabled_by_default'))
-      ->set('related_articles_exclude_categories', array_keys(array_filter($form_state->getValue('exclude_categories'))))
-      ->set('related_articles_exclude_tags', array_keys(array_filter($form_state->getValue('exclude_tags'))))
+      ->set('article_date_format', $form_state->getValue('article_date_format'))
+      ->set('related_articles_enabled_by_default', $form_state->getValue('related_articles_enabled_by_default'))
+      ->set('related_articles_exclude_categories', array_keys(array_filter($form_state->getValue('related_articles_exclude_categories'))))
+      ->set('related_articles_exclude_tags', array_keys(array_filter($form_state->getValue('related_articles_exclude_tags'))))
       ->set('people_list_filter_1_label', $form_state->getValue('people_list_filter_1_label'))
       ->set('people_list_filter_2_label', $form_state->getValue('people_list_filter_2_label'))
       ->set('people_list_filter_3_label', $form_state->getValue('people_list_filter_3_label'))

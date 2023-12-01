@@ -241,22 +241,6 @@ class SiteConfiguration {
       ],
       '#description'    => $this->t('Select the location for social sharing links (Facebook, Twitter, etc) to appear on your pages.'),
     ];
-    // Choose date/time format sitewide.
-    $form['ucb_date_format'] = [
-      '#type'           => 'select',
-      '#title'          => $this->t('Display settings for Date formats on Articles'),
-      '#default_value'  => theme_get_setting('ucb_date_format', $themeName),
-      '#options'        => [
-        $this->t('Short Date'),
-        $this->t('Medium Date'),
-        $this->t('Long Date'),
-        $this->t('Short Date with Time'),
-        $this->t('Medium Date with Time'),
-        $this->t('Long Date with Time'),
-        $this->t('None - Hide'),
-      ],
-      '#description'    => $this->t('Select the preferred Global Date/Time format for dates on your site.'),
-    ];
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $form['advanced'] = [
         '#type'  => 'details',
@@ -371,6 +355,7 @@ class SiteConfiguration {
    */
   public function attachArticlesConfiguration(array &$variables) {
     $settings = $this->getSettings();
+    $variables['article_date_format'] = $settings->get('article_date_format') ?? '0';
     $variables['related_articles_exclude_categories'] = $settings->get('related_articles_exclude_categories') ?? [];
     $variables['related_articles_exclude_tags'] = $settings->get('related_articles_exclude_tags') ?? [];
   }

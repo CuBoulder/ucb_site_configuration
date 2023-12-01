@@ -12,6 +12,7 @@ site_search_url: ''
 gtm_account: ''
 
 # Settings in "Content types"
+article_date_format: '0'
 related_articles_enabled_by_default: FALSE
 related_articles_exclude_categories: []
 related_articles_exclude_tags: []
