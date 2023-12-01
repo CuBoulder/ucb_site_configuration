@@ -36,7 +36,11 @@ function ucb_site_configuration_preprocess_node(array &$variables) {
   /** @var \Drupal\node\NodeInterface */
   $node = $variables['node'];
   if ($node->getType() === 'ucb_article') {
-    \Drupal::service('ucb_site_configuration')->attachRelatedArticlesConfiguration($variables);
+    \Drupal::service('ucb_site_configuration')->attachArticlesConfiguration($variables);
+    $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
+  }
+  elseif ($node->getType() === 'ucb_people_list_page') {
+    \Drupal::service('ucb_site_configuration')->attachPeopleListConfiguration($variables);
     $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
   }
 }

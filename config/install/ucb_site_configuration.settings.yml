@@ -12,3 +12,6 @@ site_search_url: ''
 related_articles_enabled_by_default: FALSE
 related_articles_exclude_categories: []
 related_articles_exclude_tags: []
+people_list_filter_1_label: ''
+people_list_filter_2_label: ''
+people_list_filter_3_label: ''

@@ -31,10 +31,10 @@ ucb_site_configuration.appearance_form:
     _admin_route: true
 
 ucb_site_configuration.pages_form:
-  path: '/admin/config/cu-boulder/pages'
+  path: '/admin/config/cu-boulder/content-types'
   defaults:
     _form: '\Drupal\ucb_site_configuration\Form\PagesForm'
-    _title: Pages and search
+    _title: Content types
   requirements:
     _permission: edit ucb site pages
   options:
@@ -47,16 +47,6 @@ ucb_site_configuration.contact_info_form:
     _title: Contact info
   requirements:
     _permission: edit ucb site contact info
-  options:
-    _admin_route: true
-
-ucb_site_configuration.related_articles_form:
-  path: '/admin/config/cu-boulder/related-articles'
-  defaults:
-    _form: '\Drupal\ucb_site_configuration\Form\RelatedArticlesForm'
-    _title: Related articles
-  requirements:
-    _permission: configure ucb related articles
   options:
     _admin_route: true
 

@@ -3,39 +3,23 @@
 namespace Drupal\ucb_site_configuration\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Path\PathValidatorInterface;
-use Drupal\Core\Routing\RequestContext;
-use Drupal\path_alias\AliasManagerInterface;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The form for the "Pages & Search" tab in CU Boulder site settings.
+ * The form for the "Content" tab in CU Boulder site settings.
  */
 class PagesForm extends ConfigFormBase {
 
   /**
-   * The path alias manager.
+   * The entity type manager.
    *
-   * @var \Drupal\path_alias\AliasManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $aliasManager;
-
-  /**
-   * The path validator.
-   *
-   * @var \Drupal\Core\Path\PathValidatorInterface
-   */
-  protected $pathValidator;
-
-  /**
-   * The request context.
-   *
-   * @var \Drupal\Core\Routing\RequestContext
-   */
-  protected $requestContext;
+  protected $entityTypeManager;
 
   /**
    * The site configuration service defined in this module.
@@ -49,20 +33,14 @@ class PagesForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.
-   * @param \Drupal\path_alias\AliasManagerInterface $alias_manager
-   *   The path alias manager.
-   * @param \Drupal\Core\Path\PathValidatorInterface $path_validator
-   *   The path validator.
-   * @param \Drupal\Core\Routing\RequestContext $request_context
-   *   The request context.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The entity type manager.
    * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
    *   The site configuration service defined in this module.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context, SiteConfiguration $service) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entityTypeManager, SiteConfiguration $service) {
     parent::__construct($config_factory);
-    $this->aliasManager = $alias_manager;
-    $this->pathValidator = $path_validator;
-    $this->requestContext = $request_context;
+    $this->entityTypeManager = $entityTypeManager;
     $this->service = $service;
   }
 
@@ -77,9 +55,7 @@ class PagesForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('path_alias.manager'),
-      $container->get('path.validator'),
-      $container->get('router.request_context'),
+      $container->get('entity_type.manager'),
       $container->get('ucb_site_configuration')
     );
   }
@@ -88,7 +64,7 @@ class PagesForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['system.site', 'ucb_site_configuration.settings'];
+    return ['ucb_site_configuration.settings'];
   }
 
   /**
@@ -105,113 +81,82 @@ class PagesForm extends ConfigFormBase {
    *   Contains the definition of a home page field.
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $configuration = $this->service->getConfiguration();
     $settings = $this->service->getSettings();
-    $systemSiteSettings = $this->config('system.site');
-    $siteSearchOptions = $configuration->get('site_search_options');
-    $siteSearchEnabled = $settings->get('site_search_enabled');
-    $form['site_frontpage'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Home page'),
-      '#default_value' => $this->aliasManager->getAliasByPath($systemSiteSettings->get('page.front')),
-      '#required' => TRUE,
-      '#size' => 40,
-      '#description' => $this->t('Specify a relative URL to display as the site home page.'),
-      '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
-    ];
-    $form['site_search_enabled'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Enable searching'),
-    ];
-    foreach ($siteSearchOptions as $key => $value) {
-      $form['site_search_enabled']['site_search_enabled_' . $key] = [
-        '#type' => 'checkbox',
-        '#title' => $value['label'],
-        '#default_value' => in_array($key, $siteSearchEnabled),
-      ];
+    $entityStorage = $this->entityTypeManager->getStorage('taxonomy_term');
+    $categoryTerms = $entityStorage->loadByProperties(['vid' => 'category']);
+    $categoryOptions = [];
+    $tagTerms = $entityStorage->loadByProperties(['vid' => 'tags']);
+    $tagOptions = [];
+    foreach ($categoryTerms as $categoryTerm) {
+      $categoryOptions[$categoryTerm->id()] = $categoryTerm->label();
     }
-    $form['site_search'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Site search'),
-      '#states' => [
-        'visible' => [[':input[name="site_search_enabled_custom"]' => ['checked' => TRUE]]],
+    foreach ($tagTerms as $tagTerm) {
+      $tagOptions[$tagTerm->id()] = $tagTerm->label();
+    }
+    $form['article'] = [
+      '#type'  => 'details',
+      '#title' => $this->t('Article'),
+      '#open'  => TRUE,
+      'enabled_by_default' => [
+        '#type' => 'checkbox',
+        '#title' => $this->t('Enable related articles by default for new articles'),
+        '#description' => $this->t('If enabled, related articles will default to on when creating a new article. A content author may still turn on or off related articles manually for an individual article.'),
+        '#default_value' => $settings->get('related_articles_enabled_by_default') ?? FALSE,
+        '#required' => FALSE,
+      ],
+      'exclude_categories' => [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Exclude categories'),
+        '#default_value' => $settings->get('related_articles_exclude_categories') ?? [],
+        '#options' => $categoryOptions,
+        '#required' => FALSE,
+      ],
+      'exclude_tags' => [
+        '#type' => 'checkboxes',
+        '#title' => $this->t('Exclude tags'),
+        '#default_value' => $settings->get('related_articles_exclude_tags') ?? [],
+        '#options' => $tagOptions,
+        '#required' => FALSE,
       ],
     ];
-    $form['site_search']['site_search_label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#default_value' => $settings->get('site_search_label'),
-      '#placeholder' => $siteSearchOptions['custom']['label'],
-      '#required' => FALSE,
-      '#size' => 32,
-      '#description' => $this->t('Leave blank to use the default label.'),
-    ];
-    $form['site_search']['site_search_placeholder'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Placeholder'),
-      '#default_value' => $settings->get('site_search_placeholder'),
-      '#placeholder' => $siteSearchOptions['custom']['placeholder'],
-      '#required' => FALSE,
-      '#size' => 32,
-      '#description' => $this->t('Leave blank to use the default placeholder.'),
-    ];
-    $form['site_search']['site_search_url'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Search page'),
-      '#default_value' => $settings->get('site_search_url') ? $this->aliasManager->getAliasByPath($settings->get('site_search_url')) : '',
-      '#states' => [
-        'required' => [[':input[name="site_search_enabled_custom"]' => ['checked' => TRUE]]],
+    $form['people_list'] = [
+      '#type'  => 'details',
+      '#title' => $this->t('People List Page'),
+      '#open'  => TRUE,
+      'people_list_filter_1_label' => [
+        '#type'           => 'textfield',
+        '#title'          => $this->t('Filter 1 label'),
+        '#default_value'  => $settings->get('people_list_filter_1_label') ?? 'Filter 1',
+        '#description'    => $this->t('Choose the label that will be used for "Filter 1" on People List Pages.'),
       ],
-      '#size' => 40,
-      '#description' => $this->t('Specify a relative URL to use as the site search page.'),
-      '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
+      'people_list_filter_2_label' => [
+        '#type'           => 'textfield',
+        '#title'          => $this->t('Filter 2 label'),
+        '#default_value'  => $settings->get('people_list_filter_2_label') ?? 'Filter 2',
+        '#description'    => $this->t('Choose the label that will be used for "Filter 2" on People List Pages.'),
+      ],
+      'people_list_filter_3_label' => [
+        '#type'           => 'textfield',
+        '#title'          => $this->t('Filter 3 label'),
+        '#default_value'  => $settings->get('people_list_filter_3_label') ?? 'Filter 3',
+        '#description'    => $this->t('Choose the label that will be used for "Filter 3" on People List Pages.'),
+      ],
     ];
     return parent::buildForm($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @see \Drupal\system\Form\SiteInformationForm::validateForm
-   *   Contains the validation of a home page path.
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (($value = $form_state->getValue('site_frontpage')) && $value[0] !== '/') {
-      $form_state->setErrorByName('site_frontpage', $this->t("The path '%path' has to start with a slash.", ['%path' => $form_state->getValue('site_frontpage')]));
-    }
-    if (!$this->pathValidator->isValid($form_state->getValue('site_frontpage'))) {
-      $form_state->setErrorByName('site_frontpage', $this->t("The path '%path' is invalid.", ['%path' => $form_state->getValue('site_frontpage')]));
-    }
-    if ($form_state->getValues('site_search_enabled')['site_search_enabled_custom']) {
-      if (($value = $form_state->getValue('site_search_url')) && $value[0] !== '/') {
-        $form_state->setErrorByName('site_search_url', $this->t("The path '%path' has to start with a slash.", ['%path' => $form_state->getValue('site_search_url')]));
-      }
-      if (!$this->pathValidator->isValid($form_state->getValue('site_search_url'))) {
-        $form_state->setErrorByName('site_search_url', $this->t("The path '%path' is invalid.", ['%path' => $form_state->getValue('site_search_url')]));
-      }
-    }
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $configuration = $this->service->getConfiguration();
-    $siteSearchEnabled = [];
-    $siteSearchEnabledFormValues = $form_state->getValues('site_search_enabled');
-    $siteSearchFormValues = $form_state->getValues('site_search');
-    foreach ($configuration->get('site_search_options') as $key => $value) {
-      if ($siteSearchEnabledFormValues['site_search_enabled_' . $key]) {
-        $siteSearchEnabled[] = $key;
-      }
-    }
     $this->config('ucb_site_configuration.settings')
-      ->set('site_search_enabled', $siteSearchEnabled)
-      ->set('site_search_label', $siteSearchFormValues['site_search_label'])
-      ->set('site_search_placeholder', $siteSearchFormValues['site_search_placeholder'])
-      ->set('site_search_url', $siteSearchFormValues['site_search_url'])
+      ->set('related_articles_enabled_by_default', $form_state->getValue('enabled_by_default'))
+      ->set('related_articles_exclude_categories', array_keys(array_filter($form_state->getValue('exclude_categories'))))
+      ->set('related_articles_exclude_tags', array_keys(array_filter($form_state->getValue('exclude_tags'))))
+      ->set('people_list_filter_1_label', $form_state->getValue('people_list_filter_1_label'))
+      ->set('people_list_filter_2_label', $form_state->getValue('people_list_filter_2_label'))
+      ->set('people_list_filter_3_label', $form_state->getValue('people_list_filter_3_label'))
       ->save();
-    $this->config('system.site')->set('page.front', $form_state->getValue('site_frontpage'))->save();
     parent::submitForm($form, $form_state);
   }
 

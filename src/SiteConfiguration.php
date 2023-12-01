@@ -264,26 +264,6 @@ class SiteConfiguration {
       ],
       '#description'    => $this->t('Select the preferred Global Date/Time format for dates on your site.'),
     ];
-    // Custom labels for filters 1-3 on People List Pages
-    $form['ucb_filter_1_label'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('Filter 1 Label'),
-      '#default_value'  => theme_get_setting('ucb_filter_1_label', $themeName),
-      '#description'    => $this->t('Choose the label that will be used for "Filter 1" on People List Pages'),
-    ];
-    $form['ucb_filter_2_label'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('Filter 2 Label'),
-      '#default_value'  => theme_get_setting('ucb_filter_2_label', $themeName),
-      '#description'    => $this->t('Choose the label that will be used for "Filter 2" on People List Pages'),
-    ];
-    $form['ucb_filter_3_label'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('Filter 3 Label'),
-      '#default_value'  => theme_get_setting('ucb_filter_3_label', $themeName),
-      '#description'    => $this->t('Choose the label that will be used for "Filter 3" on People List Pages'),
-    ];
-
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $form['advanced'] = [
         '#type'  => 'details',
@@ -391,15 +371,28 @@ class SiteConfiguration {
   }
 
   /**
-   * Attaches related articles configuration to Articles.
+   * Attaches configuration to Articles.
    *
    * @param array &$variables
    *   The array to add the site information to.
    */
-  public function attachRelatedArticlesConfiguration(array &$variables) {
+  public function attachArticlesConfiguration(array &$variables) {
     $settings = $this->getSettings();
     $variables['related_articles_exclude_categories'] = $settings->get('related_articles_exclude_categories') ?? [];
     $variables['related_articles_exclude_tags'] = $settings->get('related_articles_exclude_tags') ?? [];
+  }
+
+  /**
+   * Attaches configuration to People Lists.
+   *
+   * @param array &$variables
+   *   The array to add the site information to.
+   */
+  public function attachPeopleListConfiguration(array &$variables) {
+    $settings = $this->getSettings();
+    $variables['people_list_filter_1_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 1';
+    $variables['people_list_filter_2_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 2';
+    $variables['people_list_filter_3_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 3';
   }
 
   /**

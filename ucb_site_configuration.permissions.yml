@@ -3,8 +3,8 @@ edit ucb site general:
   description: 'Enables editing of the CU Boulder general site settings and information such as the site name.'
 
 edit ucb site pages:
-  title: Change the site homepage
-  description: 'Enables changing the site homepage.'
+  title: Configure content
+  description: 'Enables configuring CU Boulder-provided content types.'
 
 edit ucb site appearance:
   title: Edit the site appearance
