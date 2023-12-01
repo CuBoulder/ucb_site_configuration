@@ -209,13 +209,6 @@ class SiteConfiguration {
       '#description'    => $this->t('The sticky menu appears at the top of the page when scrolling on large-screen devices, allowing for quick access to links.'),
     ];
 
-    $form['ucb_gtm_account'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('GTM Account Number'),
-      '#default_value'  => theme_get_setting('ucb_gtm_account', $themeName),
-      '#description'    => $this->t('Google Tag Manager account number e.g. GTM-123456.'),
-    ];
-
     $form['ucb_secondary_menu_position'] = [
       '#type'           => 'select',
       '#title'          => $this->t('Position of the secondary menu'),
