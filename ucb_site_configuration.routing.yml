@@ -30,13 +30,13 @@ ucb_site_configuration.appearance_form:
   options:
     _admin_route: true
 
-ucb_site_configuration.pages_form:
+ucb_site_configuration.content_types_form:
   path: '/admin/config/cu-boulder/content-types'
   defaults:
-    _form: '\Drupal\ucb_site_configuration\Form\PagesForm'
+    _form: '\Drupal\ucb_site_configuration\Form\ContentTypesForm'
     _title: Content types
   requirements:
-    _permission: edit ucb site pages
+    _permission: edit ucb site content types
   options:
     _admin_route: true
 

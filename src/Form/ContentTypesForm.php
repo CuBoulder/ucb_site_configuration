@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * The form for the "Content" tab in CU Boulder site settings.
  */
-class PagesForm extends ConfigFormBase {
+class ContentTypesForm extends ConfigFormBase {
 
   /**
    * The entity type manager.
@@ -29,7 +29,7 @@ class PagesForm extends ConfigFormBase {
   protected $service;
 
   /**
-   * Constructs a GeneralForm object.
+   * Constructs a ContentTypesForm object.
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The config factory.

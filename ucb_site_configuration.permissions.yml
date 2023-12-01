@@ -2,21 +2,17 @@ edit ucb site general:
   title: Edit the site general settings
   description: 'Enables editing of the CU Boulder general site settings and information such as the site name.'
 
-edit ucb site pages:
-  title: Configure content
-  description: 'Enables configuring CU Boulder-provided content types.'
-
 edit ucb site appearance:
   title: Edit the site appearance
   description: 'Enables editing of the CU Boulder site appearance.'
 
+edit ucb site content types:
+  title: Configure content types
+  description: 'Enables configuring CU Boulder-provided content types.'
+
 edit ucb site contact info:
   title: Edit the site contact info
   description: 'Enables editing of the CU Boulder site contact info.'
-
-configure ucb related articles:
-  title: Configure related articles
-  description: 'Exclude categories or tags from related articles.'
 
 administer ucb external services:
   title: Administer third-party services

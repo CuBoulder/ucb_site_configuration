@@ -8,8 +8,8 @@ ucb_site_configuration.appearance_form:
   title: 'Appearance and layout'
   base_route: ucb_site_configuration
   weight: 1
-ucb_site_configuration.pages_form:
-  route_name: ucb_site_configuration.pages_form
+ucb_site_configuration.content_types_form:
+  route_name: ucb_site_configuration.content_types_form
   title: 'Content types'
   base_route: ucb_site_configuration
   weight: 2

@@ -17,10 +17,10 @@ ucb_site_configuration.appearance_form:
   route_name: ucb_site_configuration.appearance_form
   parent: ucb_site_configuration
   weight: 1
-ucb_site_configuration.pages_form:
+ucb_site_configuration.content_types_form:
   title: Content types
   description: 'Change settings for specific content types.'
-  route_name: ucb_site_configuration.pages_form
+  route_name: ucb_site_configuration.content_types_form
   parent: ucb_site_configuration
   weight: 2
 ucb_site_configuration.contact_info_form:
