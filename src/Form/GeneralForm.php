@@ -243,6 +243,12 @@ class GeneralForm extends ConfigFormBase {
         '#description' => $this->t('Specify a relative URL to use as the site search page.'),
         '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
       ];
+      $advanced['gtm_account'] = [
+        '#type'           => 'textfield',
+        '#title'          => $this->t('GTM Account Number'),
+        '#default_value'  => $settings->get('gtm_account'),
+        '#description'    => $this->t('Google Tag Manager account number e.g. GTM-123456.'),
+      ];
       $form['advanced'] = $advanced;
     }
     return parent::buildForm($form, $form_state);
@@ -304,6 +310,7 @@ class GeneralForm extends ConfigFormBase {
         ->set('site_search_label', $siteSearchFormValues['site_search_label'])
         ->set('site_search_placeholder', $siteSearchFormValues['site_search_placeholder'])
         ->set('site_search_url', $siteSearchFormValues['site_search_url'])
+        ->set('gtm_account', $form_state->getValue('gtm_account'))
         ->save();
     }
     parent::submitForm($form, $form_state);
