@@ -157,8 +157,8 @@ class SiteConfiguration {
       '#options'        => [
         $this->t('Black'),
         $this->t('White'),
-        $this->t('Light'),
-        $this->t('Dark'),
+        $this->t('Light Gray'),
+        $this->t('Dark Gray'),
       ],
       '#description'    => $this->t('Select the color for the header background for the site information at the top of the page.'),
     ];
