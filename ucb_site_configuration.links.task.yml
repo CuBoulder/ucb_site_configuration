@@ -8,9 +8,9 @@ ucb_site_configuration.appearance_form:
   title: 'Appearance and layout'
   base_route: ucb_site_configuration
   weight: 1
-ucb_site_configuration.pages_form:
-  route_name: ucb_site_configuration.pages_form
-  title: 'Pages and search'
+ucb_site_configuration.content_types_form:
+  route_name: ucb_site_configuration.content_types_form
+  title: 'Content types'
   base_route: ucb_site_configuration
   weight: 2
 ucb_site_configuration.contact_info_form:
@@ -18,13 +18,8 @@ ucb_site_configuration.contact_info_form:
   title: 'Contact info'
   base_route: ucb_site_configuration
   weight: 3
-ucb_site_configuration.related_articles_form:
-  route_name: ucb_site_configuration.related_articles_form
-  title: 'Related articles'
-  base_route: ucb_site_configuration
-  weight: 4
 ucb_site_configuration.external_services:
   route_name: entity.ucb_external_service_include.collection
   title: 'Third-party services'
   base_route: ucb_site_configuration
-  weight: 5
+  weight: 4

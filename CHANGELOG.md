@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder Site Configuration 2.6
+  This update:
+  - Moves all settings from "Pages and Search" into "General". Search settings are now advanced settings.
+  - Replaces the "Pages and search" and "Related articles" tabs with a brand new "Content types" tab. All "Related articles" settings have been moved into "Content types".
+  - Replaces the `edit ucb pages` and `configure ucb related articles` permissions with a new `edit ucb content types` permission.
+  - Moves the People List filter labels and Article date format into "Content types".
+  - Moves the GTM account setting into "General" as an advanced setting.
+  - Changes header color labels (Light -> Light Gray, Dark -> Dark Gray). Resolves CuBoulder/ucb_site_configuration#37
+  
+  Resolves CuBoulder/ucb_site_configuration#36
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/576), [tiamat10-profile](https://github.com/CuBoulder/tiamat10-profile/pull/53)
+---
+
 - ### People List Filter Labels as a Global Setting
   Changes the People List `Filter 1`, `Filter 2`, and `Filter 3` custom labels to a Global Setting in Site Configuration, rather than being set per-page. These labels will be set under Configuration => Cu Boulder Site Settings => Appearance and Layout.
   

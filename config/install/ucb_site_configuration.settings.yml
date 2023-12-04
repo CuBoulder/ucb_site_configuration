@@ -1,5 +1,6 @@
 # Editable site settings (non-theme) will go here
 
+# Settings in "General"
 site_type: ''
 site_affiliation: ''
 site_affiliation_label: ''
@@ -8,7 +9,13 @@ site_search_enabled:
   - default
 site_search_label: ''
 site_search_url: ''
+gtm_account: ''
 
+# Settings in "Content types"
+article_date_format: '0'
 related_articles_enabled_by_default: FALSE
 related_articles_exclude_categories: []
 related_articles_exclude_tags: []
+people_list_filter_1_label: ''
+people_list_filter_2_label: ''
+people_list_filter_3_label: ''

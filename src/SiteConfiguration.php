@@ -157,8 +157,8 @@ class SiteConfiguration {
       '#options'        => [
         $this->t('Black'),
         $this->t('White'),
-        $this->t('Light'),
-        $this->t('Dark'),
+        $this->t('Light Gray'),
+        $this->t('Dark Gray'),
       ],
       '#description'    => $this->t('Select the color for the header background for the site information at the top of the page.'),
     ];
@@ -209,13 +209,6 @@ class SiteConfiguration {
       '#description'    => $this->t('The sticky menu appears at the top of the page when scrolling on large-screen devices, allowing for quick access to links.'),
     ];
 
-    $form['ucb_gtm_account'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('GTM Account Number'),
-      '#default_value'  => theme_get_setting('ucb_gtm_account', $themeName),
-      '#description'    => $this->t('Google Tag Manager account number e.g. GTM-123456.'),
-    ];
-
     $form['ucb_secondary_menu_position'] = [
       '#type'           => 'select',
       '#title'          => $this->t('Position of the secondary menu'),
@@ -248,42 +241,6 @@ class SiteConfiguration {
       ],
       '#description'    => $this->t('Select the location for social sharing links (Facebook, Twitter, etc) to appear on your pages.'),
     ];
-    // Choose date/time format sitewide.
-    $form['ucb_date_format'] = [
-      '#type'           => 'select',
-      '#title'          => $this->t('Display settings for Date formats on Articles'),
-      '#default_value'  => theme_get_setting('ucb_date_format', $themeName),
-      '#options'        => [
-        $this->t('Short Date'),
-        $this->t('Medium Date'),
-        $this->t('Long Date'),
-        $this->t('Short Date with Time'),
-        $this->t('Medium Date with Time'),
-        $this->t('Long Date with Time'),
-        $this->t('None - Hide'),
-      ],
-      '#description'    => $this->t('Select the preferred Global Date/Time format for dates on your site.'),
-    ];
-    // Custom labels for filters 1-3 on People List Pages
-    $form['ucb_filter_1_label'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('Filter 1 Label'),
-      '#default_value'  => theme_get_setting('ucb_filter_1_label', $themeName),
-      '#description'    => $this->t('Choose the label that will be used for "Filter 1" on People List Pages'),
-    ];
-    $form['ucb_filter_2_label'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('Filter 2 Label'),
-      '#default_value'  => theme_get_setting('ucb_filter_2_label', $themeName),
-      '#description'    => $this->t('Choose the label that will be used for "Filter 2" on People List Pages'),
-    ];
-    $form['ucb_filter_3_label'] = [
-      '#type'           => 'textfield',
-      '#title'          => $this->t('Filter 3 Label'),
-      '#default_value'  => theme_get_setting('ucb_filter_3_label', $themeName),
-      '#description'    => $this->t('Choose the label that will be used for "Filter 3" on People List Pages'),
-    ];
-
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $form['advanced'] = [
         '#type'  => 'details',
@@ -391,15 +348,29 @@ class SiteConfiguration {
   }
 
   /**
-   * Attaches related articles configuration to Articles.
+   * Attaches configuration to Articles.
    *
    * @param array &$variables
    *   The array to add the site information to.
    */
-  public function attachRelatedArticlesConfiguration(array &$variables) {
+  public function attachArticlesConfiguration(array &$variables) {
     $settings = $this->getSettings();
+    $variables['article_date_format'] = $settings->get('article_date_format') ?? '0';
     $variables['related_articles_exclude_categories'] = $settings->get('related_articles_exclude_categories') ?? [];
     $variables['related_articles_exclude_tags'] = $settings->get('related_articles_exclude_tags') ?? [];
+  }
+
+  /**
+   * Attaches configuration to People Lists.
+   *
+   * @param array &$variables
+   *   The array to add the site information to.
+   */
+  public function attachPeopleListConfiguration(array &$variables) {
+    $settings = $this->getSettings();
+    $variables['people_list_filter_1_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 1';
+    $variables['people_list_filter_2_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 2';
+    $variables['people_list_filter_3_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 3';
   }
 
   /**
