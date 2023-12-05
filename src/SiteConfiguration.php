@@ -209,8 +209,8 @@ class SiteConfiguration {
       '#title'          => $this->t('Position of the secondary menu'),
       '#default_value'  => theme_get_setting('ucb_secondary_menu_position', $themeName),
       '#options'        => [
-        'inline' => $this->t('Inline with the main navigation'),
         'above'  => $this->t('Above the main navigation'),
+        'inline' => $this->t('Inline with the main navigation'),
       ],
       '#description'    => $this->t('The secondary menu of this site can be populated with secondary or action links and displayed inline with or above the main navigation.'),
     ];
@@ -236,7 +236,7 @@ class SiteConfiguration {
         'bold' => $this->t('Bold'),
         'normal' => $this->t('Normal'),
       ],
-      '#description'    => $this->t('Headers are bold by default, but can also be set to the same font weight as normal text.'),
+      '#description'    => $this->t('Headings are bold by default, but can also be set to the same font weight as normal text.'),
     ];
 
     $form['misc'] = [
