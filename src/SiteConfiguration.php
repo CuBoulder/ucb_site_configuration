@@ -139,7 +139,13 @@ class SiteConfiguration {
 
     $themeName = $this->getThemeName();
 
-    $form['ucb_campus_header_color'] = [
+    $form['header'] = [
+      '#type' => 'details',
+      '#title' => 'Site header and navigation',
+      '#open' => TRUE,
+    ];
+
+    $form['header']['ucb_campus_header_color'] = [
       '#type'           => 'select',
       '#title'          => $this->t('CU Boulder campus header color'),
       '#default_value'  => theme_get_setting('ucb_campus_header_color', $themeName),
@@ -150,7 +156,7 @@ class SiteConfiguration {
       '#description'    => $this->t('Select the color for the header background for the campus branding information at the top of the page.'),
     ];
 
-    $form['ucb_header_color'] = [
+    $form['header']['ucb_header_color'] = [
       '#type'           => 'select',
       '#title'          => $this->t('CU Boulder site header color'),
       '#default_value'  => theme_get_setting('ucb_header_color', $themeName),
@@ -163,7 +169,7 @@ class SiteConfiguration {
       '#description'    => $this->t('Select the color for the header background for the site information at the top of the page.'),
     ];
 
-    $form['ucb_menu_style'] = [
+    $form['header']['ucb_menu_style'] = [
       '#type'           => 'select',
       '#title'          => $this->t('Menu style'),
       '#default_value'  => theme_get_setting('ucb_menu_style', $themeName) ?? 'default',
@@ -184,32 +190,21 @@ class SiteConfiguration {
       '#description'    => $this->t('Select a style for the main navigation menu.'),
     ];
 
-    $form['ucb_sidebar_position'] = [
-      '#type'           => 'select',
-      '#title'          => $this->t('Where to show sidebar content on a page'),
-      '#default_value'  => theme_get_setting('ucb_sidebar_position', $themeName),
-      '#options'        => [
-        $this->t('Left'),
-        $this->t('Right'),
-      ],
-      '#description'    => $this->t('Select if sidebar content should appear on the left or right side of a page.'),
-    ];
-
-    $form['ucb_breadcrumb_nav'] = [
+    $form['header']['ucb_breadcrumb_nav'] = [
       '#type'           => 'checkbox',
       '#title'          => $this->t('Show breadcrumb navigation on pages'),
       '#default_value'  => theme_get_setting('ucb_breadcrumb_nav', $themeName),
       '#description'    => $this->t('If enabled, the breadcrumb navigation will be shown at the top of pages, helping visitors find their way around the site.'),
     ];
 
-    $form['ucb_sticky_menu'] = [
+    $form['header']['ucb_sticky_menu'] = [
       '#type'           => 'checkbox',
       '#title'          => $this->t('Show sticky menu'),
       '#default_value'  => theme_get_setting('ucb_sticky_menu', $themeName),
       '#description'    => $this->t('The sticky menu appears at the top of the page when scrolling on large-screen devices, allowing for quick access to links.'),
     ];
 
-    $form['ucb_secondary_menu_position'] = [
+    $form['header']['ucb_secondary_menu_position'] = [
       '#type'           => 'select',
       '#title'          => $this->t('Position of the secondary menu'),
       '#default_value'  => theme_get_setting('ucb_secondary_menu_position', $themeName),
@@ -220,15 +215,49 @@ class SiteConfiguration {
       '#description'    => $this->t('The secondary menu of this site can be populated with secondary or action links and displayed inline with or above the main navigation.'),
     ];
 
-    $form['ucb_secondary_menu_button_display'] = [
+    $form['header']['ucb_secondary_menu_button_display'] = [
       '#type'           => 'checkbox',
       '#title'          => $this->t('Display links in the secondary menu as buttions'),
       '#default_value'  => theme_get_setting('ucb_secondary_menu_button_display', $themeName),
       '#description'    => $this->t('Check this box to display the links in the secondary menu of this site as buttons instead of links.'),
     ];
 
+    $form['content'] = [
+      '#type' => 'details',
+      '#title' => 'Page content',
+      '#open' => TRUE,
+    ];
+
+    $form['content']['ucb_heading_font'] = [
+      '#type'           => 'select',
+      '#title'          => $this->t('Heading font'),
+      '#default_value'  => theme_get_setting('ucb_heading_font', $themeName) ?? 'bold',
+      '#options'        => [
+        'bold' => $this->t('Bold'),
+        'normal' => $this->t('Normal'),
+      ],
+      '#description'    => $this->t('Headers are bold by default, but can also be set to the same font weight as normal text.'),
+    ];
+
+    $form['misc'] = [
+      '#type' => 'details',
+      '#title' => 'Miscellaneous',
+      '#open' => TRUE,
+    ];
+
+    $form['misc']['ucb_sidebar_position'] = [
+      '#type'           => 'select',
+      '#title'          => $this->t('Where to show sidebar content on a page'),
+      '#default_value'  => theme_get_setting('ucb_sidebar_position', $themeName),
+      '#options'        => [
+        $this->t('Left'),
+        $this->t('Right'),
+      ],
+      '#description'    => $this->t('Select if sidebar content should appear on the left or right side of a page.'),
+    ];
+
     // Choose where social share buttons are positioned on each page.
-    $form['ucb_social_share_position'] = [
+    $form['misc']['ucb_social_share_position'] = [
       '#type'           => 'select',
       '#title'          => $this->t('Where your social media sharing links render'),
       '#default_value'  => theme_get_setting('ucb_social_share_position', $themeName),
@@ -241,6 +270,7 @@ class SiteConfiguration {
       ],
       '#description'    => $this->t('Select the location for social sharing links (Facebook, Twitter, etc) to appear on your pages.'),
     ];
+
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $form['advanced'] = [
         '#type'  => 'details',
