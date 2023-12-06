@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder Site Configuration v2.6.1
+  This update:
+  - Reorganizes the _Appearance and layout_ section of CU Boulder site settings into three categories: _Header and navigation_, _Page content_, and _Miscellaneous_.
+  - Adds a _Heading font_ setting. The setting defaults to _Bold_ but can also be set to _Normal_. CuBoulder/tiamat-theme#516.
+  - Swaps the location of _Inline_ and _Above_ when choosing the secondary menu position. CuBoulder/tiamat-theme#551
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/578)
+---
+
 - ### CU Boulder Site Configuration 2.6
   This update:
   - Moves all settings from "Pages and Search" into "General". Search settings are now advanced settings.
