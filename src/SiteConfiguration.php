@@ -141,7 +141,7 @@ class SiteConfiguration {
 
     $form['header'] = [
       '#type' => 'details',
-      '#title' => 'Site header and navigation',
+      '#title' => 'Header and navigation',
       '#open' => TRUE,
     ];
 
@@ -216,10 +216,21 @@ class SiteConfiguration {
     ];
 
     $form['header']['ucb_secondary_menu_button_display'] = [
-      '#type'           => 'checkbox',
-      '#title'          => $this->t('Display links in the secondary menu as buttions'),
+      '#type'           => 'select',
+      '#title'          => $this->t('Secondary menu button display'),
       '#default_value'  => theme_get_setting('ucb_secondary_menu_button_display', $themeName),
-      '#description'    => $this->t('Check this box to display the links in the secondary menu of this site as buttons instead of links.'),
+      '#options'        => [
+        'none' => $this->t('None (text only)'),
+        'blue' => $this->t('Blue'),
+        'gold' => $this->t('Gold'),
+        'gray' => $this->t('Gray'),
+      ],
+      '#description'    => $this->t('The links in the secondary menu can display as blue, gold, or gray buttons if desired.'),
+      '#states' => [
+        'visible' => [
+          ':input[name="ucb_secondary_menu_position"]' => ['value' => 'inline'],
+        ],
+      ],
     ];
 
     $form['content'] = [
