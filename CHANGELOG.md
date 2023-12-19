@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder Site Configuration v2.6.2
+  This update changes "Display links in the secondary menu as buttons" to "Secondary menu button display" with options for none, blue, gold, and gray. The setting only appears if "Position of the secondary menu" is set to "Above the main navigation". CuBoulder/tiamat-theme#551
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/583)
+---
+
 ## [20231212] - 2023-12-12
 
 -   ### CU Boulder Site Configuration v2.6.1
