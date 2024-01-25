@@ -16,6 +16,8 @@ article_date_format: '0'
 related_articles_enabled_by_default: FALSE
 related_articles_exclude_categories: []
 related_articles_exclude_tags: []
-people_list_filter_1_label: ''
-people_list_filter_2_label: ''
-people_list_filter_3_label: ''
+people_list_department_label: Department
+people_list_job_type_label: Job Type
+people_list_filter_1_label: Filter 1
+people_list_filter_2_label: Filter 2
+people_list_filter_3_label: Filter 3
