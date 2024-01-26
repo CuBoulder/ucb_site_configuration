@@ -142,6 +142,18 @@ class ContentTypesForm extends ConfigFormBase {
       '#type'  => 'details',
       '#title' => $this->t('People List Page'),
       '#open'  => TRUE,
+      'people_list_department_label' => [
+        '#type'           => 'textfield',
+        '#title'          => $this->t('Department label'),
+        '#default_value'  => $settings->get('people_list_department_label') ?? 'Department',
+        '#description'    => $this->t('Choose the label that will be used for "Department" on People List Pages.'),
+      ],
+      'people_list_job_type_label' => [
+        '#type'           => 'textfield',
+        '#title'          => $this->t('Job Type label'),
+        '#default_value'  => $settings->get('people_list_job_type_label') ?? 'Job Type',
+        '#description'    => $this->t('Choose the label that will be used for "Job Type" on People List Pages.'),
+      ],
       'people_list_filter_1_label' => [
         '#type'           => 'textfield',
         '#title'          => $this->t('Filter 1 label'),
@@ -173,6 +185,8 @@ class ContentTypesForm extends ConfigFormBase {
       ->set('related_articles_enabled_by_default', $form_state->getValue('related_articles_enabled_by_default'))
       ->set('related_articles_exclude_categories', array_keys(array_filter($form_state->getValue('related_articles_exclude_categories'))))
       ->set('related_articles_exclude_tags', array_keys(array_filter($form_state->getValue('related_articles_exclude_tags'))))
+      ->set('people_list_department_label', $form_state->getValue('people_list_department_label'))
+      ->set('people_list_job_type_label', $form_state->getValue('people_list_job_type_label'))
       ->set('people_list_filter_1_label', $form_state->getValue('people_list_filter_1_label'))
       ->set('people_list_filter_2_label', $form_state->getValue('people_list_filter_2_label'))
       ->set('people_list_filter_3_label', $form_state->getValue('people_list_filter_3_label'))
