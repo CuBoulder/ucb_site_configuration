@@ -3,23 +3,26 @@
 namespace Drupal\ucb_site_configuration\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Extension\ModuleHandlerInterface;
-use Drupal\Core\Extension\ThemeHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
+use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Theme\ThemeManagerInterface;
+use Drupal\Core\StreamWrapper\StreamWrapperManager;
 use Drupal\file\Entity\File;
 use Drupal\file\FileInterface;
-use Drupal\system\Form\ThemeSettingsForm;
 use Drupal\ucb_site_configuration\SiteConfiguration;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * The form for the "Appearance" tab in CU Boulder site settings.
  */
-class AppearanceForm extends ThemeSettingsForm {
+class AppearanceForm extends ConfigFormBase {
+  /**
+   * The file system.
+   *
+   * @var \Drupal\Core\File\FileSystemInterface
+   */
+  protected $fileSystem;
 
   /**
    * The current user.
@@ -40,14 +43,6 @@ class AppearanceForm extends ThemeSettingsForm {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
-   *   The module handler instance to use.
-   * @param \Drupal\Core\Extension\ThemeHandlerInterface $theme_handler
-   *   The theme handler.
-   * @param \Symfony\Component\Mime\MimeTypeGuesserInterface $mime_type_guesser
-   *   The MIME type guesser instance to use.
-   * @param \Drupal\Core\Theme\ThemeManagerInterface $theme_manager
-   *   The theme manager.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system.
    * @param \Drupal\Core\Session\AccountInterface $user
@@ -55,8 +50,9 @@ class AppearanceForm extends ThemeSettingsForm {
    * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
    *   The site configuration service defined in this module.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, ModuleHandlerInterface $module_handler, ThemeHandlerInterface $theme_handler, MimeTypeGuesserInterface $mime_type_guesser, ThemeManagerInterface $theme_manager, FileSystemInterface $file_system, AccountInterface $user, SiteConfiguration $service) {
-    parent::__construct($config_factory, $module_handler, $theme_handler, $mime_type_guesser, $theme_manager, $file_system);
+  public function __construct(ConfigFactoryInterface $config_factory, FileSystemInterface $file_system, AccountInterface $user, SiteConfiguration $service) {
+    parent::__construct($config_factory);
+    $this->fileSystem = $file_system;
     $this->user = $user;
     $this->service = $service;
   }
@@ -72,10 +68,6 @@ class AppearanceForm extends ThemeSettingsForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('module_handler'),
-      $container->get('theme_handler'),
-      $container->get('file.mime_type.guesser'),
-      $container->get('theme.manager'),
       $container->get('file_system'),
       $container->get('current_user'),
       $container->get('ucb_site_configuration')
@@ -92,9 +84,17 @@ class AppearanceForm extends ThemeSettingsForm {
   /**
    * {@inheritdoc}
    */
+  protected function getEditableConfigNames() {
+    return [$this->service->getThemeName() . '.settings'];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function buildForm(array $form, FormStateInterface $form_state, $theme = '') {
     $theme = $this->service->getThemeName();
     $form = parent::buildForm($form, $form_state, $theme);
+    $this->service->buildThemeSettingsForm($form, $form_state);
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $advanced = [];
       $advanced['custom_logo'] = [
@@ -216,8 +216,15 @@ class AppearanceForm extends ThemeSettingsForm {
     if ($fidsLight && isset($fidsLight[0]) && ($file = File::load($fidsLight[0]))) {
       $this->makePermanent($file);
     }
+
+    // Excludes unnecessary elements before saving.
+    $form_state->cleanValues();
     $form_state->unsetValue('ucb_custom_logo_dark_upload');
     $form_state->unsetValue('ucb_custom_logo_light_upload');
+  
+    $values = $form_state->getValues();
+    $config = $this->config($this->service->getThemeName() . '.settings');
+    theme_settings_convert_to_config($values, $config)->save();
 
     parent::submitForm($form, $form_state);
   }
@@ -231,6 +238,42 @@ class AppearanceForm extends ThemeSettingsForm {
   protected function makePermanent(FileInterface $file) {
     $file->setPermanent();
     $file->save();
+  }
+
+  /**
+   * Helper function for the system_theme_settings form.
+   *
+   * Attempts to validate normal system paths, paths relative to the public files
+   * directory, or stream wrapper URIs. If the given path is any of the above,
+   * returns a valid path or URI that the theme system can display.
+   *
+   * @param string $path
+   *   A path relative to the Drupal root or to the public files directory, or
+   *   a stream wrapper URI.
+   *
+   * @return mixed
+   *   A valid path that can be displayed through the theme system, or FALSE if
+   *   the path could not be validated.
+   * 
+   * @see \Drupal\system\Form\ThemeSettingsForm->validatePath
+   */
+  protected function validatePath($path) {
+    // Absolute local file paths are invalid.
+    if ($this->fileSystem->realpath($path) == $path) {
+      return FALSE;
+    }
+    // A path relative to the Drupal root or a fully qualified URI is valid.
+    if (is_file($path)) {
+      return $path;
+    }
+    // Prepend 'public://' for relative file paths within public filesystem.
+    if (StreamWrapperManager::getScheme($path) === FALSE) {
+      $path = 'public://' . $path;
+    }
+    if (is_file($path)) {
+      return $path;
+    }
+    return FALSE;
   }
 
 }
