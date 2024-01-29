@@ -256,17 +256,6 @@ class SiteConfiguration {
       '#open' => TRUE,
     ];
 
-    $form['misc']['ucb_sidebar_position'] = [
-      '#type'           => 'select',
-      '#title'          => $this->t('Where to show sidebar content on a page'),
-      '#default_value'  => theme_get_setting('ucb_sidebar_position', $themeName),
-      '#options'        => [
-        $this->t('Left'),
-        $this->t('Right'),
-      ],
-      '#description'    => $this->t('Select if sidebar content should appear on the left or right side of a page.'),
-    ];
-
     // Choose where social share buttons are positioned on each page.
     $form['misc']['ucb_social_share_position'] = [
       '#type'           => 'select',

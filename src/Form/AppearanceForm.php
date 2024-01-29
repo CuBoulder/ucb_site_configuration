@@ -97,6 +97,16 @@ class AppearanceForm extends ConfigFormBase {
     $this->service->buildThemeSettingsForm($form, $form_state);
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $advanced = [];
+      $advanced['ucb_sidebar_position'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Sidebar position'),
+        '#default_value' => theme_get_setting('ucb_sidebar_position', $theme),
+        '#options' => [
+          'right' => $this->t('Right (default)'),
+          'left' => $this->t('Left'),
+        ],
+        '#description' => $this->t('Select if sidebar content should appear on the left or right side of a page.'),
+      ];
       $advanced['custom_logo'] = [
         '#type' => 'container',
       ];
