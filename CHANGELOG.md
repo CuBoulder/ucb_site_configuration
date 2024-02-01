@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder Site Configuration v2.6.4
+  This update:
+  - Fixes an error in Drupal 10.2 caused by a dependency on a `ThemeSettingsForm` class marked as internal. This dependency has been removed. Resolves CuBoulder/ucb_site_configuration#43
+  - Moves "Sidebar position" under Advanced in Appearance and layout, with the setting now expecting a value of either `left` or `right`. Updates are needed in the theme and profile to make the setting work and will be tagged as sister PRs, but aren't required to merge this PR. CuBoulder/tiamat-theme#633.
+  
+  @jnicholCU assigned as the reviewer to test the primary fix of this update.
+---
+
 - ### Adds label fields for "Department" and "Job Type" on People List Pages
   CuBoulder/tiamat-theme#626
   
