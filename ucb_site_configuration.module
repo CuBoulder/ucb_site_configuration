@@ -72,7 +72,12 @@ function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInte
   foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
     $includeId = $externalServiceInclude->id();
     $contentServicesFieldAllowedOptions[$includeId] = $externalServiceInclude->label();
-    if (in_array($node->id(), $externalServiceInclude->getNodeIds())) {
+    $isSelected = in_array($node->id(), $externalServiceInclude->getNodeIds());
+    // Inverts the selection for a site-wide include.
+    if ($externalServiceInclude->isSitewide()) {
+      $isSelected = !$isSelected;
+    }
+    if ($isSelected) {
       $contentServicesFieldDefaultOptions[] = $includeId;
     }
   }
@@ -115,14 +120,18 @@ function ucb_site_configuration_form_node_form_submit(array &$form, FormStateInt
     $nodeIds = $externalServiceInclude->getNodeIds();
     $index = array_search($node->id(), $nodeIds);
     $isSelected = (bool) $contentServicesFieldSelectedIds[$includeId];
-    // Add the node to the include.
+    // Inverts the selection for a site-wide include.
+    if ($externalServiceInclude->isSitewide()) {
+      $isSelected = !$isSelected;
+    }
     if ($isSelected && $index === FALSE) {
+      // Adds the node to the include.
       $nodeIds[] = $node->id();
       $externalServiceInclude->set('nodes', $nodeIds);
       $externalServiceInclude->save();
-      // Remove the node from the include.
     }
     elseif (!$isSelected && $index !== FALSE) {
+      // Removes the node from the include.
       unset($nodeIds[$index]);
       $externalServiceInclude->set('nodes', $nodeIds);
       $externalServiceInclude->save();

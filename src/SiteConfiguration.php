@@ -419,10 +419,15 @@ class SiteConfiguration {
    */
   public function attachExternalServiceIncludes(array &$variables, NodeInterface $node = NULL) {
     $storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
-    $query = $storage->getQuery('OR')->condition('sitewide', TRUE);
+    $query = $storage->getQuery('OR');
+    $exclusiveGroup = $query->andConditionGroup()->condition('sitewide', TRUE);
     if ($node) {
-      $query->condition('nodes.*', $node->id());
+      $inclusiveGroup = $query->andConditionGroup()->condition('sitewide', FALSE);
+      $inclusiveGroup->condition('nodes.*', $node->id());
+      $exclusiveGroup->condition('nodes.*', [$node->id()], 'NOT IN');
+      $query->condition($inclusiveGroup);
     }
+    $query->condition($exclusiveGroup);
     $results = $query->execute();
     /** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
     $externalServiceIncludeEntities = $storage->loadMultiple($results);
@@ -451,7 +456,7 @@ class SiteConfiguration {
    */
   public function getContentAccessibleExternalServiceIncludes() {
     $storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
-    $query = $storage->getQuery('AND')->condition('sitewide', FALSE);
+    $query = $storage->getQuery();
     if (!$this->user->hasPermission('administer ucb external services')) {
       $query->condition('content_editing_enabled', TRUE);
     }

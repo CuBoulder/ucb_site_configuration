@@ -104,8 +104,8 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
       '#type'  => 'radios',
       '#title' => $this->t('Include this service on'),
       '#options' => [
-        $this->t('Specific content'),
-        $this->t('All content on this site'),
+        $this->t('Specified content only'),
+        $this->t('All content on this site, excluding specified content'),
       ],
       '#default_value' => $entity->isSitewide() ? 1 : 0,
       '#required' => TRUE,
@@ -116,7 +116,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         '#type' => 'entity_autocomplete',
         '#target_type' => 'node',
         '#title' => $this->t('Content'),
-        '#description' => $this->t('Specify content to include this service on. Multiple entries may be seperated by commas.'),
+        '#description' => $this->t('Specify content to include or exclude (optional). Multiple entries may be seperated by commas.'),
         '#default_value' => $entity->getNodes(),
         '#tags' => TRUE,
       ],
@@ -127,12 +127,6 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         '#description' => $this->t('If enabled, all users will be able to add or remove this service for content they can edit, including when creating new content. A user with permission to administer third-party services will always be able to add or remove this service, regardless if enabled.'),
         '#default_value' => $entity->isContentEditingEnabled(),
         '#tags' => TRUE,
-        '#states' => [
-          'visible' => [':input[name="sitewide"]' => ['value' => 0]],
-        ],
-      ],
-      '#states' => [
-        'visible' => [':input[name="sitewide"]' => ['value' => 0]],
       ],
     ];
     return $form + parent::form($form, $form_state);
