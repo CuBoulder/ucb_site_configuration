@@ -424,27 +424,31 @@ class SiteConfiguration {
     if ($node) {
       $inclusiveGroup = $query->andConditionGroup()->condition('sitewide', FALSE);
       $inclusiveGroup->condition('nodes.*', $node->id());
-      $exclusiveGroup->condition('nodes.*', [$node->id()], 'NOT IN');
+      $exclusiveGroup->condition($query->orConditionGroup()->condition('nodes.0', operator: 'IS NULL')->condition('nodes.*', [$node->id()], 'NOT IN'));
       $query->condition($inclusiveGroup);
     }
     $query->condition($exclusiveGroup);
     $results = $query->execute();
-    /** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
-    $externalServiceIncludeEntities = $storage->loadMultiple($results);
-    $externalServiceIncludeArrays = [];
-    foreach ($externalServiceIncludeEntities as $externalServiceInclude) {
-      $externalServiceName = $externalServiceInclude->getServiceName();
-      $externalServiceIncludeArrays[$externalServiceName][] = [
-        'id' => $externalServiceInclude->id(),
-        'label' => $externalServiceInclude->label(),
-        'service_name' => $externalServiceName,
-        'service_settings' => $externalServiceInclude->getServiceSettings(),
-        'sitewide' => $externalServiceInclude->isSitewide(),
-      ];
+    $externalServiceEnabled = count($results) > 0;
+    if ($externalServiceEnabled) {
+      /** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
+      $externalServiceIncludeEntities = $storage->loadMultiple($results);
+      $externalServiceIncludeArrays = [];
+      foreach ($externalServiceIncludeEntities as $externalServiceInclude) {
+        $externalServiceName = $externalServiceInclude->getServiceName();
+        $externalServiceIncludeArrays[$externalServiceName][] = [
+          'id' => $externalServiceInclude->id(),
+          'label' => $externalServiceInclude->label(),
+          'service_name' => $externalServiceName,
+          'service_settings' => $externalServiceInclude->getServiceSettings(),
+          'sitewide' => $externalServiceInclude->isSitewide(),
+        ];
+      }
+      foreach ($externalServiceIncludeArrays as $externalServiceName => $externalServiceIncludeArray) {
+        $variables['service_' . $externalServiceName . '_includes'] = $externalServiceIncludeArray;
+      }
     }
-    foreach ($externalServiceIncludeArrays as $externalServiceName => $externalServiceIncludeArray) {
-      $variables['service_' . $externalServiceName . '_includes'] = $externalServiceIncludeArray;
-    }
+    $variables['external_service_enabled'] = $externalServiceEnabled;
   }
 
   /**
