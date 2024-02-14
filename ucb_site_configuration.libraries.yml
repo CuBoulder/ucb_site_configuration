@@ -1,0 +1,20 @@
+service-livechat:
+  version: 1.x
+  js:
+    https://cdn.livechatinc.com/tracking.js:
+      type: external
+      attributes:
+        async: true
+        defer: true
+
+service-mainstay:
+  version: 1.x
+  css:
+    theme:
+      https://webbot.mainstay.com/static/css/webchat.css: { type: external }
+  js:
+    https://webbot.mainstay.com/static/js/webchat.js:
+      type: external
+      attributes:
+        async: true
+        defer: true
