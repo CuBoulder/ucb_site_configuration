@@ -448,65 +448,10 @@ class SiteConfiguration {
    *   The third-party service to attach.
    */
   public function attachExternalServiceInclude(array &$attachments, $externalServiceInclude) {
-    $externalServiceId = $externalServiceInclude->id();
     $externalServiceName = $externalServiceInclude->getServiceName();
     $externalServiceSettings = $externalServiceInclude->getServiceSettings();
-    switch ($externalServiceName) {
-      case 'livechat':
-        $serviceConfiguration = [
-          'license' => $externalServiceSettings['license_id'],
-        ];
-        $attachments['#attached']['library'][] = 'ucb_site_configuration/service-livechat';
-        $attachments['#attached']['html_head'][] = [
-          [
-            '#type' => 'html_tag',
-            '#tag' => 'script',
-            '#value' => 'window.__lc=' . Json::encode($serviceConfiguration) . ';',
-            '#attributes' => [
-              'type' => 'text/javascript',
-            ],
-          ],
-          'service-livechat-' . $externalServiceId,
-        ];
-        break;
-
-      case 'mainstay':
-        $serviceConfiguration = [
-          'botToken' => $externalServiceSettings['bot_token'],
-          'collegeId' => $externalServiceSettings['college_id'],
-        ];
-        $attachments['#attached']['library'][] = 'ucb_site_configuration/service-mainstay';
-        $attachments['#attached']['html_head'][] = [
-          [
-            '#type' => 'html_tag',
-            '#tag' => 'script',
-            '#value' => 'window.admitHubBot=' . Json::encode($serviceConfiguration) . ';',
-            '#attributes' => [
-              'type' => 'text/javascript',
-            ],
-          ],
-          'service-mainstay-' . $externalServiceId,
-        ];
-        break;
-
-      case 'statuspage':
-        $attachments['#attached']['html_head'][] = [
-          [
-            '#type' => 'html_tag',
-            '#tag' => 'script',
-            '#attributes' => [
-              'type' => 'text/javascript',
-              'src' => 'https://' . $externalServiceSettings['page_id'] . '.statuspage.io/embed/script.js',
-              'async' => '',
-              'defer' => '',
-            ],
-          ],
-          'service-statuspage-' . $externalServiceId,
-        ];
-        break;
-
-      default:
-    }
+    $attachments['#attached']['library'][] = 'ucb_site_configuration/service-' . $externalServiceName;
+    $attachments['#attached']['drupalSettings']['service_' . $externalServiceName][] = $externalServiceSettings;
   }
 
   /**
