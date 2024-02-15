@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
- * Enables external service includes to be referenced from the page template.
+ * Enables site general settings to be referenced from the page template.
  *
  * Implements hook_preprocess_HOOK().
  */
@@ -17,14 +17,21 @@ function ucb_site_configuration_preprocess_page(array &$variables) {
   /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
   $service = \Drupal::service('ucb_site_configuration');
   $service->attachSiteInformation($variables);
+  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
+  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
+}
+
+/**
+ * Attaches third-party services to nodes.
+ *
+ * Implements hook_page_attachments().
+ */
+function ucb_site_configuration_page_attachments(array &$variables) {
+  /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+  $service = \Drupal::service('ucb_site_configuration');
   if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
     $service->attachExternalServiceIncludes($variables, $node);
   }
-  else {
-    $service->attachExternalServiceIncludes($variables);
-  }
-  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
-  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
 }
 
 /**

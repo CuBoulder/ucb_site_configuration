@@ -2,6 +2,7 @@
 
 namespace Drupal\ucb_site_configuration;
 
+use Drupal\Component\Serialization\Json;
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityTypeRepositoryInterface;
@@ -406,18 +407,17 @@ class SiteConfiguration {
   }
 
   /**
-   * Attaches external service includes.
+   * Attaches all applicable third-party service to a page.
    *
-   * This function is meant to be called from `hook_preprocess`. Variables can
-   * be referenced from the template using `service_servicename_includes`.
+   * This function is meant to be called from `hook_page_attachments`.
    *
-   * @param array &$variables
-   *   The array to add the external service includes to.
+   * @param array &$attachments
+   *   The attachments array to add the third-party services to.
    * @param \Drupal\node\NodeInterface|null $node
    *   A node to match includes that are for specific content. If null, only
    *   sitewide includes will be attached.
    */
-  public function attachExternalServiceIncludes(array &$variables, NodeInterface $node = NULL) {
+  public function attachExternalServiceIncludes(array &$attachments, NodeInterface $node = NULL) {
     $storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
     $query = $storage->getQuery('OR');
     $exclusiveGroup = $query->andConditionGroup()->condition('sitewide', TRUE);
@@ -433,22 +433,80 @@ class SiteConfiguration {
     if ($externalServiceEnabled) {
       /** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
       $externalServiceIncludeEntities = $storage->loadMultiple($results);
-      $externalServiceIncludeArrays = [];
       foreach ($externalServiceIncludeEntities as $externalServiceInclude) {
-        $externalServiceName = $externalServiceInclude->getServiceName();
-        $externalServiceIncludeArrays[$externalServiceName][] = [
-          'id' => $externalServiceInclude->id(),
-          'label' => $externalServiceInclude->label(),
-          'service_name' => $externalServiceName,
-          'service_settings' => $externalServiceInclude->getServiceSettings(),
-          'sitewide' => $externalServiceInclude->isSitewide(),
-        ];
-      }
-      foreach ($externalServiceIncludeArrays as $externalServiceName => $externalServiceIncludeArray) {
-        $variables['service_' . $externalServiceName . '_includes'] = $externalServiceIncludeArray;
+        $this->attachExternalServiceInclude($attachments, $externalServiceInclude);
       }
     }
-    $variables['external_service_enabled'] = $externalServiceEnabled;
+  }
+
+  /**
+   * Attaches a single third-party service to a page.
+   *
+   * @param array &$attachments
+   *   The attachments array to add the third-party service to.
+   * @param \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface $externalServiceInclude
+   *   The third-party service to attach.
+   */
+  public function attachExternalServiceInclude(array &$attachments, $externalServiceInclude) {
+    $externalServiceId = $externalServiceInclude->id();
+    $externalServiceName = $externalServiceInclude->getServiceName();
+    $externalServiceSettings = $externalServiceInclude->getServiceSettings();
+    switch ($externalServiceName) {
+      case 'livechat':
+        $serviceConfiguration = [
+          'license' => $externalServiceSettings['license_id'],
+        ];
+        $attachments['#attached']['library'][] = 'ucb_site_configuration/service-livechat';
+        $attachments['#attached']['html_head'][] = [
+          [
+            '#type' => 'html_tag',
+            '#tag' => 'script',
+            '#value' => 'window.__lc=' . Json::encode($serviceConfiguration) . ';',
+            '#attributes' => [
+              'type' => 'text/javascript',
+            ],
+          ],
+          'service-livechat-' . $externalServiceId,
+        ];
+        break;
+
+      case 'mainstay':
+        $serviceConfiguration = [
+          'botToken' => $externalServiceSettings['bot_token'],
+          'collegeId' => $externalServiceSettings['college_id'],
+        ];
+        $attachments['#attached']['library'][] = 'ucb_site_configuration/service-mainstay';
+        $attachments['#attached']['html_head'][] = [
+          [
+            '#type' => 'html_tag',
+            '#tag' => 'script',
+            '#value' => 'window.admitHubBot=' . Json::encode($serviceConfiguration) . ';',
+            '#attributes' => [
+              'type' => 'text/javascript',
+            ],
+          ],
+          'service-mainstay-' . $externalServiceId,
+        ];
+        break;
+
+      case 'statuspage':
+        $attachments['#attached']['html_head'][] = [
+          [
+            '#type' => 'html_tag',
+            '#tag' => 'script',
+            '#attributes' => [
+              'type' => 'text/javascript',
+              'src' => 'https://' . $externalServiceSettings['page_id'] . '.statuspage.io/embed/script.js',
+              'async' => '',
+              'defer' => '',
+            ],
+          ],
+          'service-statuspage-' . $externalServiceId,
+        ];
+        break;
+
+      default:
+    }
   }
 
   /**
