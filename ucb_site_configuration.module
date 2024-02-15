@@ -9,7 +9,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
- * Enables external service includes to be referenced from the page template.
+ * Enables site general settings to be referenced from the page template.
  *
  * Implements hook_preprocess_HOOK().
  */
@@ -17,14 +17,21 @@ function ucb_site_configuration_preprocess_page(array &$variables) {
   /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
   $service = \Drupal::service('ucb_site_configuration');
   $service->attachSiteInformation($variables);
+  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
+  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
+}
+
+/**
+ * Attaches third-party services to nodes.
+ *
+ * Implements hook_page_attachments().
+ */
+function ucb_site_configuration_page_attachments(array &$variables) {
+  /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
+  $service = \Drupal::service('ucb_site_configuration');
   if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
     $service->attachExternalServiceIncludes($variables, $node);
   }
-  else {
-    $service->attachExternalServiceIncludes($variables);
-  }
-  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.configuration';
-  $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
 }
 
 /**
@@ -72,7 +79,12 @@ function ucb_site_configuration_form_node_form_alter(array &$form, FormStateInte
   foreach ($contentAccessibleExternalServiceIncludes as $externalServiceInclude) {
     $includeId = $externalServiceInclude->id();
     $contentServicesFieldAllowedOptions[$includeId] = $externalServiceInclude->label();
-    if (in_array($node->id(), $externalServiceInclude->getNodeIds())) {
+    $isSelected = in_array($node->id(), $externalServiceInclude->getNodeIds());
+    // Inverts the selection for a site-wide include.
+    if ($externalServiceInclude->isSitewide()) {
+      $isSelected = !$isSelected;
+    }
+    if ($isSelected) {
       $contentServicesFieldDefaultOptions[] = $includeId;
     }
   }
@@ -115,14 +127,18 @@ function ucb_site_configuration_form_node_form_submit(array &$form, FormStateInt
     $nodeIds = $externalServiceInclude->getNodeIds();
     $index = array_search($node->id(), $nodeIds);
     $isSelected = (bool) $contentServicesFieldSelectedIds[$includeId];
-    // Add the node to the include.
+    // Inverts the selection for a site-wide include.
+    if ($externalServiceInclude->isSitewide()) {
+      $isSelected = !$isSelected;
+    }
     if ($isSelected && $index === FALSE) {
+      // Adds the node to the include.
       $nodeIds[] = $node->id();
       $externalServiceInclude->set('nodes', $nodeIds);
       $externalServiceInclude->save();
-      // Remove the node from the include.
     }
     elseif (!$isSelected && $index !== FALSE) {
+      // Removes the node from the include.
       unset($nodeIds[$index]);
       $externalServiceInclude->set('nodes', $nodeIds);
       $externalServiceInclude->save();

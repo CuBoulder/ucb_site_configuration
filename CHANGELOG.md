@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Third-party services update (v2.7)
+  This update:
+  - Changes the behavior of the "All content" option on third-party service entities:
+     - When selected, the content field no longer hides, but instead becomes an exclude field.
+     - The third-party service is excluded from content in this field, the inverse of the include behavior.
+  - Refactors third-party services by moving all associated code into the Site Configuration module. In the future, a sister PR in tiamat-theme is unlikely to be necessary.
+  
+  Resolves CuBoulder/ucb_site_configuration#47
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/671)
+---
+
 - ### CU Boulder Site Configuration v2.6.4
   This update:
   - Fixes an error in Drupal 10.2 caused by a dependency on a `ThemeSettingsForm` class marked as internal. This dependency has been removed. Resolves CuBoulder/ucb_site_configuration#43
