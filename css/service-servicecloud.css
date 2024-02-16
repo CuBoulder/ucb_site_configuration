@@ -1,0 +1,102 @@
+body .helpButton {
+  width: 225px;
+}
+
+body .embeddedServiceHelpButton .uiButton .helpButtonLabel .message {
+  overflow: initial;
+  white-space: break-spaces;
+}
+
+body .embeddedServiceSidebarMinimizedDefaultUI .minimizedText>.message {
+  overflow: visible;
+  white-space: break-spaces;
+}
+
+body .embeddedServiceSidebarMinimizedDefaultUI .content {
+  background-color: #CFB87C;
+  color: #222;
+}
+
+body .embeddedServiceSidebarMinimizedDefaultUI.helpButton {
+  background-color: #CFB87C;
+  border-color: #CFB87C;
+  padding: 0px;
+}
+
+body .embeddedServiceHelpButton .helpButton .uiButton {
+  background-color: #CFB87C;
+  color: #111;
+  font-family: "Arial", sans-serif;
+  font-weight: bolder;
+  min-width: fit-content;
+}
+
+body .embeddedServiceHelpButton .helpButton .uiButton:focus {
+  outline: 1px solid #CFB87C;
+}
+
+body .embeddedServiceHelpButton .helpButton .helpButtonEnabled:hover::before,
+body .embeddedServiceHelpButton .helpButton .helpButtonEnabled:focus::before {
+  opacity: 1;
+  background-color: #a6a6a6;
+}
+
+body .embeddedServiceSidebarButton .label,
+body .embeddedServiceSidebarButton:disabled .label,
+body .embeddedServiceSidebarButton .label:hover,
+body .embeddedServiceSidebarButton:hover .label {
+  color: #111;
+}
+
+body .embeddedServiceSidebarButton:not(:disabled):focus,
+body .embeddedServiceSidebarButton:not(:disabled):hover {
+  background: #a6a6a6;
+}
+
+body .embeddedServiceLiveAgentStateChatPlaintextMessageDefaultUI.chasitor.plaintextContent {
+  color: #111;
+}
+
+@supports (-webkit-touch-callout: none) {
+  .embeddedservice-chat-header lightning-icon,
+  embeddedservice-chat-header svg.slds-icon-text-default {
+    fill: rgb(255, 255, 255) !important;
+  }
+
+  .slds-icon-text-default {
+    visibility: hidden;
+  }
+
+  .embeddedservice-chat-header lightning-icon,
+  embeddedservice-chat-header svg.slds-icon-text-default {
+    margin-bottom: -20px;
+  }
+
+  .slds-icon-utility-close:after {
+    content: "X";
+    color: black;
+    font-size: medium;
+  }
+
+  .slds-icon-utility-minimize-window:after {
+    content: "__";
+    color: black;
+    font-size: medium;
+  }
+
+  button.closeButton[embeddedService-chatHeader_chatHeader] {
+    padding-top: 0px;
+  }
+
+  .closeButton {
+    margin-top: -13px;
+    font-size: revert;
+    font-weight: bolder;
+  }
+
+  .minimizeButton {
+    margin-top: -13px;
+    font-size: revert;
+    font-weight: bolder;
+  }
+}

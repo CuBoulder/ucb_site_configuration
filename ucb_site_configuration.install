@@ -120,3 +120,14 @@ function ucb_site_configuration_update_9506() {
     'site_search_url',
   ]);
 }
+
+/**
+ * Adds the Service Cloud third-party service.
+ *
+ * Introduced in version 2.8 to address issue #46.
+ */
+function ucb_site_configuration_update_9507() {
+  _ucb_site_configuration_update_config([
+    'external_services',
+  ]);
+}
