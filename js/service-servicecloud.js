@@ -18,7 +18,7 @@
       if (enableAutoOpen) {
         setTimeout(
           function () {
-            closeEyeCatcherAndBootstrap();
+            closeEyeCatcherAndBootstrap(document.querySelector('.service-servicecloud-eyecatcher'));
           },
           autoOpenTime * 1000
         );
@@ -62,43 +62,34 @@
     );
   }
 
-  function closeEyeCatcher() {
-    const img = document.querySelector("#eye-catcher");
-    if (img != null) {
-      img.style.display = "none";
-    }
+  function closeEyeCatcher(eyeCatcher) {
+    if (eyeCatcher)
+      eyeCatcher.setAttribute('hidden', '');
   }
 
-  function closeEyeCatcherAndBootstrap() {
-    closeEyeCatcher();
+  function closeEyeCatcherAndBootstrap(eyeCatcher) {
+    closeEyeCatcher(eyeCatcher);
     embedded_svc.bootstrapEmbeddedService();
   }
 
   function addEyeCatcherHtml() {
     const eyeCatcher = document.createElement("div");
     const eyeCatcherCloser = document.createElement("div");
-    const eyeCatcherImgDiv = document.createElement("div");
     const eyeCatcherImg = document.createElement("img");
 
-    eyeCatcher.id = "eye-catcher";
-    eyeCatcher.style = "position: fixed; visibility: visible; z-index: 2147483639; background: transparent; border: 0px; padding: 10px 10px 0px 0px; float: left; margin-right: -10px; backface-visibility: hidden; bottom: 59px; right: 13px;"
+    eyeCatcher.className = 'service-servicecloud-eyecatcher';
 
-    eyeCatcherCloser.style = "position: absolute; display: block; top: -5px; right: -3px; width: 16px; line-height: 16px; text-align: center; cursor: pointer; text-decoration: none; color: rgb(0, 0, 0); font-size: 20px; font-family: Arial, sans-serif; border-radius: 50%; background-color: rgba(255, 255, 255, 0.5);";
-    eyeCatcherCloser.addEventListener("click", closeEyeCatcher);
+    eyeCatcherCloser.className = 'service-servicecloud-eyecatcher-closer';
+    eyeCatcherCloser.addEventListener("click", function () { closeEyeCatcher(eyeCatcher) });
     eyeCatcherCloser.textContent = "x";
 
-    eyeCatcherImgDiv.id = "eye-catcher-img";
-    eyeCatcherImgDiv.style = "display: block; overflow: hidden; cursor: pointer;"
-
-    eyeCatcherImg.id = "imagID";
+    eyeCatcherImg.className = 'service-servicecloud-eyecatcher-img';
     eyeCatcherImg.alt = "Chat now";
-    eyeCatcherImg.addEventListener("click", closeEyeCatcherAndBootstrap);
+    eyeCatcherImg.addEventListener("click", function () { closeEyeCatcherAndBootstrap(eyeCatcher) });
     eyeCatcherImg.src = "https://cdn.livechat-files.com/api/file/lc/main/12416433/0/ec/3cd23a1c1292c884141874e90a228a2b.png";
-    eyeCatcherImg.style = "display: block; border: 0px; float: right; width: 275px; height: 124px;"
 
     eyeCatcher.appendChild(eyeCatcherCloser);
-    eyeCatcherImgDiv.appendChild(eyeCatcherImg);
-    eyeCatcher.appendChild(eyeCatcherImgDiv);
+    eyeCatcher.appendChild(eyeCatcherImg);
 
     body.appendChild(eyeCatcher);
   }

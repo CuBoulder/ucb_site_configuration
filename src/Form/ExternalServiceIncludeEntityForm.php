@@ -178,7 +178,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         break;
 
       default:
-        $form_state->setError($this->t('Unrecognized third-party service selected.'));
+        $form_state->setErrorByName('service_name', $this->t('Unrecognized third-party service selected.'));
     }
   }
 
