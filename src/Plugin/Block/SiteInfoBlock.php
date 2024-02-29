@@ -51,11 +51,23 @@ class SiteInfoBlock extends BlockBase implements ContainerFactoryPluginInterface
    */
   public function build() {
     $config = $this->configFactory->get('ucb_site_configuration.contact_info');
+    $general = array_map(function ($item) {
+      return [
+        'visible' => $item['visible'],
+        'label' => $item['label'],
+        'value' => [
+          '#type' => 'processed_text',
+          '#text' => $item['value']['value'],
+          '#format' => $item['value']['format'],
+          '#langcode' => 'en',
+        ],
+      ];
+    }, $config->get('general'));
     return [
       '#data' => [
         'icons_visible' => $config->get('icons_visible'),
         'general_visible' => $config->get('general_visible'),
-        'general' => $config->get('general'),
+        'general' => $general,
         'email_visible' => $config->get('email_visible'),
         'email' => $config->get('email'),
         'phone_visible' => $config->get('phone_visible'),

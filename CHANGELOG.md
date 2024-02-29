@@ -9,6 +9,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CU Boulder Site Configuration v2.8
+  This update:
+  - [New] Adds Service Cloud third-party service and associated configuration. Resolves CuBoulder/ucb_site_configuration#46
+  - [Bug] Refactors third-party services yet again to fix a bug with the previous implementation.
+  - [Bug] Prevents third-party services from being attached to admin pages. Resolves CuBoulder/ucb_site_configuration#50
+  - [Bug] Fixes Shortcodes not rendering correctly in the site contact info block. Resolves CuBoulder/ucb_migration_shortcodes#15
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/702)
+---
+
 - ### Third-party services update (v2.7)
   This update:
   - Changes the behavior of the "All content" option on third-party service entities:

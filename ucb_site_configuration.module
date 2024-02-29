@@ -29,7 +29,7 @@ function ucb_site_configuration_preprocess_page(array &$variables) {
 function ucb_site_configuration_page_attachments(array &$variables) {
   /** @var \Drupal\ucb_site_configuration\SiteConfiguration */
   $service = \Drupal::service('ucb_site_configuration');
-  if (($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
+  if (!\Drupal::service('router.admin_context')->isAdminRoute() && ($node = \Drupal::routeMatch()->getParameter('node')) && $node instanceof NodeInterface) {
     $service->attachExternalServiceIncludes($variables, $node);
   }
 }

@@ -177,21 +177,32 @@ external_services:
   mainstay: 
     label: Mainstay
     content_label: Mainstay
-    settings: ['bot_token', 'college_id']
+    settings:
+      - bot_token
+      - college_id
     availability:
       content: true
       sitewide: true
+  servicecloud:
+    label: Service Cloud
+    content_label: Service Cloud
+    settings:
+      - auto_open
+      - auto_open_delay
+      - eyecatcher
   livechat: 
     label: LiveChat
     content_label: LiveChat
-    settings: ['license_id']
+    settings:
+      - license_id
     availability:
       content: true
       sitewide: true
   statuspage:
     label: StatusPage
     content_label: StatusPage
-    settings: ['page_id']
+    settings:
+      - page_id
     availability:
       content: true
       sitewide: true

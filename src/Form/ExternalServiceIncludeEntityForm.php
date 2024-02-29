@@ -146,6 +146,19 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         }
         break;
 
+      case 'servicecloud':
+        $delayFieldName = $externalServiceName . '__auto_open_delay';
+        $delay = $form_state->getValue($delayFieldName);
+        if (!preg_match('/^[0-9]?[0-9]$/', $delay)) {
+          $form_state->setErrorByName($delayFieldName, $this->t('A valid auto-open delay is a number in the range 0-99.'));
+        }
+        else {
+          $form_state->setValue($delayFieldName, (int) $delay);
+        }
+        $form_state->setValue($externalServiceName . '__auto_open', $form_state->getValue($externalServiceName . '__auto_open') ? TRUE : FALSE);
+        $form_state->setValue($externalServiceName . '__eyecatcher', $form_state->getValue($externalServiceName . '__eyecatcher') ? TRUE : FALSE);
+        break;
+
       case 'livechat':
         $licenseIdFieldName = $externalServiceName . '__license_id';
         $licenseId = $form_state->getValue($licenseIdFieldName);
@@ -165,6 +178,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         break;
 
       default:
+        $form_state->setErrorByName('service_name', $this->t('Unrecognized third-party service selected.'));
     }
   }
 
@@ -249,6 +263,37 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
               ':input[name="service_name"]' => ['value' => $externalServiceName],
             ],
           ],
+        ];
+        break;
+
+      case 'servicecloud':
+        $form[$externalServiceName . '__auto_open'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Automatically open chat'),
+          '#description' => $this->t('Select if you want this chat client to open automatically. Auto-open will only apply to desktop browsers.'),
+          '#default_value' => $externalServiceSettings['auto_open'] ?? FALSE,
+        ];
+        $form[$externalServiceName . '__auto_open_delay'] = [
+          '#type' => 'textfield',
+          '#size' => 64,
+          '#maxlength' => 64,
+          '#title' => $this->t('Auto-open delay'),
+          '#default_value' => $externalServiceSettings['auto_open_delay'] ?? '15',
+          '#description' => $this->t('The number of seconds to wait before opening the chat client automatically.'),
+          '#states' => [
+            'visible' => [
+              ':input[name="' . $externalServiceName . '__auto_open"]' => ['checked' => TRUE],
+            ],
+            'required' => [
+              ':input[name="service_name"]' => ['value' => $externalServiceName],
+            ],
+          ],
+        ];
+        $form[$externalServiceName . '__eyecatcher'] = [
+          '#type' => 'checkbox',
+          '#title' => $this->t('Display eyecatcher'),
+          '#description' => $this->t('Select if you want the eyecatcher to be displayed. The eyecatcher will only appear on desktop browsers.'),
+          '#default_value' => $externalServiceSettings['eyecatcher'] ?? FALSE,
         ];
         break;
 
