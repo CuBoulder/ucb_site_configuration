@@ -418,21 +418,21 @@ class SiteConfiguration {
    */
   public function attachExternalServiceIncludes(array &$attachments, NodeInterface $node = NULL) {
     $storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
-    $query = $storage->getQuery('OR');
-    $exclusiveGroup = $query->andConditionGroup()->condition('sitewide', TRUE);
+    $query = $storage->getQuery('OR')->condition('sitewide', TRUE);
     if ($node) {
-      $inclusiveGroup = $query->andConditionGroup()->condition('sitewide', FALSE);
-      $inclusiveGroup->condition('nodes.*', $node->id());
-      $exclusiveGroup->condition($query->orConditionGroup()->condition('nodes.0', operator: 'IS NULL')->condition('nodes.*', [$node->id()], 'NOT IN'));
-      $query->condition($inclusiveGroup);
+      $query->condition('nodes.*', $node->id());
     }
-    $query->condition($exclusiveGroup);
     $results = $query->execute();
     $externalServiceEnabled = count($results) > 0;
     if ($externalServiceEnabled) {
       /** @var \Drupal\ucb_site_configuration\Entity\ExternalServiceIncludeInterface[] */
       $externalServiceIncludeEntities = $storage->loadMultiple($results);
       foreach ($externalServiceIncludeEntities as $externalServiceInclude) {
+        if ($externalServiceInclude->isSitewide() && $node && in_array($node->id(), $externalServiceInclude->getNodeIds())) {
+          // This third-party service is an entire site service that was
+          // excluded from this particular node.
+          break;
+        }
         $this->attachExternalServiceInclude($attachments, $externalServiceInclude);
       }
     }
