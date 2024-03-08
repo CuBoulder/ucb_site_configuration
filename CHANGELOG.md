@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Fixes third-party services set to "all content" appearing on content in the exclude field (v2.8.1)
+  Apparently Drupal's query API is so limiting that they actively encourage [duplicating the exact same code 3 times](https://www.drupal.org/docs/8/api/database-api/dynamic-queries/conditions#s-using-not-in-with-multi-value-field-like-roles-user-entity) in the documentation, big yikes. Instead of a query condition this update just grabs all of them and uses PHP to filter some out.
+  
+  Resolves CuBoulder/ucb_site_configuration#51
+---
+
 - ### CU Boulder Site Configuration v2.8
   This update:
   - [New] Adds Service Cloud third-party service and associated configuration. Resolves CuBoulder/ucb_site_configuration#46
