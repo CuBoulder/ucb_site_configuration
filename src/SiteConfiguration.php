@@ -185,7 +185,7 @@ class SiteConfiguration {
         'modern'    => $this->t('Dark 2'),
         'simple'    => $this->t('Dark 3'),
         'shadow'    => $this->t('Dark 4'),
-        'swatch'    => $this->t('Dark 6'),
+        'swatch'    => $this->t('Dark 5'),
       ],
       '#description'    => $this->t('Select a style for the main navigation menu.'),
     ];
