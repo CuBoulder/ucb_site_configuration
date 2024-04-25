@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Renames menu styles (v2.8.2)
+  This update renames menu styles to more generic names.
+  
+  - Highlight -> Light 1
+  - Ivory -> Light 2
+  - Layers -> Dark 1
+  - Minimal -> Light 3
+  - Modern -> Dark 2
+  - Rise -> Light 4
+  - Shadow -> Dark 3
+  - Simple -> Dark 4
+  - Spirit -> Light 5
+  - Swatch -> Dark 5
+  - Tradition -> Light 6
+  
+  Resolves CuBoulder/ucb_site_configuration#53
+---
+
 - ### Fixes third-party services set to "all content" appearing on content in the exclude field (v2.8.1)
   Apparently Drupal's query API is so limiting that they actively encourage [duplicating the exact same code 3 times](https://www.drupal.org/docs/8/api/database-api/dynamic-queries/conditions#s-using-not-in-with-multi-value-field-like-roles-user-entity) in the documentation, big yikes. Instead of a query condition this update just grabs all of them and uses PHP to filter some out.
   
