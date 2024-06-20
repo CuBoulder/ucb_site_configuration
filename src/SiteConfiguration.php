@@ -92,14 +92,14 @@ class SiteConfiguration {
    *   The messenger service.
    */
   public function __construct(
-        AccountInterface $user,
-        ModuleHandlerInterface $module_handler,
-        ConfigFactoryInterface $config_factory,
-        TranslationManager $string_translation,
-        EntityTypeManagerInterface $entity_type_manager,
-        EntityTypeRepositoryInterface $entity_type_repository,
-        RouteMatchInterface $current_route_match,
-        MessengerInterface $messenger
+    AccountInterface $user,
+    ModuleHandlerInterface $module_handler,
+    ConfigFactoryInterface $config_factory,
+    TranslationManager $string_translation,
+    EntityTypeManagerInterface $entity_type_manager,
+    EntityTypeRepositoryInterface $entity_type_repository,
+    RouteMatchInterface $current_route_match,
+    MessengerInterface $messenger,
   ) {
     $this->user = $user;
     $this->moduleHandler = $module_handler;
@@ -248,27 +248,6 @@ class SiteConfiguration {
         'normal' => $this->t('Normal'),
       ],
       '#description'    => $this->t('Headings are bold by default, but can also be set to the same font weight as normal text.'),
-    ];
-
-    $form['misc'] = [
-      '#type' => 'details',
-      '#title' => 'Miscellaneous',
-      '#open' => TRUE,
-    ];
-
-    // Choose where social share buttons are positioned on each page.
-    $form['misc']['ucb_social_share_position'] = [
-      '#type'           => 'select',
-      '#title'          => $this->t('Where your social media sharing links render'),
-      '#default_value'  => theme_get_setting('ucb_social_share_position', $themeName),
-      '#options'        => [
-        $this->t('None'),
-        $this->t('Left Side (Desktop) / Below Title (Mobile)'),
-        $this->t('Left Side (Desktop) / Below Content (Mobile)'),
-        $this->t('Below Content'),
-        $this->t('Below Title'),
-      ],
-      '#description'    => $this->t('Select the location for social sharing links (Facebook, Twitter, etc) to appear on your pages.'),
     ];
 
     if ($this->user->hasPermission('edit ucb site advanced')) {
