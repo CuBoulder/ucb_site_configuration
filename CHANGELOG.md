@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Removes "social share position" setting (v2.8.3)
+  [Remove] CuBoulder/tiamat-theme#1073
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/1078)
+---
+
 - ### Renames menu styles (v2.8.2)
   This update renames menu styles to more generic names.
   
