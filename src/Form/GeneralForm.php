@@ -274,11 +274,10 @@ class GeneralForm extends ConfigFormBase {
         $form_state->setErrorByName($fieldName, $this->t("The path '%path' has to start with a slash.", ['%path' => $value]));
         return FALSE;
       }
-      if (!$this->pathValidator->isValid($value)) {
-        $form_state->setErrorByName($fieldName, $this->t("The path '%path' is invalid.", ['%path' => $value]));
-        return FALSE;
+      if ($this->pathValidator->isValid($value)) {
+        return TRUE;
       }
-      return TRUE;
+      $form_state->setErrorByName($fieldName, $this->t("The path '%path' is invalid.", ['%path' => $value]));
     }
     return FALSE;
   }
@@ -293,8 +292,8 @@ class GeneralForm extends ConfigFormBase {
     if ($this->validatePath($form_state, 'site_frontpage')) {
       $form_state->setValue('site_frontpage', $this->aliasManager->getPathByAlias($form_state->getValue('site_frontpage')));
     }
-    if ($this->user->hasPermission('edit ucb site advanced') && $form_state->getValues('site_search_enabled')['site_search_enabled_custom'] && $this->validatePath($form_state, 'site_search_url')) {
-      $form_state->setValue('site_search_url', $this->aliasManager->getPathByAlias($form_state->getValue('site_search_url')));
+    if ($this->user->hasPermission('edit ucb site advanced') && $form_state->getValues('site_search_enabled')['site_search_enabled_custom']) {
+      $this->validatePath($form_state, 'site_search_url');
     }
     parent::validateForm($form, $form_state);
   }
