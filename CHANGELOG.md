@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Fixes bug with site frontpage setting (v2.8.4)
+  [Bug] Resolves CuBoulder/ucb_site_configuration#56
+---
+
 - ### Removes "social share position" setting (v2.8.3)
   [Remove] CuBoulder/tiamat-theme#1073
   
