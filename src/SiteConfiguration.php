@@ -380,8 +380,8 @@ class SiteConfiguration {
     $variables['people_list_department_label'] = $settings->get('people_list_department_label') ?? 'Department';
     $variables['people_list_job_type_label'] = $settings->get('people_list_job_type_label') ?? 'Job Type';
     $variables['people_list_filter_1_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 1';
-    $variables['people_list_filter_2_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 2';
-    $variables['people_list_filter_3_label'] = $settings->get('people_list_filter_1_label') ?? 'Filter 3';
+    $variables['people_list_filter_2_label'] = $settings->get('people_list_filter_2_label') ?? 'Filter 2';
+    $variables['people_list_filter_3_label'] = $settings->get('people_list_filter_3_label') ?? 'Filter 3';
   }
 
   /**

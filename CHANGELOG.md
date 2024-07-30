@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Fixes People List Filter labels
+  Previously there was an error in the site configuration where the set Filter 1 label would be presented for Filter 2 and Filter 3. This has been corrected and allows the People List Page to access the correct term labels.
+  
+  Resolves #60 
+---
+
 - ### Fixes bug with site frontpage setting (v2.8.4)
   [Bug] Resolves CuBoulder/ucb_site_configuration#56
 ---
