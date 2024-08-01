@@ -117,7 +117,6 @@ class GeneralForm extends ConfigFormBase {
     $configuration = $this->service->getConfiguration();
     $settings = $this->service->getSettings();
     $systemSiteSettings = $this->config('system.site');
-    $siteFrontpage = $systemSiteSettings->get('page.front');
     $siteTypeOptions = $configuration->get('site_type_options');
     $siteAffiliationOptions = array_filter($configuration->get('site_affiliation_options'), function ($value) {
       return !$value['type_restricted'];
@@ -131,10 +130,18 @@ class GeneralForm extends ConfigFormBase {
     $form['site_frontpage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Home page'),
-      '#default_value' => $siteFrontpage && $siteFrontpage[0] === '/' ? $this->aliasManager->getAliasByPath($siteFrontpage) : $siteFrontpage,
+      '#default_value' => $this->toAliasPathIfValid($systemSiteSettings->get('page.front')),
       '#required' => TRUE,
       '#size' => 40,
       '#description' => $this->t('Specify a relative URL to display as the site home page.'),
+      '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
+    ];
+    $form['site_404'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('404 (not found) page'),
+      '#default_value' => $this->toAliasPathIfValid($systemSiteSettings->get('page.404')),
+      '#size' => 40,
+      '#description' => $this->t('This page is displayed when no other content matches the requested document.'),
       '#field_prefix' => $this->requestContext->getCompleteBaseUrl(),
     ];
     if ($this->user->hasPermission('edit ucb site advanced')) {
@@ -283,6 +290,19 @@ class GeneralForm extends ConfigFormBase {
   }
 
   /**
+   * Converts the path to an alias path if valid, otherwise returns the path.
+   *
+   * @param string $path
+   *   The path to convert.
+   *
+   * @return string
+   *   The converted path.
+   */
+  protected function toAliasPathIfValid($path) {
+    return $path[0] === '/' ? $this->aliasManager->getAliasByPath($path) : $path;
+  }
+
+  /**
    * {@inheritdoc}
    *
    * @see \Drupal\system\Form\SiteInformationForm::validateForm
@@ -291,6 +311,9 @@ class GeneralForm extends ConfigFormBase {
   public function validateForm(array &$form, FormStateInterface $form_state) {
     if ($this->validatePath($form_state, 'site_frontpage')) {
       $form_state->setValue('site_frontpage', $this->aliasManager->getPathByAlias($form_state->getValue('site_frontpage')));
+    }
+    if ($this->validatePath($form_state, 'site_404')) {
+      $form_state->setValue('site_404', $this->aliasManager->getPathByAlias($form_state->getValue('site_404')));
     }
     if ($this->user->hasPermission('edit ucb site advanced') && $form_state->getValues('site_search_enabled')['site_search_enabled_custom']) {
       $this->validatePath($form_state, 'site_search_url');
@@ -307,6 +330,7 @@ class GeneralForm extends ConfigFormBase {
     $this->config('system.site')
       ->set('name', $form_state->getValue('site_name'))
       ->set('page.front', $form_state->getValue('site_frontpage'))
+      ->set('page.404', $form_state->getValue('site_404'))
       ->save();
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $siteTypeId = $form_state->getValue('site_type');

@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds 404 page setting to General (2.8.5)
+  Resolves CuBoulder/ucb_site_configuration#62
+---
+
 - ### Fixes People List Filter labels
   Previously there was an error in the site configuration where the set Filter 1 label would be presented for Filter 2 and Filter 3. This has been corrected and allows the People List Page to access the correct term labels.
   
