@@ -138,8 +138,8 @@ site_affiliation_options:
     label: 'Office of Information Technology'
     type_restricted: false
   infrastructure_sustainability:
-    url: 'https://www.colorado.edu/infrastructure-sustainability'
-    label: 'Part of Infrastructure and Sustainability'
+    url: 'https://www.colorado.edu/infrastructure-resilience'
+    label: 'Part of Infrastructure and Resilience'
     type_restricted: false
   institutional_equity_compliance:
     url: 'https://www.colorado.edu/oiec'
