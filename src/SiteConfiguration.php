@@ -8,6 +8,7 @@ use Drupal\Core\Entity\EntityTypeRepositoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
+use Drupal\Core\Routing\RequestContext;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -58,6 +59,13 @@ class SiteConfiguration {
   protected $entityTypeRepository;
 
   /**
+   * The request context.
+   *
+   * @var \Drupal\Core\Routing\RequestContext
+   */
+  protected $requestContext;
+
+  /**
    * The current route match.
    *
    * @var \Drupal\Core\Routing\RouteMatchInterface
@@ -86,6 +94,8 @@ class SiteConfiguration {
    *   The entity type manager.
    * @param \Drupal\Core\Entity\EntityTypeRepositoryInterface $entity_type_repository
    *   The entity type repository.
+   * @param \Drupal\Core\Routing\RequestContext $request_context
+   *   The request context.
    * @param \Drupal\Core\Routing\RouteMatchInterface $current_route_match
    *   The current route match.
    * @param \Drupal\Core\Messenger\MessengerInterface $messenger
@@ -98,6 +108,7 @@ class SiteConfiguration {
     TranslationManager $string_translation,
     EntityTypeManagerInterface $entity_type_manager,
     EntityTypeRepositoryInterface $entity_type_repository,
+    RequestContext $request_context,
     RouteMatchInterface $current_route_match,
     MessengerInterface $messenger,
   ) {
@@ -107,6 +118,7 @@ class SiteConfiguration {
     $this->stringTranslation = $string_translation;
     $this->entityTypeManager = $entity_type_manager;
     $this->entityTypeRepository = $entity_type_repository;
+    $this->requestContext = $request_context;
     $this->currentRouteMatch = $current_route_match;
     $this->messenger = $messenger;
   }
@@ -349,7 +361,7 @@ class SiteConfiguration {
         }
         $searchUrl = $settings->get('site_search_url');
         if ($searchUrl) {
-          $siteSearchOption['url'] = $searchUrl;
+          $siteSearchOption['url'] = $this->requestContext->getCompleteBaseUrl() . $searchUrl;
         }
       }
       $variables['site_search'][] = $siteSearchOption;
