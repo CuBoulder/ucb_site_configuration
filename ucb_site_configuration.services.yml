@@ -8,5 +8,6 @@ services:
       - '@string_translation'
       - '@entity_type.manager'
       - '@entity_type.repository'
+      - '@router.request_context'
       - '@current_route_match'
       - '@messenger'
