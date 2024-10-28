@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Prepends site base URL to site-relative search page path (v2.8.6)
+  [bug, severity:moderate] An issue existed where the site-relative search page path would be treated as root-relative by the browser due to a missing prefixing of the site's URL, preventing custom site search from working as expected. This update resolves the issue by correctly prefixing the site's full URL to the search page path. Resolves CuBoulder/ucb_site_configuration#69
+---
+
+- ### Updates linter workflow
+  Updates the linter workflow to use the new parent workflow in action-collection.
+  
+  CuBoulder/action-collection#7
+  
+  Sister PR in: All the things
+---
+
 - ### Create developer-sandbox-ci.yml
   new ci workflow
 ---
