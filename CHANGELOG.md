@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Renames Infrastructure and Sustainability to Infrastructure and Resilience (v2.9)
+  [change] This update renames Infrastructure and Sustainability to Infrastructure and Resilience. This update contains an update hook.
+  
+  Resolves CuBoulder/ucb_site_configuration#65
+---
+
 - ### Prepends site base URL to site-relative search page path (v2.8.6)
   [bug, severity:moderate] An issue existed where the site-relative search page path would be treated as root-relative by the browser due to a missing prefixing of the site's URL, preventing custom site search from working as expected. This update resolves the issue by correctly prefixing the site's full URL to the search page path. Resolves CuBoulder/ucb_site_configuration#69
 ---

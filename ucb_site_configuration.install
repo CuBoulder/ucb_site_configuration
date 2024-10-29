@@ -131,3 +131,14 @@ function ucb_site_configuration_update_9507() {
     'external_services',
   ]);
 }
+
+/**
+ * Renames Infrastructure and Sustainability to Infrastructure and Resilience.
+ *
+ * Introduced in version 2.9 to address issue #65.
+ */
+function ucb_site_configuration_update_9508() {
+  _ucb_site_configuration_update_config([
+    'site_affiliation_options',
+  ]);
+}
