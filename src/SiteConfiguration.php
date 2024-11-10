@@ -346,6 +346,12 @@ class SiteConfiguration {
         ],
         '#description'    => $this->t('Check this box if you would like to display the "Be Boulder" slogan in the header.'),
       ];
+      $form['advanced']['ucb_homepage_header'] = [
+        '#type'           => 'checkbox',
+        '#title'          => $this->t('Hide the normal header bar. For the CU Homepage only.'),
+        '#default_value'  => theme_get_setting('ucb_homepage_header', $themeName),
+        '#description'    => $this->t('Uncheck this box if you would like the header to not display. This is meant for the CU Homepage layout only.'),
+      ];
       $form['advanced']['ucb_secondary_menu_default_links'] = [
         '#type'           => 'checkbox',
         '#title'          => $this->t('Display the standard Boulder secondary menu in the header navigation region.'),
