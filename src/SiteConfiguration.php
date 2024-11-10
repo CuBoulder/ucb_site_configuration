@@ -262,6 +262,66 @@ class SiteConfiguration {
       '#description'    => $this->t('Headings are bold by default, but can also be set to the same font weight as normal text.'),
     ];
 
+    $form['content']['ucb_above_content_region_color'] = [
+      '#type'           => 'select',
+      '#title'          => $this->t('Above Content background color'),
+      '#default_value'  => theme_get_setting('ucb_above_content_region_color', $themeName),
+      '#options'        => [
+        'white' => $this->t('None'),
+        'light-gray' => $this->t('Light Gray'),
+        'dark-gray' => $this->t('Dark Gray'),
+        'black' => $this->t('Black'),
+        'gold' => $this->t('Gold'),
+        'tan' => $this->t('Tan'),
+        'light-blue' => $this->t('Light Blue'),
+        'medium-blue' => $this->t('Medium Blue'),
+        'dark-blue' => $this->t('Dark Blue'),
+        'light-green' => $this->t('Light Green'),
+        'brick' => $this->t('Brick'),
+      ],
+      '#description'    => $this->t('The global background color for this Block Layout region.'),
+    ];
+
+    $form['content']['ucb_after_content_one_region_color'] = [
+      '#type'           => 'select',
+      '#title'          => $this->t('After Content 1 background color'),
+      '#default_value'  => theme_get_setting('ucb_after_content_one_region_color', $themeName),
+      '#options'        => [
+        'white' => $this->t('None'),
+        'light-gray' => $this->t('Light Gray'),
+        'dark-gray' => $this->t('Dark Gray'),
+        'black' => $this->t('Black'),
+        'gold' => $this->t('Gold'),
+        'tan' => $this->t('Tan'),
+        'light-blue' => $this->t('Light Blue'),
+        'medium-blue' => $this->t('Medium Blue'),
+        'dark-blue' => $this->t('Dark Blue'),
+        'light-green' => $this->t('Light Green'),
+        'brick' => $this->t('Brick'),
+      ],
+      '#description'    => $this->t('The global background color for this Block Layout region.'),
+    ];
+
+    $form['content']['ucb_after_content_two_region_color'] = [
+      '#type'           => 'select',
+      '#title'          => $this->t('After Content 2 background color'),
+      '#default_value'  => theme_get_setting('ucb_after_content_two_region_color', $themeName),
+      '#options'        => [
+        'white' => $this->t('None'),
+        'light-gray' => $this->t('Light Gray'),
+        'dark-gray' => $this->t('Dark Gray'),
+        'black' => $this->t('Black'),
+        'gold' => $this->t('Gold'),
+        'tan' => $this->t('Tan'),
+        'light-blue' => $this->t('Light Blue'),
+        'medium-blue' => $this->t('Medium Blue'),
+        'dark-blue' => $this->t('Dark Blue'),
+        'light-green' => $this->t('Light Green'),
+        'brick' => $this->t('Brick'),
+      ],
+      '#description'    => $this->t('The global background color for this Block Layout region.'),
+    ];
+
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $form['advanced'] = [
         '#type'  => 'details',
@@ -282,6 +342,7 @@ class SiteConfiguration {
           $this->t('None'),
           $this->t('Footer'),
           $this->t('Header'),
+          $this->t('Homepage Layout'),
         ],
         '#description'    => $this->t('Check this box if you would like to display the "Be Boulder" slogan in the header.'),
       ];
