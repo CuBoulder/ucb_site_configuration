@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Update SiteConfiguration.php
+  Update for the new homepage footer option as well as background color choices for the above and below content regions.
+  
+  Sister PR: https://github.com/CuBoulder/tiamat-theme/pull/1456
+---
+
 - ### Renames Infrastructure and Sustainability to Infrastructure and Resilience (v2.9)
   [change] This update renames Infrastructure and Sustainability to Infrastructure and Resilience. This update contains an update hook.
   
