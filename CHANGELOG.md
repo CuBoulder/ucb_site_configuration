@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Increases the maximum length of the "Content" field on third-party service entities (v2.9.1)
+  Previously, a site wasn't able to include or exclude all the pages they wanted to due to a default character limit on the "Content" field on third-party services entities. This update increases the character limit to 10,000.
+  
+  Resolves CuBoulder/ucb_site_configuration#72
+---
+
 - ### Update SiteConfiguration.php
   Update for the new homepage footer option as well as background color choices for the above and below content regions.
   

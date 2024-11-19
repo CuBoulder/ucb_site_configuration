@@ -117,6 +117,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         '#target_type' => 'node',
         '#title' => $this->t('Content'),
         '#description' => $this->t('Specify content to include or exclude (optional). Multiple entries may be seperated by commas.'),
+        '#maxlength' => 10000,
         '#default_value' => $entity->getNodes(),
         '#tags' => TRUE,
       ],
