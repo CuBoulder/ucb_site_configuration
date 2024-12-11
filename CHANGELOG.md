@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds Sidebar color options
+  Options for sidebar menu styles added. Default is the current D10 Gold, and the light gray option mimics the D7 style
+  
+  Sister PR: https://github.com/CuBoulder/tiamat-theme/pull/1544
+---
+
 - ### Increases the maximum length of the "Content" field on third-party service entities (v2.9.1)
   Previously, a site wasn't able to include or exclude all the pages they wanted to due to a default character limit on the "Content" field on third-party services entities. This update increases the character limit to 10,000.
   
