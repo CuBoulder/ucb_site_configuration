@@ -202,6 +202,17 @@ class SiteConfiguration {
       '#description'    => $this->t('Select a style for the main navigation menu.'),
     ];
 
+    $form['header']['ucb_sidebar_menu_style'] = [
+      '#type'           => 'select',
+      '#title'          => $this->t('Sidebar menu style'),
+      '#default_value'  => theme_get_setting('ucb_sidebar_menu_style', $themeName) ?? 'gold',
+      '#options'        => [
+        'gold'   => $this->t('Gold'),
+        'light-gray' => $this->t('Light Gray'),
+      ],
+      '#description'    => $this->t('Select a style for the sidebar navigation menu.'),
+    ];
+
     $form['header']['ucb_breadcrumb_nav'] = [
       '#type'           => 'checkbox',
       '#title'          => $this->t('Show breadcrumb navigation on pages'),
