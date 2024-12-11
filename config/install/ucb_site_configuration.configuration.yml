@@ -146,8 +146,8 @@ site_affiliation_options:
     label: 'Office of Institutional Equity'
     type_restricted: false
   integrity_safety_compliance:
-    url: ''
-    label: 'Office of Integrity, Safety and Compliance'
+    url: 'https://www.colorado.edu/compliance'
+    label: 'Office of Compliance, Ethics and Policy'
     type_restricted: false
   strategic_relations_comm:
     url: 'https://www.colorado.edu/strategicrelations'
