@@ -133,11 +133,27 @@ function ucb_site_configuration_update_9507() {
 }
 
 /**
+ * Updates a site affiliation.
+ *
  * Renames Infrastructure and Sustainability to Infrastructure and Resilience.
  *
  * Introduced in version 2.9 to address issue #65.
  */
 function ucb_site_configuration_update_9508() {
+  _ucb_site_configuration_update_config([
+    'site_affiliation_options',
+  ]);
+}
+
+/**
+ * Updates a site affiliation.
+ *
+ * Renames Office of Integrity, Safety and Compliance to Office of Compliance,
+ * Ethics and Policy, and adds a URL to this affiliation.
+ *
+ * Introduced in version 2.10 to address issue #74.
+ */
+function ucb_site_configuration_update_9509() {
   _ucb_site_configuration_update_config([
     'site_affiliation_options',
   ]);

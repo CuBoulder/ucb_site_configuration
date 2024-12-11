@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Updates site affiliation (v2.10)
+  This update renames _Office of Integrity, Safety and Compliance_ to _Office of Compliance, Ethics and Policy_, and adds a URL to this affiliation.
+  
+  [change] Resolves CuBoulder/ucb_site_configuration#74
+---
+
 - ### Adds Sidebar color options
   Options for sidebar menu styles added. Default is the current D10 Gold, and the light gray option mimics the D7 style
   
