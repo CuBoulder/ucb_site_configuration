@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Removes unused include templates and settings (v2.11)
+  This update removes the unused includes and settings originally intended for the CU Boulder homepage secondary and footer menus. They have instead built these out using the appropriate mechanisms available in Web Express and don't need custom code to support it.
+  
+  CuBoulder/tiamat-theme#1537
+  
+  Sister PR in: [tiamat-theme](https://github.com/CuBoulder/tiamat-theme/pull/1554)
+---
+
 - ### Updates site affiliation (v2.10)
   This update renames _Office of Integrity, Safety and Compliance_ to _Office of Compliance, Ethics and Policy_, and adds a URL to this affiliation.
   

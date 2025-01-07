@@ -363,18 +363,6 @@ class SiteConfiguration {
         '#default_value'  => theme_get_setting('ucb_homepage_header', $themeName),
         '#description'    => $this->t('Check this box if you would like to hide the header. This is meant for the CU Homepage layout only.'),
       ];
-      $form['advanced']['ucb_secondary_menu_default_links'] = [
-        '#type'           => 'checkbox',
-        '#title'          => $this->t('Display the standard Boulder secondary menu in the header navigation region.'),
-        '#default_value'  => theme_get_setting('ucb_secondary_menu_default_links', $themeName),
-        '#description'    => $this->t('Check this box if you would like to display the default Boulder secondary menu links in the header.'),
-      ];
-      $form['advanced']['ucb_footer_menu_default_links'] = [
-        '#type'           => 'checkbox',
-        '#title'          => $this->t('Display the standard Boulder menus in the footer region.'),
-        '#default_value'  => theme_get_setting('ucb_footer_menu_default_links', $themeName),
-        '#description'    => $this->t('Check this box if you would like to display the default Boulder footer menu links in the footer.'),
-      ];
     }
   }
 
