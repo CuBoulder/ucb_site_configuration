@@ -1,4 +1,6 @@
 <?php
+use Drupal\views\Entity\View;
+use Drupal\views\ViewEntityInterface;
 
 /**
  * @file
@@ -158,3 +160,36 @@ function ucb_site_configuration_update_9509() {
     'site_affiliation_options',
   ]);
 }
+
+/**
+ * Updates the 'newsletter_by_type' view from the profile to change its path and disable it to fix the one taxonomy view to rule them all
+ */
+function ucb_site_configuration_update_9510() {
+  $view_id = 'newsletter_by_type';
+
+  // Load the view
+  $view = View::load($view_id);
+  if ($view instanceof ViewEntityInterface) {
+    // Modify the path to prevent conflict, needs path to be changed
+    $new_path = '/temporary-disabled/newsletter-type';
+
+    foreach ($view->get('display') as &$display) {
+      if (isset($display['display_options']['path'])) {
+        $display['display_options']['path'] = $new_path;
+      }
+    }
+
+    // Save the modified view
+    $view->save();
+
+    // Then disable the view
+    $view->disable();
+    $view->save();
+
+    \Drupal::logger('ucb_site_configuration')->notice("Updated and disabled the '$view_id' view to resolve path conflict.");
+  }
+  else {
+    \Drupal::logger('ucb_site_configuration')->warning("View '$view_id' not found.");
+  }
+}
+
