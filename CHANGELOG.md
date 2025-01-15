@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### #78 Adds update to remove newsletter view
+  Previously disabling the "Newsletters by Type" view would continue to cannibalize the "Taxonomy Terms" view page and result in a blank page due to both views sharing a path by default. This could only be disabled by changing the path, then disabiling the view on live sites, in order to correctly render the taxonomy view.
+  
+  This update hook should disable the newsletter-specific view and allow the taxonomy view to handle all terms correctly, after running a `drush updb` command on the live sites
+  
+  Resolves #78 
+---
+
 - ### Removes unused include templates and settings (v2.11)
   This update removes the unused includes and settings originally intended for the CU Boulder homepage secondary and footer menus. They have instead built these out using the appropriate mechanisms available in Web Express and don't need custom code to support it.
   
