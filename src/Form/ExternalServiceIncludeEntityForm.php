@@ -350,7 +350,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
             '#size' => 24,
             '#maxlength' => 24,
             '#title' => $this->t('AI Bot ID'),
-            '#default_value' => $externalServiceSettings['ai_bot_id'] ?? '',
+            '#default_value' => $externalServiceSettings['ai_bot_id'] ?? '6765a3c67b1f300012149d6e',
             '#states' => [
               'required' => [
                 ':input[name="service_name"]' => ['value' => $externalServiceName],
@@ -362,7 +362,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
             '#size' => 230,
             '#maxlength' => 230,
             '#title' => $this->t('Goodkind API Key'),
-            '#default_value' => $externalServiceSettings['ai_bot_api_key'] ?? '',
+            '#default_value' => $externalServiceSettings['ai_bot_api_key'] ?? '659425d1a56d1027865e1d658b27679e288bdd07adb4814d0d812a69bba6b429c77939ec0214f41e731ec17a26ce1ddcff47d138efbfc5199ff87a2569ed8115f4fbfca462109099a2cdf031b6c7b55fb3734024368179943a227b5cc6ec566bb01a45695e42a074f00d15ad0029775f46b7ad',
             '#states' => [
               'required' => [
                 ':input[name="service_name"]' => ['value' => $externalServiceName],
