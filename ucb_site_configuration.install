@@ -193,3 +193,8 @@ function ucb_site_configuration_update_9510() {
   }
 }
 
+function ucb_site_configuration_update_9511() {
+  _ucb_site_configuration_update_config([
+    'external_services',
+  ]);
+}
