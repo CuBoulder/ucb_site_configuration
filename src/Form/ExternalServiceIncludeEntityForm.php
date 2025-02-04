@@ -178,6 +178,22 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         }
         break;
 
+      case 'goodkind':
+        $aiBotIdFieldName = $externalServiceName . '__ai_bot_id';
+        $botId = $form_state->getValue($aiBotIdFieldName);
+
+        if (strlen($botId) != 24 || !preg_match('/^[a-z0-9]+$/', $botId)) {
+          $form_state->setErrorByName($aiBotIdFieldName, $this->t('A valid bot ID is 24 characters long and a mix of lowercase letters and numbers.'));
+        }
+
+        $aiBotApiFieldName = $externalServiceName . '__ai_bot_api_key';
+        $botApi = $form_state->getValue($aiBotApiFieldName);
+
+        if (strlen($botApi) != 230 || !preg_match('/^[a-z0-9]+$/', $botApi)) {
+          $form_state->setErrorByName($aiBotApiFieldName, $this->t('A valid Bot API key is 230 characters long and a mix of lowercase letters and numbers.'));
+        }
+        break;
+
       default:
         $form_state->setErrorByName('service_name', $this->t('Unrecognized third-party service selected.'));
     }
@@ -328,6 +344,32 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
           ],
         ];
         break;
+        case 'goodkind':
+          $form[$externalServiceName . '__ai_bot_id'] = [
+            '#type' => 'textfield',
+            '#size' => 24,
+            '#maxlength' => 24,
+            '#title' => $this->t('AI Bot ID'),
+            '#default_value' => $externalServiceSettings['ai_bot_id'] ?? '6765a3c67b1f300012149d6e',
+            '#states' => [
+              'required' => [
+                ':input[name="service_name"]' => ['value' => $externalServiceName],
+              ],
+            ],
+          ];
+          $form[$externalServiceName . '__ai_bot_api_key'] = [
+            '#type' => 'textfield',
+            '#size' => 230,
+            '#maxlength' => 230,
+            '#title' => $this->t('Goodkind API Key'),
+            '#default_value' => $externalServiceSettings['ai_bot_api_key'] ?? '659425d1a56d1027865e1d658b27679e288bdd07adb4814d0d812a69bba6b429c77939ec0214f41e731ec17a26ce1ddcff47d138efbfc5199ff87a2569ed8115f4fbfca462109099a2cdf031b6c7b55fb3734024368179943a227b5cc6ec566bb01a45695e42a074f00d15ad0029775f46b7ad',
+            '#states' => [
+              'required' => [
+                ':input[name="service_name"]' => ['value' => $externalServiceName],
+              ],
+            ],
+          ];
+          break;
 
       default:
     }

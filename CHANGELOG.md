@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### #80 Adds Goodkind bot to external service
+  Adds the Goodkind AI chatbot to External Services. Cannot test locally, gets a 500 error. Need to test on developer sandbox.
+  
+  Resolves #80 
+---
+
 - ### #78 Adds update to remove newsletter view
   Previously disabling the "Newsletters by Type" view would continue to cannibalize the "Taxonomy Terms" view page and result in a blank page due to both views sharing a path by default. This could only be disabled by changing the path, then disabiling the view on live sites, in order to correctly render the taxonomy view.
   

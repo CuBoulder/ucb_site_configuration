@@ -10,11 +10,11 @@ service-mainstay:
       https://webbot.mainstay.com/static/css/webchat.css: { type: external }
   js:
     js/service-mainstay.js: {}
-    
+
 service-servicecloud:
   version: '1.0'
   css:
-    theme: 
+    theme:
       css/service-servicecloud.css: {}
   js:
     js/service-servicecloud.js: {}
@@ -23,3 +23,8 @@ service-statuspage:
   version: '1.0'
   js:
     js/service-statuspage.js: {}
+
+service-goodkind:
+  version: '1.0'
+  js:
+    js/service-goodkind.js: {}
