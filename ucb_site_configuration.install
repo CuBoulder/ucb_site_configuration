@@ -193,6 +193,10 @@ function ucb_site_configuration_update_9510() {
   }
 }
 
+/**
+ * Updates the Third-party services to add the Goodkind AI chatbot option. 
+ */
+
 function ucb_site_configuration_update_9511() {
   _ucb_site_configuration_update_config([
     'external_services',
