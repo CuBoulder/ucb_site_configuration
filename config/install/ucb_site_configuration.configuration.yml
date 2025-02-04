@@ -1,7 +1,7 @@
 # Configuration for this module will go here
 
 site_type_options:
-  college: 
+  college:
     label: 'College'
   school:
     label: 'School'
@@ -174,7 +174,7 @@ site_search_options:
     parameter: 'cse'
 
 external_services:
-  mainstay: 
+  mainstay:
     label: Mainstay
     content_label: Mainstay
     settings:
@@ -190,7 +190,7 @@ external_services:
       - auto_open
       - auto_open_delay
       - eyecatcher
-  livechat: 
+  livechat:
     label: LiveChat
     content_label: LiveChat
     settings:
@@ -203,6 +203,15 @@ external_services:
     content_label: StatusPage
     settings:
       - page_id
+    availability:
+      content: true
+      sitewide: true
+  goodkind:
+    label: Goodkind
+    content_label: Goodkind
+    settings:
+      - ai_bot_id
+      - ai_bot_api_key
     availability:
       content: true
       sitewide: true

@@ -178,6 +178,22 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         }
         break;
 
+      case 'goodkind':
+        $aiBotIdFieldName = $externalServiceName . '__ai_bot_id';
+        $botId = $form_state->getValue($aiBotIdFieldName);
+
+        if (strlen($botId) != 24 || !preg_match('/^[a-z0-9]+$/', $botId)) {
+          $form_state->setErrorByName($aiBotIdFieldName, $this->t('A valid bot ID is 24 characters long and a mix of lowercase letters and numbers.'));
+        }
+
+        $aiBotApiFieldName = $externalServiceName . '__ai_bot_api_key';
+        $botApi = $form_state->getValue($aiBotApiFieldName);
+
+        if (strlen($botApi) != 230 || !preg_match('/^[a-z0-9]+$/', $botApi)) {
+          $form_state->setErrorByName($aiBotApiFieldName, $this->t('A valid Bot API key is 230 characters long and a mix of lowercase letters and numbers.'));
+        }
+        break;
+
       default:
         $form_state->setErrorByName('service_name', $this->t('Unrecognized third-party service selected.'));
     }
@@ -328,6 +344,32 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
           ],
         ];
         break;
+        case 'goodkind':
+          $form[$externalServiceName . '__ai_bot_id'] = [
+            '#type' => 'textfield',
+            '#size' => 24,
+            '#maxlength' => 24,
+            '#title' => $this->t('AI Bot ID'),
+            '#default_value' => $externalServiceSettings['ai_bot_id'] ?? '',
+            '#states' => [
+              'required' => [
+                ':input[name="service_name"]' => ['value' => $externalServiceName],
+              ],
+            ],
+          ];
+          $form[$externalServiceName . '__ai_bot_api_key'] = [
+            '#type' => 'textfield',
+            '#size' => 230,
+            '#maxlength' => 230,
+            '#title' => $this->t('Goodkind API Key'),
+            '#default_value' => $externalServiceSettings['ai_bot_api_key'] ?? '',
+            '#states' => [
+              'required' => [
+                ':input[name="service_name"]' => ['value' => $externalServiceName],
+              ],
+            ],
+          ];
+          break;
 
       default:
     }
