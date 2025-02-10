@@ -1,8 +1,6 @@
 (function (drupalSettings) {
   const settings = drupalSettings.service_goodkind[0];
   if (!settings) return;
-
-  console.log(settings)
   // Set config BEFORE loading the script
   window.gkCBWConfig = {
     aiBotId: settings.ai_bot_id,
