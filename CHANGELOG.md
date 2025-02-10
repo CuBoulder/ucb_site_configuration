@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Remove debug logging from Goodkind bot
+  Needed to push the Goodkind chat bot to sandboxes for testing as it only works on a specified public domain. Included debug logging in case of issues, but this is no longer needed.
+  
+  Resolves #82 
+---
+
 - ### #80 Adds Goodkind bot to external service
   Adds the Goodkind AI chatbot to External Services. Cannot test locally, gets a 500 error. Need to test on developer sandbox.
   
