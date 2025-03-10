@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### D11 version bump
+  D11 version bump
+---
+
 - ### Remove debug logging from Goodkind bot
   Needed to push the Goodkind chat bot to sandboxes for testing as it only works on a specified public domain. Included debug logging in case of issues, but this is no longer needed.
   
