@@ -194,7 +194,20 @@ function ucb_site_configuration_update_9510() {
 }
 
 /**
- * Updates the Third-party services to add the Goodkind AI chatbot option. 
+ * Updates a site affiliation.
+ *
+ * Renames Division of Student Affairs to Division of Student Life,
+ * and adds a URL to this affiliation.
+ *
+ * Introduced in version 2.11 to address issue #1629.
+ */
+function ucb_site_configuration_update_9511() {
+  _ucb_site_configuration_update_config([
+    'site_affiliation_options',
+  ]);
+
+/**
+ * Updates the Third-party services to add the Goodkind AI chatbot option.
  */
 
 function ucb_site_configuration_update_9511() {
