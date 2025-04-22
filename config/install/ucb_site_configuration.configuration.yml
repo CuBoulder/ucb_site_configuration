@@ -114,8 +114,8 @@ site_affiliation_options:
     label: 'Office of Strategic Initiatives'
     type_restricted: false
   student_affairs:
-    url: 'https://www.colorado.edu/studentaffairs'
-    label: 'Division of Student Affairs'
+    url: 'https://www.colorado.edu/studentlife'
+    label: 'Division of Student Life'
     type_restricted: false
   undergraduate_education:
     url: ''

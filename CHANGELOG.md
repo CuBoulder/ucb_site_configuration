@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Renames Division of Student Affairs to Division of Student Life (v2.11)
+  This update renames 'Division of Student Affairs' to 'Division of Student Life', via an update hook. 
+  
+  Resolves https://github.com/CuBoulder/tiamat-theme/issues/1629
+---
+
 - ### D11 version bump
   D11 version bump
 ---
