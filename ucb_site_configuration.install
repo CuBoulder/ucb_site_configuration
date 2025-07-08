@@ -216,3 +216,14 @@ function ucb_site_configuration_update_9512() {
     'site_affiliation_options',
   ]);
 }
+
+/**
+ * Updates the CMCI affiliation to CMDI with new label and URL.
+ *
+ * Introduced in version 2.13 to address CMDI rename in issue #88 (site config repo).
+ */
+function ucb_site_configuration_update_9513() {
+  _ucb_site_configuration_update_config([
+    'site_affiliation_options',
+  ]);
+}

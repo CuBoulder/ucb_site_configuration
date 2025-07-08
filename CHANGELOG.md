@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### CMCI -> CMDI
+  Updates and hook for changing CMCI to CMDI with respective url and label changes.
+  
+  Resolves #88 
+---
+
 - ### Update service-servicecloud.js
   Added in new code to avoid multiple submissions.
   
