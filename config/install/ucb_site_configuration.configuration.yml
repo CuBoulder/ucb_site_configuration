@@ -65,7 +65,7 @@ site_affiliation_options:
     url: 'https://www.colorado.edu/engineering'
     label: 'College of Engineering and Applied Science'
     type_restricted: false
-  cmdi:
+  cmci:
     url: 'https://www.colorado.edu/cmdi'
     label: 'College of Communication, Media, Design and Information'
     type_restricted: false

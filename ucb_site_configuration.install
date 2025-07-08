@@ -217,24 +217,3 @@ function ucb_site_configuration_update_9512() {
   ]);
 }
 
-/**
- * Updates a site affiliation.
- *
- * Renames College of Media, Communication and Information (cmci) to College of Communication, Media, Design and Information (cmdi), and updates its URL.
- *
- * Introduced in version 2.13.
- */
-function ucb_site_configuration_update_9513() {
-  // Load the editable config.
-  $config = \Drupal::configFactory()->getEditable('ucb_site_configuration.configuration');
-  $affiliations = $config->get('site_affiliation_options');
-  if (isset($affiliations['cmci'])) {
-    $affiliations['cmdi'] = [
-      'url' => 'https://www.colorado.edu/cmdi',
-      'label' => 'College of Communication, Media, Design and Information',
-      'type_restricted' => $affiliations['cmci']['type_restricted'],
-    ];
-    unset($affiliations['cmci']);
-    $config->set('site_affiliation_options', $affiliations)->save();
-  }
-}
