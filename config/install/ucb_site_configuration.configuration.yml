@@ -215,3 +215,14 @@ external_services:
     availability:
       content: true
       sitewide: true
+  salesforce:
+    label: Salesforce
+    content_label: Salesforce
+    settings:
+      - salesforce_id
+      - embedded_service_name
+      - endpoint_url
+      - scrt2_url
+    availability:
+      content: true
+      sitewide: true
