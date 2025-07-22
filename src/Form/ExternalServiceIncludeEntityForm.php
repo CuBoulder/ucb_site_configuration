@@ -422,7 +422,7 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
               '#title' => $this->t('Embedded Service Endpoint URL'),
               '#default_value' => $externalServiceSettings['endpoint_url'] ?? '',
               '#required' => TRUE,
-              '#description' => $this->t('Example: https://cu.my.site.com/ESWParkingServicesChat123456789'),
+              '#description' => $this->t('Example: https://cu.my.site.com/EmbeddedServiceName1234'),
               '#states' => [
                 'visible' => [
                   ':input[name="service_name"]' => ['value' => $externalServiceName],
