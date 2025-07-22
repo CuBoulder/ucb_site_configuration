@@ -194,6 +194,24 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
         }
         break;
 
+      case 'salesforce':
+        $idField = $externalServiceName . '__salesforce_id';
+        $nameField = $externalServiceName . '__embedded_service_name';
+        $endpointField = $externalServiceName . '__endpoint_url';
+        $scrt2Field = $externalServiceName . '__scrt2_url';
+
+        $endpointUrl = $form_state->getValue($endpointField);
+        if (!filter_var($endpointUrl, FILTER_VALIDATE_URL) || strpos($endpointUrl, 'https://cu.my.site.com') !== 0) {
+          $form_state->setErrorByName($endpointField, $this->t('The Endpoint URL must start with https://cu.my.site.com'));
+        }
+
+        $scrt2Url = $form_state->getValue($scrt2Field);
+        if (!filter_var($scrt2Url, FILTER_VALIDATE_URL) || strpos($scrt2Url, 'https://cu.my.salesforce-scrt.com') !== 0) {
+          $form_state->setErrorByName($scrt2Field, $this->t('The SCRT2 URL must start with https://cu.my.salesforce-scrt.com'));
+        }
+
+      break;
+
       default:
         $form_state->setErrorByName('service_name', $this->t('Unrecognized third-party service selected.'));
     }
@@ -370,7 +388,61 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
             ],
           ];
           break;
+          case 'salesforce':
+            $form[$externalServiceName . '__salesforce_id'] = [
+              '#type' => 'textfield',
+              '#size' => 24,
+              '#maxlength' => 24,
+              '#title' => $this->t('Salesforce Org ID'),
+              '#default_value' => $externalServiceSettings['salesforce_id'] ?? '',
+              '#required' => TRUE,
+              '#states' => [
+                'visible' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],
+              ],
+            ];
 
+            $form[$externalServiceName . '__embedded_service_name'] = [
+              '#type' => 'textfield',
+              '#size' => 64,
+              '#maxlength' => 64,
+              '#title' => $this->t('Embedded Service Name'),
+              '#default_value' => $externalServiceSettings['embedded_service_name'] ?? '',
+              '#required' => TRUE,
+              '#states' => [
+                'visible' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],
+              ],
+            ];
+
+            $form[$externalServiceName . '__endpoint_url'] = [
+              '#type' => 'url',
+              '#title' => $this->t('Embedded Service Endpoint URL'),
+              '#default_value' => $externalServiceSettings['endpoint_url'] ?? '',
+              '#required' => TRUE,
+              '#description' => $this->t('Example: https://cu.my.site.com/EmbeddedServiceName1234'),
+              '#states' => [
+                'visible' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],
+              ],
+            ];
+
+            $form[$externalServiceName . '__scrt2_url'] = [
+              '#type' => 'url',
+              '#title' => $this->t('SCRT2 URL'),
+              '#default_value' => $externalServiceSettings['scrt2_url'] ?? '',
+              '#required' => TRUE,
+              '#description' => $this->t('Example: https://cu.my.salesforce-scrt.com'),
+              '#states' => [
+                'visible' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],
+              ],
+            ];
+          break;
       default:
     }
   }

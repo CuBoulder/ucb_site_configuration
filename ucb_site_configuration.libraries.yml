@@ -28,3 +28,8 @@ service-goodkind:
   version: '1.0'
   js:
     js/service-goodkind.js: {}
+
+service-salesforce:
+  version: '1.0'
+  js:
+    js/service-salesforce.js: {}

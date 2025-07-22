@@ -227,3 +227,14 @@ function ucb_site_configuration_update_9513() {
     'site_affiliation_options',
   ]);
 }
+
+/**
+ * Updates the Third-party services to add the Salesforce chatbot option.
+ */
+
+function ucb_site_configuration_update_9514() {
+  _ucb_site_configuration_update_config([
+    'external_services',
+  ]);
+}
+

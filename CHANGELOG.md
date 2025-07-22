@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds Salesforce Enhanced Chatbot Third-party Service
+  This change adds Salesforce Enhanced chatbots as an option to Third-party Services in site configuration.
+  
+  Resolves #90 
+---
+
 - ### CMCI -> CMDI
   Updates and hook for changing CMCI to CMDI with respective url and label changes.
   
