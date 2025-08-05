@@ -395,8 +395,10 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
               '#maxlength' => 24,
               '#title' => $this->t('Salesforce Org ID'),
               '#default_value' => $externalServiceSettings['salesforce_id'] ?? '',
-              '#required' => TRUE,
               '#states' => [
+                'required' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],
                 'visible' => [
                   ':input[name="service_name"]' => ['value' => $externalServiceName],
                 ],
@@ -409,8 +411,10 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
               '#maxlength' => 64,
               '#title' => $this->t('Embedded Service Name'),
               '#default_value' => $externalServiceSettings['embedded_service_name'] ?? '',
-              '#required' => TRUE,
               '#states' => [
+                'required' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],
                 'visible' => [
                   ':input[name="service_name"]' => ['value' => $externalServiceName],
                 ],
@@ -421,10 +425,11 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
               '#type' => 'url',
               '#title' => $this->t('Embedded Service Endpoint URL'),
               '#default_value' => $externalServiceSettings['endpoint_url'] ?? '',
-              '#required' => TRUE,
               '#description' => $this->t('Example: https://cu.my.site.com/EmbeddedServiceName1234'),
               '#states' => [
-                'visible' => [
+                'required' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],                'visible' => [
                   ':input[name="service_name"]' => ['value' => $externalServiceName],
                 ],
               ],
@@ -434,10 +439,11 @@ class ExternalServiceIncludeEntityForm extends EntityForm {
               '#type' => 'url',
               '#title' => $this->t('SCRT2 URL'),
               '#default_value' => $externalServiceSettings['scrt2_url'] ?? '',
-              '#required' => TRUE,
               '#description' => $this->t('Example: https://cu.my.salesforce-scrt.com'),
               '#states' => [
-                'visible' => [
+                'required' => [
+                  ':input[name="service_name"]' => ['value' => $externalServiceName],
+                ],                'visible' => [
                   ':input[name="service_name"]' => ['value' => $externalServiceName],
                 ],
               ],
