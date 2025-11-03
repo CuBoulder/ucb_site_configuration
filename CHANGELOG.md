@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Update service-salesforce.js
+  Allows users to add their name in the pre-chat fields for more personalization
+---
+
 - ### #92 - Fixes required Salesforce Enhanced form fields
   When Salesforce Enhanced Chat third-party service was added to Third Party Services, the form fields were set as strictly `Required` which would cause other third-party services to need these fields even if you were not adding the Salesforce chat client. 
   

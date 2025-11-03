@@ -5,6 +5,18 @@
   function initEmbeddedMessaging() {
     try {
       embeddedservice_bootstrap.settings.language = 'en_US';
+      
+      window.addEventListener("onEmbeddedMessagingReady", (event) => {
+        embeddedservice_bootstrap.prechatAPI.setVisiblePrechatFields({
+          // List the pre-chat field names with the value and whether
+          // it's editable in the pre-chat form.
+          "_firstName": {
+            "value": "",
+            "isEditableByEndUser": true
+          }
+        });
+        embeddedservice_bootstrap.prechatAPI.setHiddenPrechatFields({"CurrentSite": window.location.href});
+      });
 
       embeddedservice_bootstrap.init(
         settings.salesforce_id,
