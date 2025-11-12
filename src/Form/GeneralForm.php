@@ -3,6 +3,7 @@
 namespace Drupal\ucb_site_configuration\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Path\PathValidatorInterface;
@@ -68,8 +69,8 @@ class GeneralForm extends ConfigFormBase {
    * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
    *   The site configuration service defined in this module.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context, AccountInterface $user, SiteConfiguration $service) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, AliasManagerInterface $alias_manager, PathValidatorInterface $path_validator, RequestContext $request_context, AccountInterface $user, SiteConfiguration $service) {
+    parent::__construct($config_factory, $typed_config_manager);
     $this->aliasManager = $alias_manager;
     $this->pathValidator = $path_validator;
     $this->requestContext = $request_context;
@@ -88,6 +89,7 @@ class GeneralForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('path_alias.manager'),
       $container->get('path.validator'),
       $container->get('router.request_context'),
