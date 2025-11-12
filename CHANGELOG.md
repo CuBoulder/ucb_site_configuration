@@ -9,6 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### #96 - Explicitly mark nullable for PHP 8.4, D11 typedConfigManager Requirement
+  - Explicitly mark $node as nullable to fix PHP 8.4 deprecation warning.
+  - Drupal 11 add config.typed and typedConfigManager to form constructors and arguments
+  
+  Resolves #96 
+---
+
 - ### Update service-salesforce.js
   Allows users to add their name in the pre-chat fields for more personalization
 ---

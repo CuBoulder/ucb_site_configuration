@@ -3,6 +3,7 @@
 namespace Drupal\ucb_site_configuration\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -38,8 +39,8 @@ class ContentTypesForm extends ConfigFormBase {
    * @param \Drupal\ucb_site_configuration\SiteConfiguration $service
    *   The site configuration service defined in this module.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entityTypeManager, SiteConfiguration $service) {
-    parent::__construct($config_factory);
+  public function __construct(ConfigFactoryInterface $config_factory, TypedConfigManagerInterface $typed_config_manager, EntityTypeManagerInterface $entityTypeManager, SiteConfiguration $service) {
+    parent::__construct($config_factory, $typed_config_manager);
     $this->entityTypeManager = $entityTypeManager;
     $this->service = $service;
   }
@@ -55,6 +56,7 @@ class ContentTypesForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
+      $container->get('config.typed'),
       $container->get('entity_type.manager'),
       $container->get('ucb_site_configuration')
     );

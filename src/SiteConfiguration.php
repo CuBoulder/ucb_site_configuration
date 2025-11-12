@@ -473,7 +473,7 @@ class SiteConfiguration {
    *   A node to match includes that are for specific content. If null, only
    *   sitewide includes will be attached.
    */
-  public function attachExternalServiceIncludes(array &$attachments, NodeInterface $node = NULL) {
+  public function attachExternalServiceIncludes(array &$attachments, ?NodeInterface $node = NULL) {
     $storage = $this->entityTypeManager->getStorage($this->entityTypeRepository->getEntityTypeFromClass(ExternalServiceInclude::class));
     $query = $storage->getQuery('OR')->condition('sitewide', TRUE);
     if ($node) {
