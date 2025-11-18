@@ -127,7 +127,7 @@ site_affiliation_options:
     type_restricted: false
   finance_business_strategy:
     url: 'https://www.colorado.edu/fbs'
-    label: 'Part of Finance and Business Strategy'
+    label: 'Part of Business, Finance and Infrastructure'
     type_restricted: false
   human_resources:
     url: 'https://www.colorado.edu/hr'

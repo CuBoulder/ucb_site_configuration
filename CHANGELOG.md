@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### #98 Renames 'Part of Finance and Business Strategy' affiliation to 'Part of Business, Finance and Infrastructure'
+  Renames 'Part of Finance and Business Strategy' affiliation to 'Part of Business, Finance and Infrastructure'
+  
+  **Since this is part of a broader change of campus department naming, this should go into production on December 3.**
+  
+  Resolves #98 
+---
+
 - ### #96 - Explicitly mark nullable for PHP 8.4, D11 typedConfigManager Requirement
   - Explicitly mark $node as nullable to fix PHP 8.4 deprecation warning.
   - Drupal 11 add config.typed and typedConfigManager to form constructors and arguments

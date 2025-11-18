@@ -238,3 +238,15 @@ function ucb_site_configuration_update_9514() {
   ]);
 }
 
+/**
+ * Updates a site affiliation.
+ *
+ * Renames 'Part of Finance and Business Strategy' affiliation to 'Part of Business, Finance and Infrastructure'
+ *
+ * Introduced in version 2.14 to address issue #98.
+ */
+function ucb_site_configuration_update_9515() {
+  _ucb_site_configuration_update_config([
+    'site_affiliation_options',
+  ]);
+}
