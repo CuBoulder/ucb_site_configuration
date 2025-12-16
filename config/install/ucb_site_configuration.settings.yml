@@ -10,6 +10,7 @@ site_search_enabled:
 site_search_label: ''
 site_search_url: ''
 gtm_account: ''
+tos_acceptance_enabled: false
 
 # Settings in "Content types"
 article_date_format: '0'

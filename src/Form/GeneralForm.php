@@ -260,6 +260,12 @@ class GeneralForm extends ConfigFormBase {
         '#default_value'  => $settings->get('gtm_account'),
         '#description'    => $this->t('Google Tag Manager account number e.g. GTM-123456.'),
       ];
+      $advanced['tos_acceptance_enabled'] = [
+        '#type'           => 'checkbox',
+        '#title'          => $this->t('Enable Terms of Service acceptance'),
+        '#default_value'  => $settings->get('tos_acceptance_enabled'),
+        '#description'    => $this->t('When enabled, users will be required to accept the Terms of Service before using the site. The modal will appear on user pages for users who have not yet accepted.'),
+      ];
       $form['advanced'] = $advanced;
     }
     return parent::buildForm($form, $form_state);
@@ -358,6 +364,7 @@ class GeneralForm extends ConfigFormBase {
         ->set('site_search_placeholder', $siteSearchFormValues['site_search_placeholder'])
         ->set('site_search_url', $siteSearchFormValues['site_search_url'])
         ->set('gtm_account', $form_state->getValue('gtm_account'))
+        ->set('tos_acceptance_enabled', $form_state->getValue('tos_acceptance_enabled'))
         ->save();
     }
     parent::submitForm($form, $form_state);
