@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Add TOS Toggle
+  Add a toggle under site configuration advanced settings to have the TOS acceptance modal on/off.
+  
+  
+  Sister PR: https://github.com/CuBoulder/tiamat-theme/pull/1727
+  Sister PR: https://github.com/CuBoulder/ucb_user_invite/pull/18
+  Sister PR: https://github.com/CuBoulder/ucb_drush_commands/pull/7
+---
+
 - ### #98 Renames 'Part of Finance and Business Strategy' affiliation to 'Part of Business, Finance and Infrastructure'
   Renames 'Part of Finance and Business Strategy' affiliation to 'Part of Business, Finance and Infrastructure'
   
