@@ -1,6 +1,7 @@
 # Editable site settings (non-theme) will go here
 
 # Settings in "General"
+site_name_title_tag: ''
 site_type: ''
 site_affiliation: ''
 site_affiliation_label: ''

@@ -9,6 +9,46 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\node\NodeInterface;
 
 /**
+ * Uses alternate site name when [site:name] token is used and override is set.
+ *
+ * Overrides the [site:name] token (used by Metatag and others) with the shorter
+ * "Site name for title tag" when configured. This keeps title tags from
+ * becoming excessively long on content pages that use Metatag.
+ *
+ * Implements hook_tokens_alter().
+ */
+function ucb_site_configuration_tokens_alter(array &$replacements, array $context, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
+  if ($context['type'] !== 'site' || !isset($context['tokens']['name'])) {
+    return;
+  }
+
+  $titleTagName = \Drupal::config('ucb_site_configuration.settings')->get('site_name_title_tag');
+  if (empty(trim($titleTagName))) {
+    return;
+  }
+
+  $replacements[$context['tokens']['name']] = $titleTagName;
+  $bubbleable_metadata->addCacheTags(['config:ucb_site_configuration.settings']);
+}
+
+/**
+ * Replaces the site name in head_title for non-Metatag pages (e.g. admin).
+ *
+ * On pages where Metatag does not run, Drupal core sets head_title with
+ * separate 'title' and 'name' keys. This alters the 'name' value when the
+ * override is configured.
+ *
+ * Implements hook_preprocess_HOOK().
+ */
+function ucb_site_configuration_preprocess_html(array &$variables) {
+  $titleTagName = \Drupal::config('ucb_site_configuration.settings')->get('site_name_title_tag');
+  if (!empty(trim($titleTagName)) && isset($variables['head_title']['name'])) {
+    $variables['head_title']['name'] = $titleTagName;
+    $variables['#cache']['tags'][] = 'config:ucb_site_configuration.settings';
+  }
+}
+
+/**
  * Enables site general settings to be referenced from the page template.
  *
  * Implements hook_preprocess_HOOK().

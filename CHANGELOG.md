@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Short site name title tag
+  Add a new `site_name_title_tag` option that allows site managers, devs, architects to change their site's name that shows in the title tag. Preferably a shorter, non-acronym, for SEO purposes.
+  
+  Update hook available for existing sites to have the option added.
+  
+  Resolves #101 
+---
+
 - ### Add TOS Toggle
   Add a toggle under site configuration advanced settings to have the TOS acceptance modal on/off.
   

@@ -250,3 +250,15 @@ function ucb_site_configuration_update_9515() {
     'site_affiliation_options',
   ]);
 }
+
+/**
+ * Adds the site name for title tag setting.
+ *
+ * Allows sites to specify a shorter alternate site name for use in HTML
+ * title tags to prevent excessively long titles.
+ */
+function ucb_site_configuration_update_9516() {
+  _ucb_site_configuration_update_settings([
+    'site_name_title_tag',
+  ]);
+}
