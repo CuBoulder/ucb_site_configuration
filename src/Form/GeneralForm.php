@@ -129,6 +129,13 @@ class GeneralForm extends ConfigFormBase {
       '#default_value' => $systemSiteSettings->get('name'),
       '#required' => TRUE,
     ];
+    $form['site_name_title_tag'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Short name for title tag'),
+      '#default_value' => $settings->get('site_name_title_tag'),
+      '#description' => $this->t('An alternate, preferably shorter version of the site name used in HTML title tags. Leave blank to use the full site name above.'),
+      '#required' => FALSE,
+    ];
     $form['site_frontpage'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Home page'),
@@ -339,6 +346,9 @@ class GeneralForm extends ConfigFormBase {
       ->set('name', $form_state->getValue('site_name'))
       ->set('page.front', $form_state->getValue('site_frontpage'))
       ->set('page.404', $form_state->getValue('site_404'))
+      ->save();
+    $this->config('ucb_site_configuration.settings')
+      ->set('site_name_title_tag', $form_state->getValue('site_name_title_tag'))
       ->save();
     if ($this->user->hasPermission('edit ucb site advanced')) {
       $siteTypeId = $form_state->getValue('site_type');
