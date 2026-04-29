@@ -262,3 +262,14 @@ function ucb_site_configuration_update_9516() {
     'site_name_title_tag',
   ]);
 }
+
+/**
+ * Enables Terms of Service acceptance on existing sites.
+ *
+ * Aligns active config with the default in install/ucb_site_configuration.settings.yml.
+ */
+function ucb_site_configuration_update_9517() {
+  _ucb_site_configuration_update_settings([
+    'tos_acceptance_enabled',
+  ]);
+}

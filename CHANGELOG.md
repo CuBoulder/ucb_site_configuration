@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### ToS Enable Update
+  Updated ToS option to be enabled by default so all sites will use it. Added update hook so that the existing sites that have this option disabled will now be enabled.
+  
+  Sister PR: https://github.com/CuBoulder/tiamat-theme/pull/1793
+---
+
 - ### Short site name title tag
   Add a new `site_name_title_tag` option that allows site managers, devs, architects to change their site's name that shows in the title tag. Preferably a shorter, non-acronym, for SEO purposes.
   
