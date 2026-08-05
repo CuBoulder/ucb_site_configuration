@@ -1,0 +1,6 @@
+# Credentials and endpoint for the server-side MJML render proxy used by the
+# newsletter MJML email preview. The secret key may instead be provided via
+# settings.php to keep it out of exported configuration.
+api_endpoint: 'https://api.mjml.io/v1/render'
+application_id: ''
+secret_key: ''

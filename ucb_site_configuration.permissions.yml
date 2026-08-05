@@ -21,3 +21,7 @@ administer ucb external services:
 edit ucb site advanced:
   title: Edit advanced site settings
   description: 'Enables editing of advanced CU Boulder site settings that are typically meant for support and development staff only.'
+
+preview newsletter mjml email:
+  title: Preview newsletter MJML email
+  description: 'Allows compiling newsletter MJML into an email HTML preview via the MJML render proxy.'
