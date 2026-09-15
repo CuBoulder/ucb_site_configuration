@@ -6,11 +6,7 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * The form for the "Newsletter email (MJML)" tab in CU Boulder site settings.
- *
- * Stores the credentials and endpoint used by the server-side MJML render
- * proxy (see NewsletterMjmlController) so the newsletter MJML email preview can
- * compile MJML without exposing the API credentials to the browser.
+ * The form for the "Newsletter email (MJML)" tab in CU Boulder site settings
  */
 class NewsletterMjmlForm extends ConfigFormBase {
 
@@ -53,7 +49,7 @@ class NewsletterMjmlForm extends ConfigFormBase {
       '#type' => 'textfield',
       '#title' => $this->t('MJML secret key'),
       '#default_value' => $config->get('secret_key'),
-      '#description' => $this->t('The secret key (password) issued by the MJML API. For better security you may leave this blank and instead set it in settings.php via <code>$config[\'ucb_site_configuration.newsletter_mjml\'][\'secret_key\']</code> so the secret is kept out of exported configuration.'),
+      '#description' => $this->t('The secret key (password) issued by the MJML API.'),
     ];
 
     return parent::buildForm($form, $form_state);

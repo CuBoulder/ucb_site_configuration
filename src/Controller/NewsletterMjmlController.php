@@ -12,11 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Server-side proxy that compiles MJML into email HTML.
- *
- * The newsletter MJML email preview web component POSTs the MJML produced by
- * the newsletter MJML view mode templates to this endpoint. Keeping the call
- * server-side means the MJML API credentials are never exposed to the browser
- * and there are no cross-origin restrictions.
+ * The newsletter MJML email preview web component POSTs the MJML produced by the newsletter MJML view mode templates to this endpoint.
  */
 class NewsletterMjmlController extends ControllerBase {
 
