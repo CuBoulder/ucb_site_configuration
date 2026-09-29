@@ -117,7 +117,11 @@ class NewsletterMjmlController extends ControllerBase {
   }
 
   /**
-   * Keeps header and footer black in Word-engine Outlook on Windows
+   * Word Engine Overrides
+   *
+   * Dark mode leaves the VML fill alone:
+   * Inverts #ffffff text inside it, so labels render dark on the locked black bar.
+   * mso-color-alt:auto stays white when the message background is light and the VML fill is #333333 or darker
    */
   protected function lockOutlookWindowsChrome(string $html): string {
     if ($html === '') {
@@ -138,11 +142,15 @@ class NewsletterMjmlController extends ControllerBase {
       }
     }
 
+    $html = $this->forceOutlookHeaderLabelColor($html);
+
     $headLock = '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->'
       . '<!--[if mso]><style type="text/css">'
       . '.header,.header table,.header td,.header div,'
       . '.footer,.footer table,.footer td,.footer div{'
       . 'background:transparent !important;background-color:transparent !important;}'
+      . '.header-chrome-label,.header-chrome-label div,.header-chrome-label p,'
+      . '.header-chrome-label span,.header-chrome-label font{mso-color-alt:auto !important;}'
       . '</style><![endif]-->';
 
     if (stripos($html, 'ucb-outlook-chrome-lock') === FALSE) {
@@ -156,6 +164,90 @@ class NewsletterMjmlController extends ControllerBase {
     }
 
     return $html;
+  }
+
+  /**
+   * Applies mso-color-alt:auto onto the white header labels
+   */
+  protected function forceOutlookHeaderLabelColor(string $html): string {
+    $startMarker = '<!-- ucb-header-lock-start -->';
+    $endMarker = '<!-- ucb-header-lock-end -->';
+    $startPos = strpos($html, $startMarker);
+    $endPos = strpos($html, $endMarker);
+    if ($startPos === FALSE || $endPos === FALSE || $endPos <= $startPos) {
+      return $html;
+    }
+
+    $endPos += strlen($endMarker);
+    $header = substr($html, $startPos, $endPos - $startPos);
+    $header = preg_replace_callback(
+      '/<([a-zA-Z][\w:-]*)([^>]*)>/',
+      function (array $matches): string {
+        $attrs = $matches[2];
+        if (stripos($attrs, 'mso-color-alt') !== FALSE) {
+          return $matches[0];
+        }
+
+        $isLabel = (bool) preg_match('/\bclass=(["\'])[^"\']*\bheader-chrome-label\b[^"\']*\1/i', $attrs);
+        $isWhite = FALSE;
+        if (preg_match('/\bstyle=(["\'])(.*?)\1/is', $attrs, $style)) {
+          $isWhite = $this->styleDeclaresWhiteColor($style[2]);
+        }
+        if (!$isLabel && !$isWhite) {
+          return $matches[0];
+        }
+
+        return '<' . $matches[1] . $this->appendMsoColorAlt($attrs) . '>';
+      },
+      $header
+    );
+
+    return substr($html, 0, $startPos) . $header . substr($html, $endPos);
+  }
+
+  /**
+   * Whether a CSS declaration block sets the text color to white
+   */
+  protected function styleDeclaresWhiteColor(string $css): bool {
+    foreach (explode(';', $css) as $declaration) {
+      $declaration = trim($declaration);
+      if ($declaration === '' || !str_contains($declaration, ':')) {
+        continue;
+      }
+      [$property, $value] = array_map('trim', explode(':', $declaration, 2));
+      if (strcasecmp($property, 'color') !== 0) {
+        continue;
+      }
+      $value = strtolower((string) preg_replace('/\s*!important\s*$/i', '', $value));
+      if (in_array($value, ['#ffffff', '#fff', 'white'], TRUE)) {
+        return TRUE;
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Appends mso-color-alt:auto to an element's style
+   */
+  protected function appendMsoColorAlt(string $attrs): string {
+    if (stripos($attrs, 'mso-color-alt') !== FALSE) {
+      return $attrs;
+    }
+    if (preg_match('/\bstyle=(["\'])/i', $attrs, $match, PREG_OFFSET_CAPTURE)) {
+      $quote = $match[1][0];
+      $valueStart = $match[0][1] + strlen($match[0][0]);
+      $valueEnd = strpos($attrs, $quote, $valueStart);
+      if ($valueEnd === FALSE) {
+        return $attrs . ' style="mso-color-alt:auto;"';
+      }
+      $css = rtrim(substr($attrs, $valueStart, $valueEnd - $valueStart));
+      if ($css !== '' && !str_ends_with($css, ';')) {
+        $css .= ';';
+      }
+      $css .= 'mso-color-alt:auto;';
+      return substr($attrs, 0, $valueStart) . $css . substr($attrs, $valueEnd);
+    }
+    return rtrim($attrs) . ' style="mso-color-alt:auto;"';
   }
 
 }
