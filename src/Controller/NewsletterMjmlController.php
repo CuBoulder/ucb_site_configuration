@@ -119,7 +119,7 @@ class NewsletterMjmlController extends ControllerBase {
   /**
    * Word Engine Overrides
    *
-   * Dark mode leaves the VML fill alone:
+      * Dark mode leaves the VML fill alone:
    * Inverts #ffffff text inside it, so labels render dark on the locked black bar.
    * mso-color-alt:auto stays white when the message background is light and the VML fill is #333333 or darker
    */
@@ -143,6 +143,7 @@ class NewsletterMjmlController extends ControllerBase {
     }
 
     $html = $this->forceOutlookHeaderLabelColor($html);
+    $html = $this->forceOutlookFooterTextColor($html);
 
     $headLock = '<!--[if gte mso 9]><xml><o:OfficeDocumentSettings><o:AllowPNG/><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml><![endif]-->'
       . '<!--[if mso]><style type="text/css">'
@@ -151,6 +152,12 @@ class NewsletterMjmlController extends ControllerBase {
       . 'background:transparent !important;background-color:transparent !important;}'
       . '.header-chrome-label,.header-chrome-label div,.header-chrome-label p,'
       . '.header-chrome-label span,.header-chrome-label font{mso-color-alt:auto !important;}'
+      . '.footer-chrome-text,.footer-chrome-text p,.footer-chrome-text li,.footer-chrome-text div,'
+      . '.footer-chrome-text font,.footer-chrome-text h1,.footer-chrome-text h2,.footer-chrome-text h3,'
+      . '.footer-chrome-text h4,.footer-chrome-text h5,.footer-chrome-text h6,.footer-chrome-text strong,'
+      . '.footer-chrome-text em,.footer-chrome-text blockquote{mso-color-alt:auto !important;}'
+      . '.footer-chrome-text a{mso-color-alt:#cfb87c !important;}'
+      . '.footer-chrome-text a.ucb-link-button,.footer-chrome-text a.ucb-link-button span{mso-color-alt:auto !important;}'
       . '</style><![endif]-->';
 
     if (stripos($html, 'ucb-outlook-chrome-lock') === FALSE) {
@@ -206,6 +213,126 @@ class NewsletterMjmlController extends ControllerBase {
   }
 
   /**
+   *
+   * Body copy stays white, Gold footer links stay gold. White buttons stay white.
+   */
+  protected function forceOutlookFooterTextColor(string $html): string {
+    $startMarker = '<!-- ucb-footer-lock-start -->';
+    $endMarker = '<!-- ucb-footer-lock-end -->';
+    $startPos = strpos($html, $startMarker);
+    $endPos = strpos($html, $endMarker);
+    if ($startPos === FALSE || $endPos === FALSE || $endPos <= $startPos) {
+      return $html;
+    }
+
+    $endPos += strlen($endMarker);
+    $footer = substr($html, $startPos, $endPos - $startPos);
+    $stack = [];
+    $chromeDepth = 0;
+    $anchorDepth = 0;
+    $footer = preg_replace_callback(
+      '/<(\/?)([a-zA-Z][\w:-]*)([^>]*)>/',
+      function (array $matches) use (&$stack, &$chromeDepth, &$anchorDepth): string {
+        $isClose = $matches[1] === '/';
+        $tag = strtolower($matches[2]);
+        $attrs = $matches[3];
+        $selfClosing = !$isClose && (preg_match('/\/\s*$/', $attrs) || in_array($tag, ['img', 'br', 'hr', 'input', 'meta', 'link', 'wbr'], TRUE));
+
+        if ($isClose) {
+          while ($stack) {
+            $open = array_pop($stack);
+            if ($open['chrome']) {
+              $chromeDepth = max(0, $chromeDepth - 1);
+            }
+            if ($open['anchor']) {
+              $anchorDepth = max(0, $anchorDepth - 1);
+            }
+            if ($open['tag'] === $tag) {
+              break;
+            }
+          }
+          return $matches[0];
+        }
+
+        $isChrome = (bool) preg_match('/\bclass=(["\'])[^"\']*\bfooter-chrome-text\b[^"\']*\1/i', $attrs);
+        $inChrome = $chromeDepth > 0 || $isChrome;
+        $isAnchor = $tag === 'a';
+        $isWhite = FALSE;
+        if (preg_match('/\bstyle=(["\'])(.*?)\1/is', $attrs, $style)) {
+          $isWhite = $this->styleDeclaresWhiteColor($style[2]);
+        }
+        $isButton = (bool) preg_match('/\bucb-link-button\b/i', $attrs);
+        $rebuilt = $matches[0];
+
+        if ($inChrome && stripos($attrs, 'mso-color-alt') === FALSE) {
+          $stamp = NULL;
+          if ($isAnchor) {
+            $stamp = ($isButton || $isWhite) ? 'auto' : '#cfb87c';
+          }
+          elseif ($anchorDepth > 0) {
+            $whiteAnchor = $this->insideWhiteAnchor($stack);
+            if (($whiteAnchor || $isWhite) && ($isWhite || $this->isChromeTextTag($tag))) {
+              $stamp = 'auto';
+            }
+            elseif ($this->isChromeTextTag($tag)) {
+              $stamp = '#cfb87c';
+            }
+          }
+          elseif ($isChrome || $isWhite || $this->isChromeTextTag($tag)) {
+            $stamp = 'auto';
+          }
+          if ($stamp !== NULL) {
+            $rebuilt = '<' . $matches[2] . $this->appendMsoColorAlt($attrs, $stamp) . '>';
+          }
+        }
+
+        if (!$selfClosing) {
+          $stack[] = [
+            'tag' => $tag,
+            'chrome' => $inChrome,
+            'anchor' => $isAnchor || $anchorDepth > 0,
+            'whiteAnchor' => $isAnchor && ($isButton || $isWhite),
+          ];
+          if ($inChrome) {
+            $chromeDepth++;
+          }
+          if ($isAnchor || $anchorDepth > 0) {
+            $anchorDepth++;
+          }
+        }
+
+        return $rebuilt;
+      },
+      $footer
+    );
+
+    return substr($html, 0, $startPos) . $footer . substr($html, $endPos);
+  }
+
+  /**
+   * Whether the open tag stack is currently inside a white or button link
+   */
+  protected function insideWhiteAnchor(array $stack): bool {
+    for ($index = count($stack) - 1; $index >= 0; $index--) {
+      if ($stack[$index]['tag'] === 'a') {
+        return !empty($stack[$index]['whiteAnchor']);
+      }
+    }
+    return FALSE;
+  }
+
+  /**
+   * Text containers whose color must be locked inside the footer bar.
+   */
+  protected function isChromeTextTag(string $tag): bool {
+    return in_array($tag, [
+      'p', 'div', 'span', 'li', 'ul', 'ol', 'font',
+      'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+      'strong', 'em', 'b', 'i', 'td', 'th', 'blockquote', 'figcaption', 'center',
+    ], TRUE);
+  }
+
+  /**
    * Whether a CSS declaration block sets the text color to white
    */
   protected function styleDeclaresWhiteColor(string $css): bool {
@@ -227,27 +354,33 @@ class NewsletterMjmlController extends ControllerBase {
   }
 
   /**
-   * Appends mso-color-alt:auto to an element's style
+   * Appends an mso-color-alt declaration to an element's style
    */
-  protected function appendMsoColorAlt(string $attrs): string {
-    if (stripos($attrs, 'mso-color-alt') !== FALSE) {
-      return $attrs;
+  protected function appendMsoColorAlt(string $attrs, string $value = 'auto'): string {
+    $selfClose = '';
+    if (preg_match('/^(.*?)(\s*\/)\s*$/s', $attrs, $parts)) {
+      $attrs = $parts[1];
+      $selfClose = $parts[2];
     }
+    if (stripos($attrs, 'mso-color-alt') !== FALSE) {
+      return $attrs . $selfClose;
+    }
+    $declaration = 'mso-color-alt:' . $value . ';';
     if (preg_match('/\bstyle=(["\'])/i', $attrs, $match, PREG_OFFSET_CAPTURE)) {
       $quote = $match[1][0];
       $valueStart = $match[0][1] + strlen($match[0][0]);
       $valueEnd = strpos($attrs, $quote, $valueStart);
       if ($valueEnd === FALSE) {
-        return $attrs . ' style="mso-color-alt:auto;"';
+        return $attrs . ' style="' . $declaration . '"' . $selfClose;
       }
       $css = rtrim(substr($attrs, $valueStart, $valueEnd - $valueStart));
       if ($css !== '' && !str_ends_with($css, ';')) {
         $css .= ';';
       }
-      $css .= 'mso-color-alt:auto;';
-      return substr($attrs, 0, $valueStart) . $css . substr($attrs, $valueEnd);
+      $css .= $declaration;
+      return substr($attrs, 0, $valueStart) . $css . substr($attrs, $valueEnd) . $selfClose;
     }
-    return rtrim($attrs) . ' style="mso-color-alt:auto;"';
+    return rtrim($attrs) . ' style="' . $declaration . '"' . $selfClose;
   }
 
 }
