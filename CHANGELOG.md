@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds MJML Form Config + Overrides
+  This adds in an admin form for MJML credentials, along with some overrides to inject during the render process of MJML newsletters
+---
+
 - ### ToS Enable Update
   Updated ToS option to be enabled by default so all sites will use it. Added update hook so that the existing sites that have this option disabled will now be enabled.
   

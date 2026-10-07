@@ -35,3 +35,9 @@ ucb_site_configuration.external_services:
   route_name: entity.ucb_external_service_include.collection
   parent: ucb_site_configuration
   weight: 4
+ucb_site_configuration.newsletter_mjml_form:
+  title: Newsletter email (MJML)
+  description: 'Configure the MJML render service used for newsletter email previews.'
+  route_name: ucb_site_configuration.newsletter_mjml_form
+  parent: ucb_site_configuration
+  weight: 5

@@ -50,6 +50,24 @@ ucb_site_configuration.contact_info_form:
   options:
     _admin_route: true
 
+ucb_site_configuration.newsletter_mjml_form:
+  path: '/admin/config/cu-boulder/newsletter-mjml'
+  defaults:
+    _form: '\Drupal\ucb_site_configuration\Form\NewsletterMjmlForm'
+    _title: Newsletter email (MJML)
+  requirements:
+    _permission: edit ucb site advanced
+  options:
+    _admin_route: true
+
+ucb_site_configuration.newsletter_mjml_render:
+  path: '/newsletter-mjml/render'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\ucb_site_configuration\Controller\NewsletterMjmlController::render'
+  requirements:
+    _permission: 'preview newsletter mjml email'
+
 entity.ucb_external_service_include.collection:
   path: '/admin/config/cu-boulder/services'
   defaults:

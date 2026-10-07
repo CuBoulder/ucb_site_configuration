@@ -1,0 +1,4 @@
+# Credentials and endpoint for the server-side MJML render proxy used by the newsletter MJML email preview
+api_endpoint: 'https://api.mjml.io/v1/render'
+application_id: ''
+secret_key: ''
