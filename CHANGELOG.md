@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- ### Adds update hook for MJML config
+  Adds update hook for MJML config
+---
+
 - ### Adds MJML Form Config + Overrides
   This adds in an admin form for MJML credentials, along with some overrides to inject during the render process of MJML newsletters
 ---

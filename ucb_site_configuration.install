@@ -273,3 +273,17 @@ function ucb_site_configuration_update_9517() {
     'tos_acceptance_enabled',
   ]);
 }
+
+/**
+ * Installs default newsletter MJML settings/config
+ */
+function ucb_site_configuration_update_9518() {
+  $config = \Drupal::configFactory()->getEditable('ucb_site_configuration.newsletter_mjml');
+  if ($config->isNew()) {
+    $config
+      ->set('api_endpoint', 'https://api.mjml.io/v1/render')
+      ->set('application_id', '')
+      ->set('secret_key', '')
+      ->save();
+  }
+}
